@@ -1,0 +1,154 @@
+from __future__ import annotations
+
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from sqlalchemy.orm import Session
+
+from gardener_gopedia.config import get_settings
+from gardener_gopedia.db import get_session
+from gardener_gopedia.evaluation_service import execute_eval_run
+from gardener_gopedia.models import Dataset, DatasetQuery, EvalRun, RunHit, RunMetric, RunStatus
+from gardener_gopedia.schemas import EvalRunCreate, EvalRunOut, QueryResultOut, RunMetricOut
+
+router = APIRouter()
+
+
+@router.post("", response_model=EvalRunOut)
+def start_eval(
+    body: EvalRunCreate,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_session),
+):
+    if not db.get(Dataset, body.dataset_id):
+        raise HTTPException(404, "dataset not found")
+
+    settings = get_settings()
+    params = {
+        "top_k": body.top_k,
+        "query_timeout_s": body.query_timeout_s or settings.default_query_timeout_s,
+        "skip_if_ingest_failed": body.skip_if_ingest_failed,
+        "search_detail": body.search_detail,
+        "search_fields": body.search_fields,
+        "search_retryable_max_attempts": (
+            body.search_retryable_max_attempts
+            if body.search_retryable_max_attempts is not None
+            else settings.gopedia_search_retryable_max_attempts
+        ),
+    }
+    row = EvalRun(
+        dataset_id=body.dataset_id,
+        target_url=body.target_url or settings.gopedia_base_url,
+        ingest_run_id=body.ingest_run_id,
+        git_sha=body.git_sha,
+        index_version=body.index_version,
+        params_json=params,
+        status=RunStatus.pending.value,
+    )
+    db.add(row)
+    db.commit()
+    db.refresh(row)
+
+    background_tasks.add_task(_run_eval, row.id)
+    return row
+
+
+def _run_eval(eval_run_id: str) -> None:
+    from gardener_gopedia.db import get_engine
+    from sqlalchemy.orm import sessionmaker
+
+    SessionLocal = sessionmaker(bind=get_engine())
+    s = SessionLocal()
+    try:
+        execute_eval_run(s, eval_run_id)
+    finally:
+        s.close()
+
+
+@router.get("/{run_id}", response_model=EvalRunOut)
+def get_run(run_id: str, db: Session = Depends(get_session)):
+    row = db.get(EvalRun, run_id)
+    if not row:
+        raise HTTPException(404, "run not found")
+    return row
+
+
+@router.get("/{run_id}/metrics", response_model=list[RunMetricOut])
+def get_metrics(run_id: str, db: Session = Depends(get_session)):
+    if not db.get(EvalRun, run_id):
+        raise HTTPException(404, "run not found")
+    rows = db.query(RunMetric).filter(RunMetric.eval_run_id == run_id).all()
+    return [
+        RunMetricOut(
+            metric_name=m.metric_name,
+            value=m.value,
+            scope=m.scope,
+            dataset_query_id=m.dataset_query_id,
+        )
+        for m in rows
+    ]
+
+
+@router.get("/{run_id}/queries", response_model=list[QueryResultOut])
+def get_queries(run_id: str, db: Session = Depends(get_session)):
+    er = db.get(EvalRun, run_id)
+    if not er:
+        raise HTTPException(404, "run not found")
+
+    dqs = (
+        db.query(DatasetQuery)
+        .filter(DatasetQuery.dataset_id == er.dataset_id)
+        .order_by(DatasetQuery.external_id)
+        .all()
+    )
+    metrics = db.query(RunMetric).filter(RunMetric.eval_run_id == run_id, RunMetric.scope == "per_query").all()
+    m_by_q: dict[str, list[RunMetricOut]] = {}
+    for m in metrics:
+        if m.dataset_query_id:
+            m_by_q.setdefault(m.dataset_query_id, []).append(
+                RunMetricOut(
+                    metric_name=m.metric_name,
+                    value=m.value,
+                    scope=m.scope,
+                    dataset_query_id=m.dataset_query_id,
+                )
+            )
+
+    out: list[QueryResultOut] = []
+    for dq in dqs:
+        hits = (
+            db.query(RunHit)
+            .filter(RunHit.eval_run_id == run_id, RunHit.dataset_query_id == dq.id)
+            .order_by(RunHit.rank)
+            .all()
+        )
+        hit_dicts = [
+            {
+                "rank": h.rank,
+                "target_id": h.target_id,
+                "target_type": h.target_type,
+                "score": h.score,
+                "title": h.title,
+                "snippet": h.snippet,
+            }
+            for h in hits
+        ]
+        out.append(
+            QueryResultOut(
+                dataset_query_id=dq.id,
+                external_id=dq.external_id,
+                query_text=dq.query_text,
+                metrics=m_by_q.get(dq.id, []),
+                hits=hit_dicts,
+            )
+        )
+    return out
+
+
+@router.post("/{run_id}/wait", response_model=EvalRunOut)
+def wait_run(run_id: str, db: Session = Depends(get_session)):
+    row = db.get(EvalRun, run_id)
+    if not row:
+        raise HTTPException(404, "run not found")
+    if row.status == RunStatus.pending.value:
+        execute_eval_run(db, run_id)
+        db.refresh(row)
+    return row
