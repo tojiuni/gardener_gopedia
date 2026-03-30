@@ -46,6 +46,11 @@ build-backend = "setuptools.build_meta"
 where = ["."]
 include = ["gardener_gopedia*"]
 
+[tool.pytest.ini_options]
+markers = [
+    "integration: marks tests that hit live Gopedia/Gardener services (deselect with '-m \"not integration\"')",
+]
+
 [tool.ruff]
 line-length = 100
 target-version = "py311"

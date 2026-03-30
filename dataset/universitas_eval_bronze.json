@@ -1,0 +1,233 @@
+{
+  "name": "universitas_eval_bronze",
+  "version": "1",
+  "curation_tier": "bronze",
+  "queries": [
+    {
+      "external_id": "q_traefik_domain_substitution",
+      "text": "Traefik dynamic config에서 DOMAIN 변수는 어떻게 치환되고, 결과 파일은 어디에 저장되나?",
+      "tier": "easy",
+      "reference_answer": "Dynamic YAML에 sub.${DOMAIN} 같은 플레이스홀더를 쓰고, generate 스크립트가 DOMAIN을 치환해서 resolved 디렉터리에 결과를 씀."
+    },
+    {
+      "external_id": "q_traefik_topology_ips",
+      "text": "neunexus 네트워크 토폴로지에서 Traefik 컨테이너 IP와 Docker 호스트 IP는 각각 무엇인가?",
+      "tier": "easy",
+      "reference_answer": "Traefik 컨테이너는 192.168.0.3 (Macvlan), Docker 호스트는 192.168.0.11이다."
+    },
+    {
+      "external_id": "q_port_forward_case_ab",
+      "text": "iptime 라우터의 80/443 포워딩에서 Case A와 Case B는 어떻게 다르고, 어떤 명령어로 확인할 수 있나?",
+      "tier": "hard",
+      "reference_answer": "Case A는 192.168.0.11(Docker 호스트)로 포워딩 후 bridge를 통해 Traefik 전달. Case B는 192.168.0.3(Traefik Macvlan IP)으로 직접 포워딩. ss -tlnp나 tcpdump로 확인 가능."
+    },
+    {
+      "external_id": "q_traefik_resolved_path",
+      "text": "TRAEFIK_DYNAMIC_RESOLVED_PATH는 어떤 역할이고, Traefik 컨테이너 내부에서 어디에 마운트되나?",
+      "tier": "medium",
+      "reference_answer": "DOMAIN 치환 후의 resolved config 디렉터리이며, Traefik 컨테이너 안에서 /etc/traefik/dynamic로 마운트된다."
+    },
+    {
+      "external_id": "q_gopedia_l1_l2_l3",
+      "text": "Gopedia의 L1, L2, L3 계층은 각각 어떤 역할을 하며 나누는 기준은 무엇인가?",
+      "tier": "medium",
+      "reference_answer": "L1은 문서 정체성(Global Summary, 1 doc = 1 L1), L2는 섹션 라우팅 지도(ToC/Sectional Summary, 구조 마커 기준), L3는 LLM 인용 최소 단위(Atomic Chunk, 512-1024 토큰)."
+    },
+    {
+      "external_id": "q_gopedia_smart_sink_routing",
+      "text": "Gopedia Smart Sink는 HierarchyLevel에 따라 어떤 저장소에 기록하나?",
+      "tier": "hard",
+      "reference_answer": "L1은 PostgreSQL(마스터) + Qdrant(요약 임베딩), L2는 TypeDB(ToC/관계) + Qdrant(섹션 임베딩), L3는 Qdrant(청크 임베딩) + ClickHouse(원문/감사)."
+    },
+    {
+      "external_id": "q_gopedia_core_metaphor",
+      "text": "Gopedia 프로젝트의 Core Metaphor와 네 가지 Key Value는 무엇인가?",
+      "tier": "easy",
+      "reference_answer": "Core Metaphor는 Rhizome(수평·무한 확장 뿌리줄기). Key Value는 Pluggable(Root), Scalable(Stem), Relational(Rhizome), Actionable(Fruit)."
+    },
+    {
+      "external_id": "q_gopedia_envelope_strategy",
+      "text": "Gopedia Envelope 전략에서 Consumer는 메시지를 어떻게 라우팅하나?",
+      "tier": "medium",
+      "reference_answer": "GopediaEnvelope(GopediaHeader + google.protobuf.Any payload) 구조에서 Consumer가 헤더만 읽고 HierarchyLevel·SourceDomain으로 라우팅을 결정한 뒤, 필요 시에만 payload를 역직렬화한다."
+    },
+    {
+      "external_id": "q_taxon_postgres_config",
+      "text": "taxon RDB 스택에서 PostgreSQL 이미지 버전, 컨테이너 이름, static IP는?",
+      "tier": "easy",
+      "reference_answer": "postgres:15-alpine 이미지, 컨테이너 이름 postgres_db, neunexus 네트워크에서 static IP 192.168.0.89."
+    },
+    {
+      "external_id": "q_infisical_secret_create",
+      "text": "Infisical(Morphso)에서 시크릿을 생성하려면 어떤 API 엔드포인트와 body를 사용하나?",
+      "tier": "medium",
+      "reference_answer": "POST /api/v1/secret/secrets에 {secret_name, secret_value, project_id, environment_slug, secret_path} body를 보낸다."
+    },
+    {
+      "external_id": "q_sops_age_preparation",
+      "text": "Infisical에서 SOPS + Age로 전환할 때 사전 준비 사항은 무엇인가?",
+      "tier": "hard",
+      "reference_answer": "age-keygen으로 키 쌍 생성, .sops.yaml에 age 공개키 지정, Infisical API로 시크릿 목록/값을 export해서 YAML/JSON 구조를 정리."
+    },
+    {
+      "external_id": "q_server_os_specs",
+      "text": "osteon 서버의 OS 배포판, 커널 버전, Docker 버전, SELinux 상태는?",
+      "tier": "easy",
+      "reference_answer": "Rocky Linux 9.6 (Blue Onyx), 커널 5.14.0-570.58.1.el9_6.x86_64, Docker 24.0.9, SELinux Permissive."
+    },
+    {
+      "external_id": "q_docker_registry_auth",
+      "text": "osteon Docker Registry의 이미지 버전과 인증 방식은 무엇이며, Registry UI는 어떤 기능을 지원하나?",
+      "tier": "medium",
+      "reference_answer": "registry:2.8.2, htpasswd 인증, storage는 ./data. Registry UI는 joxit/docker-registry-ui:main이며 catalog/delete를 지원한다."
+    },
+    {
+      "external_id": "q_universitas_bio_groups",
+      "text": "Universitas 시스템 아키텍처에서 neunexus, taxon, osteon은 각각 인체의 어떤 체계를 모사하며 무엇을 담당하나?",
+      "tier": "hard",
+      "reference_answer": "neunexus는 신경계(Communication & Signal, Traefik/Tinode), taxon은 소화·저장(Digestion & Memory, ClickHouse/Storages), osteon은 골격계(Skeletal Structure, OpenTofu/Kubernetes)."
+    }
+  ],
+  "qrels": [
+    {
+      "query_external_id": "q_traefik_domain_substitution",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Dynamic YAMLs use placeholders like `sub.${DOMAIN}`; a generate script substitutes `DOMAIN` and writes the result into the **resolved** directory.",
+        "title_hint": "Dynamic config",
+        "source_path_hint": "skills/traefik/references/dynamic-config.md"
+      }
+    },
+    {
+      "query_external_id": "q_traefik_topology_ips",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "**Traefik (컨테이너)** | 192.168.0.3 | Macvlan `neunexus`, 실제 80/443 처리",
+        "title_hint": "포워딩 경로 추적",
+        "source_path_hint": "skills/traefik/references/port-forward-trace-80-443.md"
+      }
+    },
+    {
+      "query_external_id": "q_port_forward_case_ab",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Case A: 라우터가 80/443을 192.168.0.11로 포워딩",
+        "title_hint": "포워딩 경로 추적",
+        "source_path_hint": "skills/traefik/references/port-forward-trace-80-443.md"
+      }
+    },
+    {
+      "query_external_id": "q_traefik_resolved_path",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "**`TRAEFIK_DYNAMIC_RESOLVED_PATH`**: Directory with **resolved** config (after `DOMAIN` substitution). Traefik mounts this as `/etc/traefik/dynamic` in the container.",
+        "title_hint": "Dynamic config",
+        "source_path_hint": "skills/traefik/references/dynamic-config.md"
+      }
+    },
+    {
+      "query_external_id": "q_gopedia_l1_l2_l3",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "**L1 (Global Summary)** | 문서/자산의 **정체성** — \"무슨 문서인가\"",
+        "title_hint": "기능별 설명 가이드",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "q_gopedia_smart_sink_routing",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "L1 → PostgreSQL(마스터) + Qdrant(L1 요약 임베딩).",
+        "title_hint": "기능별 설명 가이드",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "q_gopedia_core_metaphor",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "**Core Metaphor**: Rhizome (수평·무한 확장 뿌리줄기)",
+        "title_hint": "Gopedia",
+        "source_path_hint": "gopedia/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "q_gopedia_envelope_strategy",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "**GopediaEnvelope**: `GopediaHeader` + `google.protobuf.Any payload`.",
+        "title_hint": "기능별 설명 가이드",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "q_taxon_postgres_config",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "**PostgreSQL**: `postgres:15-alpine`, container `postgres_db`, static IP `192.168.0.89` on `neunexus`.",
+        "title_hint": "RDB",
+        "source_path_hint": "taxon/storages/rdb/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "q_infisical_secret_create",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "**Create**: `POST /api/v1/secret/secrets` with body `{\"secret_name\": \"...\", \"secret_value\": \"...\"",
+        "title_hint": "Secret Management",
+        "source_path_hint": "taxon/storages/secret/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "q_sops_age_preparation",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "**Age 키 쌍 생성**: `age-keygen -o age-key.txt` 로 공개키/비밀키 생성. 비밀키는 Sidecar만 보관하고, 공개키는 SOPS 설정에 사용.",
+        "title_hint": "SOPS + Age",
+        "source_path_hint": "taxon/storages/secret/references/sops-age-migration.md"
+      }
+    },
+    {
+      "query_external_id": "q_server_os_specs",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "**Distro**: Rocky Linux 9.6 (Blue Onyx), EL9, x86_64.",
+        "title_hint": "Server OS",
+        "source_path_hint": "osteon/skills/server-os/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "q_docker_registry_auth",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "**Registry**: `registry:2.8.2`, htpasswd auth, storage under `./data`, CORS for UI.",
+        "title_hint": "Docker Registry",
+        "source_path_hint": "osteon/skills/docker/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "q_universitas_bio_groups",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "본 시스템은 인체의 유기적인 작동 원리를 모사하여 각 서비스의 기능을 계층별로 그룹화합니다",
+        "title_hint": "Bio-Inspired System Architecture",
+        "source_path_hint": "Universitas_System_Architecture_Blueprint.md"
+      }
+    }
+  ]
+}

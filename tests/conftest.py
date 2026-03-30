@@ -102,3 +102,36 @@ def client(monkeypatch, gardener_pg_url):
         dbm._engine = None
         dbm._SessionLocal = None
         get_settings.cache_clear()
+
+
+# ── Integration test fixtures (external service clients) ─────────────
+
+
+@pytest.fixture
+def gopedia_url():
+    """Base URL for Gopedia API (integration tests)."""
+    return os.environ.get("GOPEDIA_API_URL", "http://127.0.0.1:18787")
+
+
+@pytest.fixture
+def gardener_url():
+    """Base URL for Gardener API (integration tests)."""
+    return os.environ.get("GARDENER_API_URL", "http://127.0.0.1:18880")
+
+
+@pytest.fixture
+def gopedia_client(gopedia_url):
+    """HTTP client for Gopedia API."""
+    import httpx
+
+    with httpx.Client(base_url=gopedia_url, timeout=30.0) as client:
+        yield client
+
+
+@pytest.fixture
+def gardener_client(gardener_url):
+    """HTTP client for Gardener API."""
+    import httpx
+
+    with httpx.Client(base_url=gardener_url, timeout=60.0) as client:
+        yield client
