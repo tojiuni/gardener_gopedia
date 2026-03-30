@@ -15,10 +15,13 @@ def get_engine():
     if _engine is None:
         settings = get_settings()
         url = settings.database_url
+        if not url.startswith("postgresql"):
+            raise RuntimeError(
+                "Gardener is configured for PostgreSQL only (postgresql+psycopg). "
+                "Fix GARDENER_DATABASE_URL or POSTGRES_* in the environment."
+            )
         connect_args: dict = {}
-        if url.startswith("sqlite"):
-            connect_args["check_same_thread"] = False
-        elif url.startswith("postgresql") and settings.postgres_schema:
+        if settings.postgres_schema:
             sch = settings.postgres_schema.strip()
             if sch:
                 # Put Gardener tables in this schema (create it in Postgres first).

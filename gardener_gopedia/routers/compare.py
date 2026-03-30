@@ -46,7 +46,11 @@ def compare_runs(
 
     # Rebuild per-query recall from hits + qrels for regression list
     qrels_rows = db.query(Qrel).filter(Qrel.dataset_id == b.dataset_id).all()
-    qrels_tuples = [(q.query_id, q.target_id, q.relevance) for q in qrels_rows]
+    qrels_tuples = [
+        (q.query_id, q.target_id, q.relevance)
+        for q in qrels_rows
+        if q.target_id and str(q.target_id).strip()
+    ]
 
     def run_tuples(run_id: str) -> list[tuple[str, str, float]]:
         hits = (

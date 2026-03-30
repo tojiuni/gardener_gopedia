@@ -9,6 +9,7 @@ dependencies = [
     "uvicorn[standard]>=0.32.0",
     "pydantic>=2.9.0",
     "pydantic-settings>=2.6.0",
+    "psycopg[binary]>=3.2.0",
     "httpx>=0.27.0",
     "tenacity>=9.0.0",
     "sqlalchemy>=2.0.36",
@@ -31,13 +32,11 @@ eval = [
     "opentelemetry-sdk>=1.20.0",
     "opentelemetry-exporter-otlp-proto-http>=1.20.0",
 ]
-postgres = [
-    "psycopg[binary]>=3.2.0",
-]
 
 [project.scripts]
 gardener-api = "gardener_gopedia.cli:run_api"
 gardener-smoke = "gardener_gopedia.smoke:main"
+gardener-init-db = "gardener_gopedia.db_bootstrap:main"
 
 [build-system]
 requires = ["setuptools>=61"]

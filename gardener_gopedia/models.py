@@ -45,10 +45,24 @@ class Dataset(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     version: Mapped[str] = mapped_column(String(64), default="1")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    # Bronze (queries only / draft) → Silver (AI proposals) → Gold (promoted qrels).
+    curation_tier: Mapped[str] = mapped_column(String(32), default="bronze", nullable=False)
+    parent_dataset_id: Mapped[str | None] = mapped_column(
+        String(36), ForeignKey("datasets.id"), nullable=True
+    )
+    # Batch that produced this promoted dataset (no FK — avoids create_all order vs LabelingBatch).
+    promoted_from_batch_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    promotion_provenance_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    # Cached Phoenix REST identifiers (datasets & experiments UX); optional.
+    phoenix_dataset_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    phoenix_dataset_version_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    # When dataset.version changes, Phoenix dataset is re-created under a new name.
+    phoenix_dataset_for_version: Mapped[str | None] = mapped_column(String(64), nullable=True)
 
     queries: Mapped[list["DatasetQuery"]] = relationship(back_populates="dataset")
     qrels: Mapped[list["Qrel"]] = relationship(back_populates="dataset")
     eval_runs: Mapped[list["EvalRun"]] = relationship(back_populates="dataset")
+    labeling_batches: Mapped[list["LabelingBatch"]] = relationship(back_populates="dataset")
 
 
 class DatasetQuery(Base):
@@ -76,9 +90,13 @@ class Qrel(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
     dataset_id: Mapped[str] = mapped_column(String(36), ForeignKey("datasets.id"), nullable=False)
     query_id: Mapped[str] = mapped_column(String(36), ForeignKey("dataset_queries.id"), nullable=False)
-    target_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    # Nullable until POST /datasets/{id}/resolve-qrels fills id (agent-authored target_data-only qrels).
+    target_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
     target_type: Mapped[str] = mapped_column(String(16), default=TargetType.l3_id.value)
     relevance: Mapped[int] = mapped_column(Integer, default=1)
+    target_data: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    resolution_status: Mapped[str] = mapped_column(String(32), default="resolved", nullable=False)
+    resolution_meta: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
     dataset: Mapped["Dataset"] = relationship(back_populates="qrels")
     query: Mapped["DatasetQuery"] = relationship(back_populates="qrels")
@@ -183,3 +201,77 @@ class Review(Base):
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     reviewer: Mapped[str | None] = mapped_column(String(128), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
+class LabelingBatch(Base):
+    """Groups AI proposals and human decisions for one dataset + optional source eval run."""
+
+    __tablename__ = "labeling_batches"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    dataset_id: Mapped[str] = mapped_column(String(36), ForeignKey("datasets.id"), nullable=False)
+    source_eval_run_id: Mapped[str | None] = mapped_column(
+        String(36), ForeignKey("eval_runs.id"), nullable=True
+    )
+    external_key: Mapped[str | None] = mapped_column(String(256), nullable=True)
+    provenance_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    dataset: Mapped["Dataset"] = relationship(back_populates="labeling_batches")
+    candidates: Mapped[list["LabelCandidate"]] = relationship(back_populates="labeling_batch")
+    decisions: Mapped[list["LabelDecision"]] = relationship(back_populates="labeling_batch")
+
+    __table_args__ = (
+        UniqueConstraint("dataset_id", "external_key", name="uq_labeling_batch_dataset_external"),
+    )
+
+
+class LabelCandidate(Base):
+    """AI-proposed target for a query (Silver); not used for metrics until promoted to qrels."""
+
+    __tablename__ = "label_candidates"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    labeling_batch_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("labeling_batches.id"), nullable=False
+    )
+    dataset_query_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("dataset_queries.id"), nullable=False
+    )
+    target_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    target_type: Mapped[str] = mapped_column(String(16), default=TargetType.l3_id.value)
+    confidence: Mapped[float] = mapped_column(Float, nullable=False)
+    model_name: Mapped[str] = mapped_column(String(128), nullable=False)
+    rationale: Mapped[str | None] = mapped_column(Text, nullable=True)
+    evidence_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    candidate_rank: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+
+    labeling_batch: Mapped["LabelingBatch"] = relationship(back_populates="candidates")
+
+
+class LabelDecision(Base):
+    """Per-query resolution within a batch: unresolved, auto-accepted, or human-reviewed."""
+
+    __tablename__ = "label_decisions"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    labeling_batch_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("labeling_batches.id"), nullable=False
+    )
+    dataset_query_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("dataset_queries.id"), nullable=False
+    )
+    status: Mapped[str] = mapped_column(String(32), nullable=False)
+    chosen_target_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    chosen_target_type: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    relevance: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    reviewer: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    decided_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    labeling_batch: Mapped["LabelingBatch"] = relationship(back_populates="decisions")
+
+    __table_args__ = (
+        UniqueConstraint("labeling_batch_id", "dataset_query_id", name="uq_label_decision_batch_query"),
+    )

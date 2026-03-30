@@ -17,7 +17,7 @@ from gardener_gopedia.models import (
     RunRagasSample,
     RunStatus,
 )
-from gardener_gopedia.schemas import EvalRunCreate, EvalRunOut, QueryResultOut, RunMetricOut
+from gardener_gopedia.schemas import EvalRunCreate, EvalRunOut, QueryResultOut, RunMetricOut, eval_run_to_out
 
 router = APIRouter()
 
@@ -49,6 +49,7 @@ def start_eval(
         "ragas_answer_metrics": body.ragas_answer_metrics
         if body.ragas_answer_metrics is not None
         else settings.ragas_answer_metrics,
+        "resolve_before_eval": body.resolve_before_eval,
     }
     row = EvalRun(
         dataset_id=body.dataset_id,
@@ -64,7 +65,7 @@ def start_eval(
     db.refresh(row)
 
     background_tasks.add_task(_run_eval, row.id)
-    return row
+    return eval_run_to_out(row)
 
 
 def _run_eval(eval_run_id: str) -> None:
@@ -84,7 +85,7 @@ def get_run(run_id: str, db: Session = Depends(get_session)):
     row = db.get(EvalRun, run_id)
     if not row:
         raise HTTPException(404, "run not found")
-    return row
+    return eval_run_to_out(row)
 
 
 @router.get("/{run_id}/metrics", response_model=list[RunMetricOut])
@@ -190,4 +191,4 @@ def wait_run(run_id: str, db: Session = Depends(get_session)):
         time.sleep(0.2)
     if row.status not in (RunStatus.completed.value, RunStatus.failed.value):
         raise HTTPException(504, "eval run did not finish before timeout")
-    return row
+    return eval_run_to_out(row)

@@ -1,0 +1,105 @@
+{
+  "name": "universitas_gopedia_neunexus",
+  "version": "1",
+  "curation_tier": "bronze",
+  "queries": [
+    {
+      "external_id": "q_traefik_labels",
+      "text": "neunexus Traefik: 컨테이너 라벨에는 무엇만 두고 라우터 규칙은 어디에 정의하나?",
+      "tier": "medium",
+      "reference_answer": "컨테이너에는 `traefik` 라벨만 사용하고(예: traefik.enable=true), 라우터·서비스·미들웨어·TLS는 TRAEFIK_DYNAMIC_CONFIG_PATH 아래 dynamic config에만 둔다."
+    },
+    {
+      "external_id": "q_traefik_dynamic",
+      "text": "Traefik dynamic config 기본 경로와 라우팅 정의 위치는?",
+      "tier": "easy",
+      "reference_answer": "기본값은 `/morphogen/neunexus/lymphhub/config/traefik/dynamic`이며, 라우터·서비스·미들웨어·TLS는 모두 이 dynamic config에 정의한다."
+    },
+    {
+      "external_id": "q_docker_macvlan",
+      "text": "neunexus Docker Macvlan 네트워크 이름과 드라이버·서브넷은?",
+      "tier": "medium",
+      "reference_answer": "네트워크 이름은 neunexus, 드라이버는 macvlan(parent enp5s0), 서브넷 192.168.0.0/24, 게이트웨이 192.168.0.1이다."
+    },
+    {
+      "external_id": "q_gopedia_verify_sprouting",
+      "text": "Gopedia Verify(Sprouting)에서 Markdown과 Code 서브페이즈 목표 기간은?",
+      "tier": "medium",
+      "reference_answer": "Sub-phase 4.1.1 Markdown Origin은 2일, 4.1.2 Code Format Expansion은 7일 목표다. xylem-flow·Qdrant·TypeDB Contains 등으로 증명한다."
+    },
+    {
+      "external_id": "q_markdown_origin_xylem",
+      "text": "Gopedia Markdown Origin에서 TOC는 어떤 헤딩 레벨로 추출하고 Qdrant 페이로드에 무엇을 넣나?",
+      "tier": "hard",
+      "reference_answer": "`#`, `##`, `###` 기준으로 TOC를 트리로 추출하고, Qdrant에는 TOC·본문 벡터와 함께 Payload에 machine_id를 포함한다."
+    },
+    {
+      "external_id": "q_code_origin_graph",
+      "text": "Gopedia Code Format Expansion에서 TypeDB에 다루는 코드 관계와 Qdrant 샤딩 단위는?",
+      "tier": "hard",
+      "reference_answer": "calls, inherits 등 코드 온톨로지를 확장하고, Qdrant는 Machine ID 기준 샤딩·함수 단위(Function Level) 벡터화로 정밀도를 높인다."
+    }
+  ],
+  "qrels": [
+    {
+      "query_external_id": "q_traefik_labels",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Use only the `traefik` label (e.g. `traefik.enable=true`). Do not put router rules",
+        "title_hint": "Traefik",
+        "source_path_hint": "skills/traefik/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "q_traefik_dynamic",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "All routers, services, middlewares, and TLS are defined in the **dynamic config** under `TRAEFIK_DYNAMIC_CONFIG_PATH`",
+        "title_hint": "Traefik",
+        "source_path_hint": "skills/traefik/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "q_docker_macvlan",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "**Network name**: `neunexus`\n- **Driver**: macvlan, parent `enp5s0`, subnet `192.168.0.0/24`",
+        "title_hint": "Docker Network",
+        "source_path_hint": "skills/docker-network/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "q_gopedia_verify_sprouting",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Gopedia가 데이터 토양에 첫 뿌리를 내리는 **Verify** 단계를 관리합니다",
+        "title_hint": "Gopedia Verify",
+        "source_path_hint": "skills/gopedia-verify-flow/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "q_markdown_origin_xylem",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "**Xylem-flow**: Markdown 파서 구현. `#`, `##`, `###` 기준으로 TOC를 트리 형태로 추출한다",
+        "title_hint": "Markdown Origin",
+        "source_path_hint": "skills/gopedia-verify-flow/gopedia-markdown-origin/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "q_code_origin_graph",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "`Caller-Callee` (누가 누구를 호출하는가?)",
+        "title_hint": "Code Format Expansion",
+        "source_path_hint": "skills/gopedia-verify-flow/gopedia-code-origin/SKILL.md"
+      }
+    }
+  ]
+}

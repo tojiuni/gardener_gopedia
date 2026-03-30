@@ -13,6 +13,10 @@ from gardener_gopedia.config import get_settings
 from gardener_gopedia.gopedia_client import GopediaClient, gopedia_json_search_failed
 from gardener_gopedia.metrics_engine import compute_aggregate_metrics, per_query_recall_at_5
 from gardener_gopedia.models import DatasetQuery, EvalRun, Qrel, RunHit, RunMetric, RunStatus
+from gardener_gopedia.qrel_resolve_service import (
+    dataset_has_unresolved_qrels,
+    resolve_dataset_qrels,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -100,7 +104,21 @@ def execute_eval_run(db: Session, eval_run_id: str) -> None:
     queries = (
         db.query(DatasetQuery).filter(DatasetQuery.dataset_id == dataset.id).order_by(DatasetQuery.external_id).all()
     )
+    base = row.target_url or settings.gopedia_base_url
+    if params.get("resolve_before_eval"):
+        resolve_dataset_qrels(db, dataset.id, base, force=False)
+
     qrels_rows = db.query(Qrel).filter(Qrel.dataset_id == dataset.id).all()
+    if dataset_has_unresolved_qrels(db, dataset.id):
+        row.status = RunStatus.failed.value
+        row.error_message = (
+            "dataset has qrels without target_id (unresolved target_data). "
+            "POST /datasets/{id}/resolve-qrels or pass resolve_before_eval=true on the eval run."
+        )
+        row.ended_at = datetime.utcnow()
+        db.commit()
+        return
+
     qrels_by_query: dict[str, list[Qrel]] = {}
     for q in qrels_rows:
         qrels_by_query.setdefault(q.query_id, []).append(q)
@@ -109,7 +127,6 @@ def execute_eval_run(db: Session, eval_run_id: str) -> None:
     row.started_at = datetime.utcnow()
     db.commit()
 
-    base = row.target_url or settings.gopedia_base_url
     client = GopediaClient(base, timeout_s=max(timeout_s, 60.0))
 
     qrels_tuples: list[tuple[str, str, int]] = []
@@ -119,7 +136,9 @@ def execute_eval_run(db: Session, eval_run_id: str) -> None:
     try:
         for dq in queries:
             for qr in qrels_by_query.get(dq.id, []):
-                qrels_tuples.append((dq.id, qr.target_id, qr.relevance))
+                tid = (qr.target_id or "").strip()
+                if tid:
+                    qrels_tuples.append((dq.id, tid, qr.relevance))
 
             data = _search_with_retry(
                 client,
@@ -195,11 +214,25 @@ def execute_eval_run(db: Session, eval_run_id: str) -> None:
             "query_count": len(queries),
             **ragas_extra,
         }
+        # End timestamps for Phoenix experiment runs / OTLP (before Phoenix export).
+        row.ended_at = datetime.utcnow()
+        try:
+            from gardener_gopedia.phoenix_export import run_phoenix_post_eval
+
+            phoenix_extra = run_phoenix_post_eval(db, row, dataset)
+            row.params_json = {**(row.params_json or {}), **phoenix_extra}
+        except Exception:
+            logger.exception("Phoenix post-eval failed")
+            row.params_json = {
+                **(row.params_json or {}),
+                "phoenix_post_eval_error": "exception_logged",
+            }
         row.status = RunStatus.completed.value
     except Exception as e:
         row.status = RunStatus.failed.value
         row.error_message = str(e)[:4000]
     finally:
-        row.ended_at = datetime.utcnow()
+        if row.ended_at is None:
+            row.ended_at = datetime.utcnow()
         client.close()
         db.commit()

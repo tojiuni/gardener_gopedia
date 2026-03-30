@@ -61,6 +61,45 @@ def _build_openai_llm():
         return None, "OPENAI_API_KEY not set"
     client = OpenAI(api_key=api_key)
     llm = llm_factory(settings.ragas_openai_model, client=client, temperature=0.01)
+    # Ragas may call a "text generation" async method on the LLM object.
+    # The InstructorLLM wrapper we build exposes `agenerate()` but not `agenerate_text()`,
+    # which results in NaN scores. Provide a minimal shim to route calls through `agenerate()`.
+    if not hasattr(llm, "agenerate_text") and hasattr(llm, "generate"):
+        # Ragas metrics expect `BaseRagasLLM.agenerate_text()` which returns an LLMResult
+        # with `resp.generations[0][0].text`. Our InstructorLLM only provides `generate()`
+        # that returns the parsed output model, so we adapt it.
+        from langchain_core.outputs import Generation, LLMResult
+
+        async def _agenerate_text(prompt: Any, **kwargs: Any) -> LLMResult:  # type: ignore[no-untyped-def]
+            response_model = kwargs.pop("response_model", str)
+            temperature = kwargs.pop("temperature", None)
+            n = kwargs.pop("n", 1)
+            _ = (temperature, n)  # temperature/n are baked into llm_factory defaults
+
+            prompt_text = getattr(prompt, "text", None)
+            if prompt_text is None:
+                prompt_text = str(prompt)
+
+            out = llm.generate(prompt_text, response_model=response_model)
+            text = out if isinstance(out, str) else str(out)
+            return LLMResult(generations=[[Generation(text=text)]])
+
+        llm.agenerate_text = _agenerate_text  # type: ignore[attr-defined]
+
+    if not hasattr(llm, "generate_text") and hasattr(llm, "generate"):
+        from langchain_core.outputs import Generation, LLMResult
+
+        def _generate_text(prompt: Any, **kwargs: Any) -> LLMResult:  # type: ignore[no-untyped-def]
+            response_model = kwargs.pop("response_model", str)
+            prompt_text = getattr(prompt, "text", None)
+            if prompt_text is None:
+                prompt_text = str(prompt)
+
+            out = llm.generate(prompt_text, response_model=response_model)
+            text = out if isinstance(out, str) else str(out)
+            return LLMResult(generations=[[Generation(text=text)]])
+
+        llm.generate_text = _generate_text  # type: ignore[attr-defined]
     return llm, None
 
 
@@ -104,12 +143,15 @@ def maybe_run_ragas_after_eval(db: Session, eval_run: EvalRun) -> dict[str, Any]
     try:
         from datasets import Dataset as HFDataset
         from ragas import evaluate
-        from ragas.metrics.collections import (
-            AnswerRelevancy,
-            ContextPrecisionWithoutReference,
-            ContextRecall,
-            ContextRelevance,
-            Faithfulness,
+        # NOTE: ragas>=0.4 expects metrics to be instances of `ragas.metrics.base.Metric`.
+        # The older `ragas.metrics.collections.*` metric classes do NOT satisfy this type check.
+        # We therefore use the underscore-names from `ragas.metrics` which are compatible.
+        from ragas.metrics import (
+            _AnswerRelevancy,
+            _ContextRecall,
+            _ContextRelevance,
+            _Faithfulness,
+            _LLMContextPrecisionWithoutReference,
         )
     except ImportError as e:
         logger.warning("Ragas not installed: %s", e)
@@ -159,7 +201,7 @@ def maybe_run_ragas_after_eval(db: Session, eval_run: EvalRun) -> dict[str, Any]
         return summary
 
     hf_ds = HFDataset.from_list(rows_retrieval)
-    metrics_p1 = [ContextRelevance(llm=llm)]
+    metrics_p1 = [_ContextRelevance(llm=llm)]
     try:
         res_p1 = evaluate(
             hf_ds,
@@ -282,11 +324,11 @@ def maybe_run_ragas_after_eval(db: Session, eval_run: EvalRun) -> dict[str, Any]
                 recall_qids.append(dq.id)
 
         metrics_p2: list[Any] = [
-            Faithfulness(llm=llm),
-            ContextPrecisionWithoutReference(llm=llm),
+            _Faithfulness(llm=llm),
+            _LLMContextPrecisionWithoutReference(llm=llm),
         ]
         if emb is not None:
-            metrics_p2.append(AnswerRelevancy(llm=llm, embeddings=emb))
+            metrics_p2.append(_AnswerRelevancy(llm=llm, embeddings=emb))
 
         if ans_rows:
             try:
@@ -315,7 +357,7 @@ def maybe_run_ragas_after_eval(db: Session, eval_run: EvalRun) -> dict[str, Any]
             try:
                 res_r = evaluate(
                     HFDataset.from_list(recall_rows),
-                    metrics=[ContextRecall(llm=llm)],
+                    metrics=[_ContextRecall(llm=llm)],
                     llm=llm,
                     show_progress=settings.ragas_show_progress,
                     raise_exceptions=False,
@@ -330,20 +372,6 @@ def maybe_run_ragas_after_eval(db: Session, eval_run: EvalRun) -> dict[str, Any]
 
     # Merge Phoenix metrics into per_query_phoenix (IR)
     _attach_ir_to_phoenix(db, eval_run.id, per_query_phoenix, queries)
-
-    try:
-        from gardener_gopedia.phoenix_adapter import export_eval_run_to_phoenix
-
-        export_eval_run_to_phoenix(
-            eval_run_id=eval_run.id,
-            dataset_name=dataset.name,
-            dataset_version=dataset.version,
-            git_sha=eval_run.git_sha,
-            index_version=eval_run.index_version,
-            per_query=per_query_phoenix,
-        )
-    except Exception:
-        logger.exception("Phoenix export failed")
 
     return summary
 

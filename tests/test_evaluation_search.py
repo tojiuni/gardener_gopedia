@@ -1,33 +1,9 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
-from gardener_gopedia.config import get_settings
 from gardener_gopedia.evaluation_service import execute_eval_run
 from gardener_gopedia.models import Dataset, DatasetQuery, EvalRun, RunStatus
-
-
-@pytest.fixture
-def memory_session(monkeypatch):
-    monkeypatch.setenv("GARDENER_DATABASE_URL", "sqlite:///:memory:")
-    get_settings.cache_clear()
-    import gardener_gopedia.db as dbm
-
-    dbm._engine = None
-    dbm._SessionLocal = None
-    from gardener_gopedia.db import init_db
-    from sqlalchemy.orm import sessionmaker
-
-    init_db()
-    from gardener_gopedia.db import get_engine
-
-    Session = sessionmaker(bind=get_engine())
-    sess = Session()
-    yield sess
-    sess.close()
-    dbm._engine = None
-    dbm._SessionLocal = None
-    get_settings.cache_clear()
 
 
 def _seed_eval(sess):

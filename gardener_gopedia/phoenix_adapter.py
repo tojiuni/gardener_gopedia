@@ -18,6 +18,7 @@ def export_eval_run_to_phoenix(
     git_sha: str | None,
     index_version: str | None,
     per_query: list[dict[str, Any]],
+    extra_root_attributes: dict[str, Any] | None = None,
 ) -> None:
     """
     Emit one root span per eval run and child spans per query with Ragas / IR attributes.
@@ -61,6 +62,11 @@ def export_eval_run_to_phoenix(
         attrs["gardener.git_sha"] = git_sha
     if index_version:
         attrs["gardener.index_version"] = index_version
+    if extra_root_attributes:
+        for k, v in extra_root_attributes.items():
+            if v is None:
+                continue
+            attrs[str(k)] = str(v)[:2000]
 
     with tracer.start_as_current_span("gardener_eval_run", attributes=attrs) as root:
         root.set_attribute("gardener.per_query_count", len(per_query))
@@ -73,6 +79,9 @@ def export_eval_run_to_phoenix(
                 "gardener.tier": tier,
                 "gardener.query_text": qtext,
             }
+            dqid = row.get("dataset_query_id")
+            if dqid:
+                child_attrs["gardener.dataset_query_id"] = str(dqid)
             metrics = row.get("metrics") or {}
             if isinstance(metrics, dict):
                 for k, v in metrics.items():

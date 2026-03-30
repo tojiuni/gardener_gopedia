@@ -8,7 +8,7 @@ from typing import Iterable
 
 
 def _finite_metric_float(x: float | int | None) -> float:
-    """SQLite/SQLAlchemy may map NaN to NULL; keep metrics persistable."""
+    """SQLAlchemy/DB layers may map NaN to NULL; keep metrics persistable."""
     try:
         v = float(x)
     except (TypeError, ValueError):
