@@ -25,6 +25,8 @@ def create_dataset(body: DatasetCreate, db: Session = Depends(get_session)):
             external_id=q.external_id,
             query_text=q.text,
             project_id=q.project_id,
+            tier=q.tier,
+            reference_answer=q.reference_answer,
         )
         db.add(dq)
         db.flush()
@@ -81,6 +83,8 @@ async def upload_jsonl(
                     external_id=row["external_id"],
                     text=row["text"],
                     project_id=row.get("project_id"),
+                    tier=row.get("tier"),
+                    reference_answer=row.get("reference_answer"),
                 )
             )
         elif "query_external_id" in row and "target_id" in row:

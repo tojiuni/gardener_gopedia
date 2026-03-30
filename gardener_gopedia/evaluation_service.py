@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import time
 import uuid
 from datetime import datetime
@@ -12,6 +13,8 @@ from gardener_gopedia.config import get_settings
 from gardener_gopedia.gopedia_client import GopediaClient, gopedia_json_search_failed
 from gardener_gopedia.metrics_engine import compute_aggregate_metrics, per_query_recall_at_5
 from gardener_gopedia.models import DatasetQuery, EvalRun, Qrel, RunHit, RunMetric, RunStatus
+
+logger = logging.getLogger(__name__)
 
 
 def _strip_opt(s: str | None) -> str | None:
@@ -177,10 +180,20 @@ def execute_eval_run(db: Session, eval_run_id: str) -> None:
                 )
             )
 
+        ragas_extra: dict = {}
+        try:
+            from gardener_gopedia.ragas_service import maybe_run_ragas_after_eval
+
+            ragas_extra = maybe_run_ragas_after_eval(db, row)
+        except Exception:
+            logger.exception("Ragas/Phoenix post-eval hook failed")
+            ragas_extra = {"ragas_hook_error": "exception_logged"}
+
         row.params_json = {
             **(row.params_json or {}),
             "failure_count": failures,
             "query_count": len(queries),
+            **ragas_extra,
         }
         row.status = RunStatus.completed.value
     except Exception as e:

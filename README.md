@@ -8,6 +8,8 @@ MVP service to evaluate [Gopedia](https://github.com/) search quality: datasets/
 cd /Users/dong-hoshin/Documents/dev/gardener_gopedia
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e .
+# Optional: Ragas + OTLP → Phoenix
+# pip install -e ".[eval]"
 
 # API (default DB: sqlite:///./gardener.db)
 export GARDENER_GOPEDIA_BASE_URL=http://127.0.0.1:18787
@@ -41,3 +43,9 @@ Contract and local stack are documented in the Gopedia repo under `doc/guide/`. 
 | `GARDENER_GOPEDIA_SEARCH_RETRYABLE_MAX_ATTEMPTS` | `3` |
 | `GARDENER_DEFAULT_TOP_K` | `10` |
 | `GARDENER_DEFAULT_QUERY_TIMEOUT_S` | `15` |
+| `GARDENER_POSTGRES_SCHEMA` | (unset; use with Postgres to isolate tables) |
+| `GARDENER_RAGAS_ENABLED` | `false` |
+| `GARDENER_RAGAS_ANSWER_METRICS` | `false` |
+| `GARDENER_PHOENIX_OTLP_ENDPOINT` | (unset; e.g. `http://127.0.0.1:6006/v1/traces`) |
+
+Ragas + Phoenix: see [doc/runbook.md](doc/runbook.md) and `docker-compose.phoenix.yml`.

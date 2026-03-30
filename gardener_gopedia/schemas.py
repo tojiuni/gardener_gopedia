@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class QrelInput(BaseModel):
@@ -17,6 +17,8 @@ class QueryInput(BaseModel):
     external_id: str
     text: str
     project_id: int | None = None
+    tier: str | None = None
+    reference_answer: str | None = None
 
 
 class DatasetCreate(BaseModel):
@@ -75,6 +77,14 @@ class EvalRunCreate(BaseModel):
     search_detail: str | None = None
     search_fields: str | None = None
     search_retryable_max_attempts: int | None = None
+    ragas_enabled: bool | None = Field(
+        default=None,
+        description="Override settings: run Ragas retrieval metrics (needs OPENAI_API_KEY + pip install -e '.[eval]').",
+    )
+    ragas_answer_metrics: bool | None = Field(
+        default=None,
+        description="Phase-2: generate answers + faithfulness / answer relevancy / context recall.",
+    )
 
 
 class EvalRunOut(BaseModel):
@@ -98,15 +108,19 @@ class RunMetricOut(BaseModel):
     metric_name: str
     value: float
     scope: str
-    dataset_query_id: str | None
+    dataset_query_id: str | None = None
+    details_json: dict[str, Any] | None = None
 
 
 class QueryResultOut(BaseModel):
     dataset_query_id: str
     external_id: str
     query_text: str
+    tier: str | None = None
+    reference_answer: str | None = None
     metrics: list[RunMetricOut]
     hits: list[dict[str, Any]]
+    ragas_generated_response: str | None = None
 
 
 class ReviewCreate(BaseModel):

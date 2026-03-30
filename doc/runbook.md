@@ -18,7 +18,7 @@ If the Gopedia repository is checked out alongside this project, see:
 From the Gopedia repo root:
 
 ```bash
-cp .env.local.example .env
+cp .env.example .env
 # Set POSTGRES_PASSWORD, OPENAI_API_KEY, etc.
 export DOCKER_NETWORK_EXTERNAL=gopedia-dev
 docker compose -f docker-compose.dev.yml --env-file .env --profile app up -d --build
@@ -34,6 +34,25 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -e .
 ```
 
+If you already have a local `gardener.db` from an older version, delete it or migrate. Example SQLite migration (ignore errors if columns already exist):
+
+```bash
+sqlite3 gardener.db <<'SQL'
+ALTER TABLE dataset_queries ADD COLUMN tier VARCHAR(64);
+ALTER TABLE dataset_queries ADD COLUMN reference_answer TEXT;
+ALTER TABLE run_metrics ADD COLUMN details_json JSON;
+CREATE TABLE IF NOT EXISTS run_ragas_samples (
+  id VARCHAR(36) NOT NULL PRIMARY KEY,
+  eval_run_id VARCHAR(36) NOT NULL,
+  dataset_query_id VARCHAR(36) NOT NULL,
+  generated_response TEXT,
+  FOREIGN KEY(eval_run_id) REFERENCES eval_runs (id),
+  FOREIGN KEY(dataset_query_id) REFERENCES dataset_queries (id),
+  CONSTRAINT uq_run_ragas_sample_query UNIQUE (eval_run_id, dataset_query_id)
+);
+SQL
+```
+
 ## Start API
 
 ```bash
@@ -42,6 +61,42 @@ uvicorn gardener_gopedia.main:app --host 0.0.0.0 --port 18880
 ```
 
 Optional defaults for eval search (see `.env.example`): `GARDENER_GOPEDIA_SEARCH_DETAIL`, `GARDENER_GOPEDIA_SEARCH_FIELDS`, `GARDENER_GOPEDIA_SEARCH_RETRYABLE_MAX_ATTEMPTS`.
+
+### PostgreSQL (shared with Gopedia)
+
+Point Gardener at the same Postgres instance as Gopedia if you want one DB for app + eval data:
+
+```bash
+export GARDENER_DATABASE_URL=postgresql+psycopg://USER:PASS@127.0.0.1:5432/gopedia
+```
+
+Optional isolated schema (recommended):
+
+```sql
+CREATE SCHEMA IF NOT EXISTS gardener_eval AUTHORIZATION your_user;
+```
+
+```bash
+export GARDENER_POSTGRES_SCHEMA=gardener_eval
+```
+
+On first start, `init_db()` creates tables in that schema. Existing SQLite `gardener.db` users are unchanged.
+
+### Ragas + Phoenix (optional)
+
+1. Install eval extras: `pip install -e ".[eval]"` (Ragas, OpenAI, OpenTelemetry OTLP).
+2. Set `OPENAI_API_KEY` and enable Ragas in `.env` (see `.env.example`): `GARDENER_RAGAS_ENABLED=true`.
+3. Phase-2 answer metrics (faithfulness, answer relevancy, context recall): `GARDENER_RAGAS_ANSWER_METRICS=true` and fill `reference_answer` on dataset queries where applicable.
+4. **Phoenix (self-host)** — UI + OTLP traces for run/query drill-down:
+
+```bash
+docker compose -f docker-compose.phoenix.yml up -d
+export GARDENER_PHOENIX_OTLP_ENDPOINT=http://127.0.0.1:6006/v1/traces
+```
+
+Open `http://127.0.0.1:6006`. Each eval run emits a root trace with per-query child spans and Ragas scores as attributes. See [Arize Phoenix](https://github.com/Arize-ai/phoenix).
+
+**Note:** `arize-phoenix` Python wheels may not support Python 3.14 yet; use 3.11–3.13 for the full Phoenix SDK, or rely on OTLP from Gardener (supported here) + Phoenix container.
 
 ## Ingest then evaluate
 

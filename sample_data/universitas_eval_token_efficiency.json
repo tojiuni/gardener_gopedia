@@ -1,0 +1,41 @@
+{
+  "name": "universitas_eval_token_efficiency",
+  "version": "1",
+  "queries": [
+    {
+      "external_id": "nx_easy_traefik_minimal_label",
+      "text": "traefik.enable=true minimal yaml labels",
+      "project_id": null
+    },
+    {
+      "external_id": "nx_easy_macvlan_subnet",
+      "text": "neunexus macvlan subnet 192.168.0.0/24 gateway",
+      "project_id": null
+    },
+    {
+      "external_id": "gp_easy_l1_one_per_document",
+      "text": "1 document = 1 L1 Gopedia",
+      "project_id": null
+    }
+  ],
+  "qrels": [
+    {
+      "query_external_id": "nx_easy_traefik_minimal_label",
+      "target_id": "REPLACE_L3_nx_easy_traefik_minimal_label",
+      "target_type": "l3_id",
+      "relevance": 1
+    },
+    {
+      "query_external_id": "nx_easy_macvlan_subnet",
+      "target_id": "REPLACE_L3_nx_easy_macvlan_subnet",
+      "target_type": "l3_id",
+      "relevance": 1
+    },
+    {
+      "query_external_id": "gp_easy_l1_one_per_document",
+      "target_id": "REPLACE_L3_gp_easy_l1_one_per_document",
+      "target_type": "l3_id",
+      "relevance": 1
+    }
+  ]
+}

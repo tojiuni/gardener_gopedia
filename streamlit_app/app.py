@@ -27,8 +27,23 @@ if st.button("Load run") and run_id:
     st.subheader("Per-query hits")
     for row in rows:
         qpreview = row["query_text"][:80] if len(row["query_text"]) > 80 else row["query_text"]
-        with st.expander(f"{row['external_id']}: {qpreview}"):
+        tier = row.get("tier") or ""
+        label = f"{row['external_id']}: {qpreview}"
+        if tier:
+            label = f"[{tier}] {label}"
+        with st.expander(label):
+            if row.get("reference_answer"):
+                st.caption("reference_answer")
+                st.text(row["reference_answer"][:2000])
+            if row.get("ragas_generated_response"):
+                st.caption("Ragas generated response (phase 2)")
+                st.text(row["ragas_generated_response"][:2000])
             st.write("metrics:", row.get("metrics"))
+            for m in row.get("metrics") or []:
+                det = m.get("details_json")
+                if m.get("metric_name", "").startswith("ragas/") and det:
+                    with st.popover(f"details: {m['metric_name']}"):
+                        st.json(det)
             st.dataframe(row.get("hits", []))
 
 st.divider()

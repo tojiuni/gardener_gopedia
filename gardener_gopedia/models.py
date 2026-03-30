@@ -59,6 +59,10 @@ class DatasetQuery(Base):
     external_id: Mapped[str] = mapped_column(String(128), nullable=False)
     query_text: Mapped[str] = mapped_column(Text, nullable=False)
     project_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    # Optional tier tag for dashboards (easy/medium/hard).
+    tier: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    # Ground-truth short answer for Ragas context recall (phase 2).
+    reference_answer: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     dataset: Mapped["Dataset"] = relationship(back_populates="queries")
     qrels: Mapped[list["Qrel"]] = relationship(back_populates="query")
@@ -145,12 +149,28 @@ class RunMetric(Base):
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
     eval_run_id: Mapped[str] = mapped_column(String(36), ForeignKey("eval_runs.id"), nullable=False)
-    metric_name: Mapped[str] = mapped_column(String(64), nullable=False)
+    metric_name: Mapped[str] = mapped_column(String(128), nullable=False)
     value: Mapped[float] = mapped_column(Float, nullable=False)
     scope: Mapped[str] = mapped_column(String(32), default="aggregate")
     dataset_query_id: Mapped[str | None] = mapped_column(String(36), ForeignKey("dataset_queries.id"), nullable=True)
+    details_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
     eval_run: Mapped["EvalRun"] = relationship(back_populates="metrics")
+
+
+class RunRagasSample(Base):
+    """Per-query Ragas phase-2 generated response (and future extras)."""
+
+    __tablename__ = "run_ragas_samples"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    eval_run_id: Mapped[str] = mapped_column(String(36), ForeignKey("eval_runs.id"), nullable=False)
+    dataset_query_id: Mapped[str] = mapped_column(String(36), ForeignKey("dataset_queries.id"), nullable=False)
+    generated_response: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    __table_args__ = (
+        UniqueConstraint("eval_run_id", "dataset_query_id", name="uq_run_ragas_sample_query"),
+    )
 
 
 class Review(Base):

@@ -1,0 +1,52 @@
+{
+  "name": "universitas_eval_hard",
+  "version": "1",
+  "queries": [
+    {
+      "external_id": "nx_hard_tls_middleware_location",
+      "text": "where to configure Traefik TLS and middlewares neunexus",
+      "project_id": null
+    },
+    {
+      "external_id": "nx_hard_typo_traefik",
+      "text": "trafik docker label only traefik.enable",
+      "project_id": null
+    },
+    {
+      "external_id": "gp_hard_polyglot_mixed",
+      "text": "Polyglot persistence PostgreSQL TypeDB Qdrant Rhizome 역할",
+      "project_id": null
+    },
+    {
+      "external_id": "gp_hard_stem_vs_rhizome",
+      "text": "Stem gRPC pipeline and graph store together overview",
+      "project_id": null
+    }
+  ],
+  "qrels": [
+    {
+      "query_external_id": "nx_hard_tls_middleware_location",
+      "target_id": "REPLACE_L3_nx_hard_tls_middleware_location",
+      "target_type": "l3_id",
+      "relevance": 1
+    },
+    {
+      "query_external_id": "nx_hard_typo_traefik",
+      "target_id": "REPLACE_L3_nx_hard_typo_traefik",
+      "target_type": "l3_id",
+      "relevance": 1
+    },
+    {
+      "query_external_id": "gp_hard_polyglot_mixed",
+      "target_id": "REPLACE_L3_gp_hard_polyglot_mixed",
+      "target_type": "l3_id",
+      "relevance": 1
+    },
+    {
+      "query_external_id": "gp_hard_stem_vs_rhizome",
+      "target_id": "REPLACE_L3_gp_hard_stem_vs_rhizome_primary",
+      "target_type": "l3_id",
+      "relevance": 1
+    }
+  ]
+}

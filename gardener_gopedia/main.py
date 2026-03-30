@@ -38,4 +38,8 @@ def config_defaults():
         "gopedia_base_url": s.gopedia_base_url,
         "default_top_k": s.default_top_k,
         "default_query_timeout_s": s.default_query_timeout_s,
+        "ragas_enabled_default": s.ragas_enabled,
+        "ragas_answer_metrics_default": s.ragas_answer_metrics,
+        "phoenix_otlp_configured": bool(s.phoenix_otlp_endpoint),
+        "postgres_schema": s.postgres_schema,
     }

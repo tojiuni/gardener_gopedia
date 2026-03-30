@@ -13,10 +13,16 @@ _SessionLocal = None
 def get_engine():
     global _engine, _SessionLocal
     if _engine is None:
-        url = get_settings().database_url
-        connect_args = {}
+        settings = get_settings()
+        url = settings.database_url
+        connect_args: dict = {}
         if url.startswith("sqlite"):
             connect_args["check_same_thread"] = False
+        elif url.startswith("postgresql") and settings.postgres_schema:
+            sch = settings.postgres_schema.strip()
+            if sch:
+                # Put Gardener tables in this schema (create it in Postgres first).
+                connect_args["options"] = f"-csearch_path={sch},public"
         _engine = create_engine(url, connect_args=connect_args)
         _SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=_engine)
     return _engine

@@ -1,0 +1,41 @@
+{
+  "name": "universitas_eval_medium",
+  "version": "1",
+  "queries": [
+    {
+      "external_id": "nx_medium_no_router_in_labels",
+      "text": "Should Host() or TLS go in Docker container labels for Traefik neunexus?",
+      "project_id": null
+    },
+    {
+      "external_id": "nx_medium_network_kind",
+      "text": "What network driver does the neunexus docker network use?",
+      "project_id": null
+    },
+    {
+      "external_id": "gp_medium_xylem_meaning",
+      "text": "What does xylem-flow do in Gopedia stem pipeline?",
+      "project_id": null
+    }
+  ],
+  "qrels": [
+    {
+      "query_external_id": "nx_medium_no_router_in_labels",
+      "target_id": "REPLACE_L3_nx_medium_no_router_in_labels",
+      "target_type": "l3_id",
+      "relevance": 1
+    },
+    {
+      "query_external_id": "nx_medium_network_kind",
+      "target_id": "REPLACE_L3_nx_medium_network_kind",
+      "target_type": "l3_id",
+      "relevance": 1
+    },
+    {
+      "query_external_id": "gp_medium_xylem_meaning",
+      "target_id": "REPLACE_L3_gp_medium_xylem_meaning",
+      "target_type": "l3_id",
+      "relevance": 1
+    }
+  ]
+}

@@ -1,12 +1,22 @@
 from __future__ import annotations
 
+import time
+
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from gardener_gopedia.config import get_settings
 from gardener_gopedia.db import get_session
 from gardener_gopedia.evaluation_service import execute_eval_run
-from gardener_gopedia.models import Dataset, DatasetQuery, EvalRun, RunHit, RunMetric, RunStatus
+from gardener_gopedia.models import (
+    Dataset,
+    DatasetQuery,
+    EvalRun,
+    RunHit,
+    RunMetric,
+    RunRagasSample,
+    RunStatus,
+)
 from gardener_gopedia.schemas import EvalRunCreate, EvalRunOut, QueryResultOut, RunMetricOut
 
 router = APIRouter()
@@ -33,6 +43,12 @@ def start_eval(
             if body.search_retryable_max_attempts is not None
             else settings.gopedia_search_retryable_max_attempts
         ),
+        "ragas_enabled": body.ragas_enabled
+        if body.ragas_enabled is not None
+        else settings.ragas_enabled,
+        "ragas_answer_metrics": body.ragas_answer_metrics
+        if body.ragas_answer_metrics is not None
+        else settings.ragas_answer_metrics,
     }
     row = EvalRun(
         dataset_id=body.dataset_id,
@@ -82,6 +98,7 @@ def get_metrics(run_id: str, db: Session = Depends(get_session)):
             value=m.value,
             scope=m.scope,
             dataset_query_id=m.dataset_query_id,
+            details_json=m.details_json,
         )
         for m in rows
     ]
@@ -109,8 +126,17 @@ def get_queries(run_id: str, db: Session = Depends(get_session)):
                     value=m.value,
                     scope=m.scope,
                     dataset_query_id=m.dataset_query_id,
+                    details_json=m.details_json,
                 )
             )
+
+    ragas_by_q: dict[str, str | None] = {}
+    for rs in (
+        db.query(RunRagasSample)
+        .filter(RunRagasSample.eval_run_id == run_id)
+        .all()
+    ):
+        ragas_by_q[rs.dataset_query_id] = rs.generated_response
 
     out: list[QueryResultOut] = []
     for dq in dqs:
@@ -136,8 +162,11 @@ def get_queries(run_id: str, db: Session = Depends(get_session)):
                 dataset_query_id=dq.id,
                 external_id=dq.external_id,
                 query_text=dq.query_text,
+                tier=dq.tier,
+                reference_answer=dq.reference_answer,
                 metrics=m_by_q.get(dq.id, []),
                 hits=hit_dicts,
+                ragas_generated_response=ragas_by_q.get(dq.id),
             )
         )
     return out
@@ -148,7 +177,17 @@ def wait_run(run_id: str, db: Session = Depends(get_session)):
     row = db.get(EvalRun, run_id)
     if not row:
         raise HTTPException(404, "run not found")
-    if row.status == RunStatus.pending.value:
-        execute_eval_run(db, run_id)
-        db.refresh(row)
+    # Poll only: POST /runs schedules BackgroundTasks; do not call execute_eval_run here (races duplicate metrics).
+    deadline = time.monotonic() + 3600.0
+    while (
+        row.status not in (RunStatus.completed.value, RunStatus.failed.value)
+        and time.monotonic() < deadline
+    ):
+        db.expire(row)
+        row = db.get(EvalRun, run_id)
+        if not row:
+            raise HTTPException(404, "run not found")
+        time.sleep(0.2)
+    if row.status not in (RunStatus.completed.value, RunStatus.failed.value):
+        raise HTTPException(504, "eval run did not finish before timeout")
     return row
