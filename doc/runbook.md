@@ -89,29 +89,44 @@ export GARDENER_POSTGRES_SCHEMA=gardener_eval
 
 Run `./scripts/init-db.sh` once so the schema exists before `search_path` connections. On first API start, `init_db()` also ensures tables exist.
 
-### Ragas + Phoenix (optional)
+### Ragas + Langfuse + cost/quality KPIs (optional)
 
-1. Install eval extras: `pip install -e ".[eval]"` (Ragas, OpenAI, OpenTelemetry OTLP).
+1. Install eval extras: `pip install -e ".[eval]"` (Ragas, OpenAI, Langfuse SDK).
 2. Set `OPENAI_API_KEY` and enable Ragas in `.env` (see `.env.example`): `GARDENER_RAGAS_ENABLED=true`.
 3. Phase-2 answer metrics (faithfulness, answer relevancy, context recall): `GARDENER_RAGAS_ANSWER_METRICS=true` and fill `reference_answer` on dataset queries where applicable.
-4. **Phoenix (self-host)** — UI + OTLP traces for run/query drill-down:
+4. **Langfuse (self-host)** — traces, per-query spans, scores (IR + Ragas), and usage/cost metadata:
 
 ```bash
-./scripts/phoenix-up.sh
-export GARDENER_PHOENIX_OTLP_ENDPOINT=http://127.0.0.1:6006/v1/traces
+./scripts/langfuse-up.sh
+# In Langfuse UI: create a project and copy API keys into .env (see .env.example).
+export GARDENER_LANGFUSE_ENABLED=true
+export GARDENER_LANGFUSE_HOST=http://127.0.0.1:3000
+export GARDENER_LANGFUSE_PUBLIC_KEY=pk-lf-...
+export GARDENER_LANGFUSE_SECRET_KEY=sk-lf-...
 ```
 
-`phoenix-up.sh` sets `DOCKER_CONFIG` to a minimal config (no `credsStore`) so `docker pull` works when the default helper (e.g. `docker-credential-desktop`) is missing from `PATH`. On **Colima** (and similar), that minimal config has no `currentContext`, so the script also sets `DOCKER_HOST` to a Colima/Rancher Desktop socket when `/var/run/docker.sock` is absent. To stop: `./scripts/phoenix-down.sh`. Alternatively: `docker compose -f docker-compose.phoenix.yml up -d` from the repo root (with your usual Docker context / `DOCKER_HOST`).
+`langfuse-up.sh` downloads the [upstream Docker Compose](https://langfuse.com/self-hosting/deployment/docker-compose) into `.langfuse-docker/` and starts it. It uses a minimal `DOCKER_CONFIG` (no `credsStore`) for broken credential helpers; see `scripts/langfuse-docker-env.sh`. **Important:** the default upstream file publishes Postgres on `127.0.0.1:5432` — change that port in `.langfuse-docker/docker-compose.yml` if it collides with Gopedia’s Postgres.
 
-Open `http://127.0.0.1:6006`.
+To stop: `./scripts/langfuse-down.sh`.
 
-**Tracing (OTLP):** each completed eval emits a root span and per-query child spans (IR metrics + Ragas when enabled). Requires `pip install -e ".[eval]"` and `GARDENER_PHOENIX_OTLP_ENDPOINT`.
+**Tracing:** each completed eval (when Langfuse env is set) emits a root observation and per-query child observations with scores for `Recall@5`, Ragas metrics, and efficiency fields when present.
 
-**Datasets & experiments (REST):** when `GARDENER_PHOENIX_SYNC` is true (default) and a Phoenix base URL is available (from `GARDENER_PHOENIX_API_BASE_URL` or derived from the OTLP endpoint), Gardener uploads/updates a Phoenix dataset (keyed by Gardener dataset id + version), creates an **experiment** per eval run, and posts one **experiment run** per query with metrics + hit list. Phoenix UI: Datasets / Experiments. `GET /runs/{id}` returns `phoenix_dataset_id`, `phoenix_experiment_id`, `phoenix_ui_base_url`, etc.
+**KPI endpoints (optimization loop):**
 
-If REST sync fails (version mismatch, auth), check `params_json` on the run for `phoenix_sync_error` (eval still completes).
+- `GET /runs/{id}/kpi-summary` — run-level quality vs tokens/cost rollups.
+- `GET /runs/{id}/kpi-roi-queries?sort=worst_roi&limit=50` — per-query cost vs quality table.
 
-**Note:** `arize-phoenix` Python wheels may not support Python 3.14 yet; use 3.11–3.13 for the full Phoenix SDK, or rely on OTLP + REST from Gardener (supported here) + Phoenix container. Pin `arizephoenix/phoenix` image tag in production.
+Tuning workflow: [optimization_playbook.md](optimization_playbook.md).
+
+If Langfuse export fails, check `params_json.langfuse_sync_error` on the run (eval still completes).
+
+**Postgres schema note (upgrading existing DBs):** older Gardener versions may have optional `datasets.phoenix_*` columns that are no longer mapped by the ORM. After backup, you may drop them:
+
+```sql
+ALTER TABLE datasets DROP COLUMN IF EXISTS phoenix_dataset_id;
+ALTER TABLE datasets DROP COLUMN IF EXISTS phoenix_dataset_version_id;
+ALTER TABLE datasets DROP COLUMN IF EXISTS phoenix_dataset_for_version;
+```
 
 ## Ingest then evaluate
 

@@ -128,11 +128,9 @@ class EvalRunOut(BaseModel):
     error_message: str | None
     git_sha: str | None
     index_version: str | None
-    phoenix_dataset_id: str | None = None
-    phoenix_dataset_version_id: str | None = None
-    phoenix_experiment_id: str | None = None
-    phoenix_ui_base_url: str | None = None
-    phoenix_dataset_name: str | None = None
+    langfuse_trace_id: str | None = None
+    langfuse_trace_url: str | None = None
+    langfuse_host: str | None = None
 
 
 def _opt_str(v: Any) -> str | None:
@@ -142,7 +140,7 @@ def _opt_str(v: Any) -> str | None:
 
 
 def eval_run_to_out(row: Any) -> EvalRunOut:
-    """Map ORM EvalRun + params_json Phoenix keys to API model."""
+    """Map ORM EvalRun + params_json Langfuse keys to API model."""
     pj = row.params_json or {}
     return EvalRunOut(
         id=row.id,
@@ -155,12 +153,37 @@ def eval_run_to_out(row: Any) -> EvalRunOut:
         error_message=row.error_message,
         git_sha=row.git_sha,
         index_version=row.index_version,
-        phoenix_dataset_id=_opt_str(pj.get("phoenix_dataset_id")),
-        phoenix_dataset_version_id=_opt_str(pj.get("phoenix_dataset_version_id")),
-        phoenix_experiment_id=_opt_str(pj.get("phoenix_experiment_id")),
-        phoenix_ui_base_url=_opt_str(pj.get("phoenix_ui_base_url")),
-        phoenix_dataset_name=_opt_str(pj.get("phoenix_dataset_name")),
+        langfuse_trace_id=_opt_str(pj.get("langfuse_trace_id")),
+        langfuse_trace_url=_opt_str(pj.get("langfuse_trace_url")),
+        langfuse_host=_opt_str(pj.get("langfuse_host")),
     )
+
+
+class RunKpiSummaryOut(BaseModel):
+    """Roll-up quality vs efficiency for one eval run."""
+
+    eval_run_id: str
+    quality: dict[str, float | None]
+    efficiency: dict[str, float | None]
+    langfuse_trace_url: str | None = None
+
+
+class QueryRoiRow(BaseModel):
+    dataset_query_id: str
+    external_id: str
+    query_text: str
+    tier: str | None = None
+    recall_at_5: float | None = None
+    cost_total_usd: float | None = None
+    total_tokens: int | None = None
+    roi_score: float | None = None
+    """Higher is worse: cost-weighted quality gap (for sorting expensive low-quality queries)."""
+
+
+class RunKpiRoiOut(BaseModel):
+    eval_run_id: str
+    sort: str
+    rows: list[QueryRoiRow]
 
 
 class RunMetricOut(BaseModel):

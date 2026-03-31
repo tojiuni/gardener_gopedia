@@ -13,6 +13,11 @@ from gardener_gopedia.config import get_settings
 from gardener_gopedia.gopedia_client import GopediaClient, gopedia_json_search_failed
 from gardener_gopedia.metrics_engine import compute_aggregate_metrics, per_query_recall_at_5
 from gardener_gopedia.models import DatasetQuery, EvalRun, Qrel, RunHit, RunMetric, RunStatus
+from gardener_gopedia.kpi_aggregate import persist_run_summary_kpis
+from gardener_gopedia.observability_contract import (
+    LATENCY_SEARCH_MS,
+    PJ_LANGFUSE_POST_EVAL_ERROR,
+)
 from gardener_gopedia.qrel_resolve_service import (
     dataset_has_unresolved_qrels,
     resolve_dataset_qrels,
@@ -151,6 +156,17 @@ def execute_eval_run(db: Session, eval_run_id: str) -> None:
             latency = data.pop("_latency_ms", None)
             req_id = data.get("request_id")
 
+            if latency is not None:
+                db.add(
+                    RunMetric(
+                        eval_run_id=row.id,
+                        metric_name=LATENCY_SEARCH_MS,
+                        value=float(latency),
+                        scope="per_query",
+                        dataset_query_id=dq.id,
+                    )
+                )
+
             if gopedia_json_search_failed(data):
                 failures += 1
                 continue
@@ -205,7 +221,7 @@ def execute_eval_run(db: Session, eval_run_id: str) -> None:
 
             ragas_extra = maybe_run_ragas_after_eval(db, row)
         except Exception:
-            logger.exception("Ragas/Phoenix post-eval hook failed")
+            logger.exception("Ragas/Langfuse post-eval hook failed")
             ragas_extra = {"ragas_hook_error": "exception_logged"}
 
         row.params_json = {
@@ -214,19 +230,23 @@ def execute_eval_run(db: Session, eval_run_id: str) -> None:
             "query_count": len(queries),
             **ragas_extra,
         }
-        # End timestamps for Phoenix experiment runs / OTLP (before Phoenix export).
+        # End timestamps (before Langfuse export).
         row.ended_at = datetime.utcnow()
         try:
-            from gardener_gopedia.phoenix_export import run_phoenix_post_eval
+            from gardener_gopedia.langfuse_export import run_langfuse_post_eval
 
-            phoenix_extra = run_phoenix_post_eval(db, row, dataset)
-            row.params_json = {**(row.params_json or {}), **phoenix_extra}
+            lf_extra = run_langfuse_post_eval(db, row, dataset)
+            row.params_json = {**(row.params_json or {}), **lf_extra}
         except Exception:
-            logger.exception("Phoenix post-eval failed")
+            logger.exception("Langfuse post-eval failed")
             row.params_json = {
                 **(row.params_json or {}),
-                "phoenix_post_eval_error": "exception_logged",
+                PJ_LANGFUSE_POST_EVAL_ERROR: "exception_logged",
             }
+        try:
+            persist_run_summary_kpis(db, row, dataset.id)
+        except Exception:
+            logger.exception("Run-level KPI summary persist failed")
         row.status = RunStatus.completed.value
     except Exception as e:
         row.status = RunStatus.failed.value

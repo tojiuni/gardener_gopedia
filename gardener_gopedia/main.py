@@ -8,7 +8,7 @@ from fastapi import FastAPI
 
 from gardener_gopedia.config import get_settings
 from gardener_gopedia.db import init_db
-from gardener_gopedia.routers import compare, curation, datasets, ingest_runs, reviews, runs
+from gardener_gopedia.routers import compare, curation, datasets, ingest_runs, kpi, reviews, runs
 
 
 @asynccontextmanager
@@ -25,6 +25,7 @@ app.include_router(runs.router, prefix="/runs", tags=["runs"])
 app.include_router(compare.router, prefix="/compare", tags=["compare"])
 app.include_router(reviews.router, prefix="/reviews", tags=["reviews"])
 app.include_router(curation.router, prefix="/curation", tags=["curation"])
+app.include_router(kpi.router, prefix="/runs", tags=["kpi"])
 
 
 @app.get("/health")
@@ -35,16 +36,20 @@ def health():
 @app.get("/config/defaults")
 def config_defaults():
     s = get_settings()
-    url = s.database_url or ""
     return {
         "gopedia_base_url": s.gopedia_base_url,
         "default_top_k": s.default_top_k,
         "default_query_timeout_s": s.default_query_timeout_s,
         "ragas_enabled_default": s.ragas_enabled,
         "ragas_answer_metrics_default": s.ragas_answer_metrics,
-        "phoenix_otlp_configured": bool(s.phoenix_otlp_endpoint),
-        "phoenix_api_base_url": s.phoenix_api_base_url,
-        "phoenix_sync_enabled": s.phoenix_sync_enabled,
+        "langfuse_enabled": s.langfuse_enabled,
+        "langfuse_configured": bool(
+            s.langfuse_enabled
+            and (s.langfuse_host or "").strip()
+            and (s.langfuse_public_key or "").strip()
+            and (s.langfuse_secret_key or "").strip()
+        ),
+        "langfuse_host": s.langfuse_host,
         "database_driver": "postgresql",
         "postgres_schema": s.postgres_schema,
     }
