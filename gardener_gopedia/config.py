@@ -32,19 +32,35 @@ class Settings(BaseSettings):
     ragas_batch_size: int = 4
     ragas_show_progress: bool = False
 
-    # Phoenix OTLP HTTP exporter (self-host: docker-compose.phoenix.yml)
-    phoenix_otlp_endpoint: str | None = None
-    phoenix_service_name: str = "gardener-gopedia-eval"
-    # REST API (datasets / experiments). If unset, derived from phoenix_otlp_endpoint when possible.
-    phoenix_api_base_url: str | None = None
-    phoenix_api_key: str | None = Field(
+    # Langfuse (self-host): traces, scores, usage/cost KPIs
+    langfuse_enabled: bool = Field(
+        default=False,
+        validation_alias=AliasChoices("GARDENER_LANGFUSE_ENABLED", "LANGFUSE_ENABLED"),
+    )
+    """When true and keys+host are set, export eval traces to Langfuse after each run."""
+    langfuse_host: str | None = Field(
         default=None,
         validation_alias=AliasChoices(
-            "GARDENER_PHOENIX_API_KEY",
-            "PHOENIX_API_KEY",
+            "GARDENER_LANGFUSE_HOST",
+            "LANGFUSE_BASE_URL",
+            "LANGFUSE_HOST",
         ),
     )
-    phoenix_sync_enabled: bool = True
+    """SDK/API base URL, e.g. http://127.0.0.1:3000"""
+    langfuse_public_key: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices(
+            "GARDENER_LANGFUSE_PUBLIC_KEY",
+            "LANGFUSE_PUBLIC_KEY",
+        ),
+    )
+    langfuse_secret_key: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices(
+            "GARDENER_LANGFUSE_SECRET_KEY",
+            "LANGFUSE_SECRET_KEY",
+        ),
+    )
 
     # AI label routing (Silver → auto_accept vs human queue)
     label_auto_accept_single_min_confidence: float = 0.9
@@ -90,22 +106,9 @@ class Settings(BaseSettings):
         elif not url.startswith("postgresql"):
             raise ValueError(
                 "Gardener requires PostgreSQL; GARDENER_DATABASE_URL must use the "
-                f"postgresql scheme (refusing non-PostgreSQL URL)."
+                "postgresql scheme (refusing non-PostgreSQL URL)."
             )
         return self
-
-    @model_validator(mode="after")
-    def _resolve_phoenix_api_base(self):
-        if (self.phoenix_api_base_url or "").strip():
-            return self
-        otlp = (self.phoenix_otlp_endpoint or "").strip()
-        if not otlp:
-            return self
-        base = otlp.rstrip("/").split("/v1/traces")[0].rstrip("/")
-        if base.startswith("http://") or base.startswith("https://"):
-            self.phoenix_api_base_url = base
-        return self
-
 
 @lru_cache
 def get_settings() -> Settings:

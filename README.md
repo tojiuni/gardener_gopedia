@@ -8,7 +8,7 @@ MVP service to evaluate [Gopedia](https://github.com/) search quality: datasets/
 cd /Users/dong-hoshin/Documents/dev/gardener_gopedia
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e .
-# Optional: Ragas + OTLP → Phoenix
+# Optional: Ragas + Langfuse observability
 # pip install -e ".[eval]"
 
 # PostgreSQL: set GARDENER_DATABASE_URL or POSTGRES_* in .env (see .env.example), then:
@@ -18,8 +18,7 @@ pip install -e .
 export GARDENER_GOPEDIA_BASE_URL=http://127.0.0.1:18787
 uvicorn gardener_gopedia.main:app --host 0.0.0.0 --port 18880
 
-# Optional: Phoenix for OTLP traces (before eval if GARDENER_PHOENIX_OTLP_ENDPOINT is set)
-# ./scripts/phoenix-up.sh
+# Optional: Langfuse (self-host) — see doc/runbook.md and ./scripts/langfuse-up.sh
 
 # Smoke evaluation (needs Gopedia up)
 gardener-smoke
@@ -62,9 +61,8 @@ Contract and local stack are documented in the Gopedia repo under `doc/guide/`. 
 | `GARDENER_POSTGRES_SCHEMA` | (unset; use with Postgres to isolate tables) |
 | `GARDENER_RAGAS_ENABLED` | `false` |
 | `GARDENER_RAGAS_ANSWER_METRICS` | `false` |
-| `GARDENER_PHOENIX_OTLP_ENDPOINT` | (unset; e.g. `http://127.0.0.1:6006/v1/traces`) |
-| `GARDENER_PHOENIX_API_BASE_URL` | (unset; derived from OTLP endpoint host) |
-| `GARDENER_PHOENIX_SYNC` | `true` — upload dataset + experiment to Phoenix REST after each eval |
-| `GARDENER_PHOENIX_API_KEY` / `PHOENIX_API_KEY` | (unset; bearer token if Phoenix auth enabled) |
+| `GARDENER_LANGFUSE_ENABLED` | `false` — set `true` to export traces after each eval |
+| `GARDENER_LANGFUSE_HOST` | (unset; SDK base URL, e.g. `http://127.0.0.1:3000`) |
+| `GARDENER_LANGFUSE_PUBLIC_KEY` / `GARDENER_LANGFUSE_SECRET_KEY` | Langfuse project API keys |
 
-Ragas + Phoenix: see [doc/runbook.md](doc/runbook.md), `docker-compose.phoenix.yml`, and `./scripts/phoenix-up.sh`. Completed runs include `phoenix_*` fields on `GET /runs/{id}` when sync succeeds.
+Ragas + Langfuse + KPI APIs: see [doc/runbook.md](doc/runbook.md), `./scripts/langfuse-up.sh`, and [doc/optimization_playbook.md](doc/optimization_playbook.md). Completed runs may include `langfuse_trace_url` on `GET /runs/{id}` when export succeeds.

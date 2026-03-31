@@ -53,11 +53,6 @@ class Dataset(Base):
     # Batch that produced this promoted dataset (no FK — avoids create_all order vs LabelingBatch).
     promoted_from_batch_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
     promotion_provenance_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
-    # Cached Phoenix REST identifiers (datasets & experiments UX); optional.
-    phoenix_dataset_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
-    phoenix_dataset_version_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
-    # When dataset.version changes, Phoenix dataset is re-created under a new name.
-    phoenix_dataset_for_version: Mapped[str | None] = mapped_column(String(64), nullable=True)
 
     queries: Mapped[list["DatasetQuery"]] = relationship(back_populates="dataset")
     qrels: Mapped[list["Qrel"]] = relationship(back_populates="dataset")

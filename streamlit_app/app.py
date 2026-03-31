@@ -21,7 +21,11 @@ with tab_eval:
         with httpx.Client(timeout=60.0) as c:
             r = c.get(f"{GARDENER}/runs/{run_id}")
             r.raise_for_status()
-            st.json(r.json())
+            run_j = r.json()
+            st.json(run_j)
+            trace_url = (run_j or {}).get("langfuse_trace_url")
+            if trace_url:
+                st.markdown(f"[Open Langfuse trace]({trace_url})")
 
             r2 = c.get(f"{GARDENER}/runs/{run_id}/queries")
             r2.raise_for_status()

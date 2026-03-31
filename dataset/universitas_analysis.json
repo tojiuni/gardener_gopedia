@@ -1,0 +1,188 @@
+{
+  "analysis_date": "2026-03-31",
+  "total_files": 67,
+  "selected_count": 18,
+  "selection_criteria": "Prefer SKILL.md and substantive reference docs with concrete facts, configs, or procedures. Skip short index-only READMEs. Diverse across sub-projects.",
+  "documents": [
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/neunexus/skills/traefik/SKILL.md",
+      "container_path": "/universitas/neunexus/skills/traefik/SKILL.md",
+      "title": "Traefik (neunexus) Skill",
+      "topics": ["traefik", "reverse-proxy", "dynamic-config", "macvlan-routing", "labels"],
+      "tags": ["neunexus", "networking", "infrastructure", "proxy"],
+      "question_types": ["configuration", "how_to", "factual", "explanation"],
+      "sample_excerpt": "Labels on containers: Use only the `traefik` label (e.g. `traefik.enable=true`). Do not put router rules, `Host()`, entrypoints, or TLS in labels.",
+      "complexity": "medium"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/neunexus/skills/docker-network/SKILL.md",
+      "container_path": "/universitas/neunexus/skills/docker-network/SKILL.md",
+      "title": "Docker Network (neunexus) Skill",
+      "topics": ["docker-network", "macvlan", "static-ip", "L2-connectivity"],
+      "tags": ["neunexus", "networking", "docker", "infrastructure"],
+      "question_types": ["factual", "configuration", "explanation"],
+      "sample_excerpt": "Network name: `neunexus`, Driver: macvlan, parent `enp5s0`, subnet `192.168.0.0/24`, gateway `192.168.0.1`.",
+      "complexity": "medium"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/neunexus/skills/traefik/references/labels.md",
+      "container_path": "/universitas/neunexus/skills/traefik/references/labels.md",
+      "title": "Container labels (Traefik only)",
+      "topics": ["traefik-labels", "docker-labels", "routing-config"],
+      "tags": ["neunexus", "traefik", "docker", "configuration"],
+      "question_types": ["configuration", "how_to", "factual"],
+      "sample_excerpt": "Use **only** the `traefik` label on containers. All routing rules, entrypoints, TLS, and middlewares are defined in the **dynamic config** under `TRAEFIK_DYNAMIC_CONFIG_PATH`.",
+      "complexity": "low"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/neunexus/skills/traefik/references/dynamic-config.md",
+      "container_path": "/universitas/neunexus/skills/traefik/references/dynamic-config.md",
+      "title": "Dynamic config and domain management",
+      "topics": ["traefik-dynamic-config", "domain-management", "DOMAIN-variable", "config-generation"],
+      "tags": ["neunexus", "traefik", "configuration", "domain"],
+      "question_types": ["configuration", "how_to", "explanation"],
+      "sample_excerpt": "Domain and hostnames are managed via a single `DOMAIN` variable. Dynamic YAMLs use placeholders like `sub.${DOMAIN}`; a generate script substitutes `DOMAIN` and writes the result into the resolved directory.",
+      "complexity": "medium"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/neunexus/skills/traefik/references/port-forward-trace-80-443.md",
+      "container_path": "/universitas/neunexus/skills/traefik/references/port-forward-trace-80-443.md",
+      "title": "80/443 포워딩 경로 추적",
+      "topics": ["port-forwarding", "traefik-routing", "macvlan-vs-bridge", "network-topology"],
+      "tags": ["neunexus", "traefik", "networking", "troubleshooting"],
+      "question_types": ["comparison", "how_to", "factual", "explanation"],
+      "sample_excerpt": "라우터(iptime) 80/443 포워딩이 어느 호스트/컨테이너로 가는지 추적. Case A: 라우터가 80/443을 192.168.0.11로 포워딩 (Docker 호스트). Case B: 라우터가 80/443을 192.168.0.3으로 포워딩 (Traefik Macvlan IP).",
+      "complexity": "high"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/gopedia/SKILL.md",
+      "container_path": "/universitas/gopedia/SKILL.md",
+      "title": "Gopedia: High-Efficiency Enterprise Knowledge Graph Platform",
+      "topics": ["gopedia-architecture", "rhizome-metaphor", "design-principles", "project-structure", "verify-expand-connect"],
+      "tags": ["gopedia", "architecture", "ontology", "rag", "ingestion"],
+      "question_types": ["explanation", "factual", "comparison"],
+      "sample_excerpt": "Gopedia는 파편화된 정보를 지식 신경망으로 통합하는 Enterprise Knowledge Graph Platform입니다. Core Metaphor: Rhizome (수평·무한 확장 뿌리줄기).",
+      "complexity": "high"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/gopedia/skills/gopedia-verify-flow/SKILL.md",
+      "container_path": "/universitas/gopedia/skills/gopedia-verify-flow/SKILL.md",
+      "title": "Gopedia Verify Phase: The Sprouting",
+      "topics": ["verify-phase", "markdown-origin", "code-origin", "ingestion-pipeline"],
+      "tags": ["gopedia", "verification", "rhizome", "ingestion"],
+      "question_types": ["how_to", "explanation", "factual"],
+      "sample_excerpt": "Sub-phase 4.1.1: Markdown Origin (Target: 2 Days) — 가장 단순한 Leaf인 Markdown을 통해 Xylem-flow(인게스션)를 증명합니다.",
+      "complexity": "medium"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/gopedia/skills/gopedia-verify-flow/gopedia-markdown-origin/SKILL.md",
+      "container_path": "/universitas/gopedia/skills/gopedia-verify-flow/gopedia-markdown-origin/SKILL.md",
+      "title": "Sub-phase 4.1.1: Markdown Origin",
+      "topics": ["markdown-ingestion", "identity-so", "machine-id", "xylem-flow", "TOC-extraction", "qdrant-vector"],
+      "tags": ["gopedia", "markdown", "ingestion", "verify"],
+      "question_types": ["how_to", "factual", "configuration", "explanation"],
+      "sample_excerpt": "Identity-so: Google Machine ID 전략을 간소화한 64-bit 고유 ID 생성 (예: Timestamp + WorkerID + Sequence). 한 파일에서 나온 모든 DB 레코드가 동일한 ID를 공유하도록 한다.",
+      "complexity": "high"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/gopedia/skills/gopedia-verify-flow/gopedia-code-origin/SKILL.md",
+      "container_path": "/universitas/gopedia/skills/gopedia-verify-flow/gopedia-code-origin/SKILL.md",
+      "title": "Sub-phase 4.1.2: Code Format Expansion",
+      "topics": ["code-ingestion", "AST-parsing", "caller-callee", "inheritance", "typedb-schema", "qdrant-sharding"],
+      "tags": ["gopedia", "code", "ast", "ingestion", "verify"],
+      "question_types": ["explanation", "how_to", "factual", "comparison"],
+      "sample_excerpt": "코드 베이스의 AST를 분석해 소스 코드 간 유기적 관계를 TypeDB(Graph)와 Qdrant(Vector)에 매핑합니다. 7일 스프린트를 전제로, 함수 단위(Atomic Unit) 저장과 주석–코드 매핑에 투자하세요.",
+      "complexity": "high"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/gopedia/reference/gopedia-feature-guide.md",
+      "container_path": "/universitas/gopedia/reference/gopedia-feature-guide.md",
+      "title": "Gopedia feature — 기능별 설명 가이드",
+      "topics": ["L1-L2-L3-hierarchy", "polyglot-persistence", "envelope-strategy", "machine-id-vs-key", "smart-sink", "watermarking", "idempotency", "skill-engine", "spicedb"],
+      "tags": ["gopedia", "architecture", "rag", "storage", "feature-guide"],
+      "question_types": ["explanation", "factual", "comparison", "configuration"],
+      "sample_excerpt": "L1 (Global Summary): 문서의 정체성. L2 (ToC / Sectional Summary): 지도, 어느 섹션을 볼지 라우팅. L3 (Atomic Chunk): 증거, LLM이 인용할 최소 단위.",
+      "complexity": "high"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/gopedia/reference/gopedia-cloudbro-wiki(EN).md",
+      "container_path": "/universitas/gopedia/reference/gopedia-cloudbro-wiki(EN).md",
+      "title": "Gopedia — CloudBro Wiki (EN)",
+      "topics": ["gopedia-overview", "tech-stack", "roadmap", "applicable-domains", "core-values"],
+      "tags": ["gopedia", "wiki", "overview", "english"],
+      "question_types": ["explanation", "factual", "comparison"],
+      "sample_excerpt": "Gopedia is an Enterprise Knowledge Graph Platform (ingestion and RAG) that unifies fragmented information into a knowledge network. Target: Single Source of Truth (SSoT) for distributed data and a knowledge inference engine.",
+      "complexity": "medium"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/taxon/storages/rdb/SKILL.md",
+      "container_path": "/universitas/taxon/storages/rdb/SKILL.md",
+      "title": "RDB (PostgreSQL + pgAdmin) Skill",
+      "topics": ["postgresql", "pgadmin", "docker-compose", "static-ip", "traefik-routing"],
+      "tags": ["taxon", "storage", "rdb", "postgresql", "infrastructure"],
+      "question_types": ["configuration", "factual", "how_to"],
+      "sample_excerpt": "PostgreSQL: `postgres:15-alpine`, container `postgres_db`, static IP `192.168.0.89` on `neunexus`. pgAdmin: `dpage/pgadmin4`, access at `rdb.${DOMAIN}` via Traefik.",
+      "complexity": "medium"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/taxon/storages/rdb/references/env.md",
+      "container_path": "/universitas/taxon/storages/rdb/references/env.md",
+      "title": "RDB Environment Variables",
+      "topics": ["postgresql-env", "pgadmin-env", "secrets-management", "domain-config"],
+      "tags": ["taxon", "storage", "postgresql", "configuration", "security"],
+      "question_types": ["configuration", "factual"],
+      "sample_excerpt": "DB_PASSWORD: Prefer Infisical (e.g. `${INFISICAL_PATH/DATABASE_PASSWORD}`) or a secret from the environment. Do not commit real values.",
+      "complexity": "low"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/taxon/storages/secret/SKILL.md",
+      "container_path": "/universitas/taxon/storages/secret/SKILL.md",
+      "title": "Secret Management (Infisical via Morphso)",
+      "topics": ["infisical", "secrets-crud", "dynamic-secrets", "folders", "morphso-api", "python-sdk"],
+      "tags": ["taxon", "secrets", "infisical", "api", "security"],
+      "question_types": ["how_to", "configuration", "factual"],
+      "sample_excerpt": "Secrets CRUD: List: `GET /api/v1/secret/secrets?project_id=...`, Create: `POST /api/v1/secret/secrets` with body `{\"secret_name\": \"...\", \"secret_value\": \"...\"}`. Auth via Token or Universal Auth.",
+      "complexity": "high"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/taxon/storages/secret/references/sops-age-migration.md",
+      "container_path": "/universitas/taxon/storages/secret/references/sops-age-migration.md",
+      "title": "SOPS + Age 전환 계획 (Secret Storage)",
+      "topics": ["sops", "age-encryption", "migration-plan", "appsmith-dashboard", "go-sidecar"],
+      "tags": ["taxon", "secrets", "migration", "sops", "security"],
+      "question_types": ["how_to", "explanation", "comparison"],
+      "sample_excerpt": "현재 기밀 정보는 Infisical로 중앙 관리되고 있으며, 차후 SOPS + Age로 이전할 예정입니다. 전환 후에는 Appsmith(UI Manager)와 Go 기반 Sidecar API를 통해 시크릿의 READ, Update, Commit을 대시보드에서 관리합니다.",
+      "complexity": "medium"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/osteon/skills/docker/SKILL.md",
+      "container_path": "/universitas/osteon/skills/docker/SKILL.md",
+      "title": "Docker Registry Skill",
+      "topics": ["docker-registry", "registry-ui", "htpasswd-auth", "cors", "traefik-routing"],
+      "tags": ["osteon", "docker", "registry", "infrastructure"],
+      "question_types": ["configuration", "factual", "how_to"],
+      "sample_excerpt": "Registry: `registry:2.8.2`, htpasswd auth, storage under `./data`, CORS for UI. Registry UI: `joxit/docker-registry-ui:main`, catalog/delete supported.",
+      "complexity": "medium"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/osteon/skills/server-os/SKILL.md",
+      "container_path": "/universitas/osteon/skills/server-os/SKILL.md",
+      "title": "Server OS (osteon) Skill",
+      "topics": ["server-os", "rocky-linux", "kernel", "docker-runtime", "selinux"],
+      "tags": ["osteon", "server", "os", "infrastructure"],
+      "question_types": ["factual", "configuration"],
+      "sample_excerpt": "Distro: Rocky Linux 9.6 (Blue Onyx), EL9, x86_64. Kernel: 5.14.0-570.58.1.el9_6.x86_64. Runtime: Docker 24.0.9, Python 3.9.21, SELinux Permissive.",
+      "complexity": "low"
+    },
+    {
+      "doc_path": "/Users/dong-hoshin/Documents/dev/geneso/universitas/Universitas_System_Architecture_Blueprint.md",
+      "container_path": "/universitas/Universitas_System_Architecture_Blueprint.md",
+      "title": "Bio-Inspired System Architecture Blueprint",
+      "topics": ["system-architecture", "bio-metaphor", "service-groups", "neunexus", "lymphhub", "gopedia", "metaviewer", "metaflow", "taxon", "proprio", "osteon"],
+      "tags": ["architecture", "overview", "bio-metaphor", "infrastructure"],
+      "question_types": ["explanation", "factual", "comparison"],
+      "sample_excerpt": "본 시스템은 인체의 유기적인 작동 원리를 모사하여 각 서비스의 기능을 계층별로 그룹화합니다. neunexus(신경계), lymphhub(면역계), gopedia(중앙 온톨로지), taxon(소화·저장), osteon(골격계) 등.",
+      "complexity": "medium"
+    }
+  ]
+}

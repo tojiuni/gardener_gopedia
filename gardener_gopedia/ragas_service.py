@@ -5,13 +5,23 @@ from __future__ import annotations
 import logging
 import math
 import os
+import time
 from collections import defaultdict
 from typing import Any
 
 from sqlalchemy.orm import Session
 
 from gardener_gopedia.config import get_settings
+from gardener_gopedia.cost_tokens import compute_cost_usd, estimate_ragas_judge_tokens, openai_usage_tokens
 from gardener_gopedia.models import Dataset, DatasetQuery, EvalRun, RunHit, RunMetric, RunRagasSample
+from gardener_gopedia.observability_contract import (
+    COST_ANSWER_TOTAL_USD,
+    COST_RAGAS_ESTIMATED_USD,
+    EFF_ANSWER_INPUT_TOKENS,
+    EFF_ANSWER_OUTPUT_TOKENS,
+    EFF_RAGAS_ESTIMATED_TOKENS,
+    LATENCY_LLM_MS,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -103,15 +113,17 @@ def _build_openai_llm():
     return llm, None
 
 
-def _generate_answer(*, question: str, contexts: list[str]) -> str:
+def _generate_answer(*, question: str, contexts: list[str]) -> tuple[str, dict[str, Any]]:
+    """Return (answer_text, usage_meta) for KPI / Langfuse (tokens, cost, latency)."""
     from openai import OpenAI
 
     settings = get_settings()
     api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
-        return ""
+        return "", {}
     client = OpenAI(api_key=api_key)
     ctx_block = "\n\n---\n\n".join(contexts[:15])
+    t0 = time.perf_counter()
     resp = client.chat.completions.create(
         model=settings.ragas_openai_model,
         temperature=0,
@@ -127,7 +139,19 @@ def _generate_answer(*, question: str, contexts: list[str]) -> str:
             },
         ],
     )
-    return (resp.choices[0].message.content or "").strip()
+    llm_ms = int((time.perf_counter() - t0) * 1000)
+    text = (resp.choices[0].message.content or "").strip()
+    pi, po, pt = openai_usage_tokens(getattr(resp, "usage", None))
+    _cin, _cout, ctot = compute_cost_usd(
+        model=settings.ragas_openai_model, input_tokens=pi, output_tokens=po
+    )
+    return text, {
+        "input_tokens": pi,
+        "output_tokens": po,
+        "total_tokens": pt,
+        "llm_ms": llm_ms,
+        "cost_total_usd": ctot,
+    }
 
 
 def maybe_run_ragas_after_eval(db: Session, eval_run: EvalRun) -> dict[str, Any]:
@@ -231,7 +255,7 @@ def maybe_run_ragas_after_eval(db: Session, eval_run: EvalRun) -> dict[str, Any]
     metric_keys = list(p1_scores[0].keys()) if p1_scores else []
     cr_key = "context_relevance" if "context_relevance" in (metric_keys or []) else (metric_keys[0] if metric_keys else "context_relevance")
 
-    per_query_phoenix: list[dict[str, Any]] = []
+    per_query_o11y: list[dict[str, Any]] = []
     cr_vals: list[float] = []
     for i, qid in enumerate(q_order):
         row_score = p1_scores[i] if i < len(p1_scores) else {}
@@ -255,7 +279,32 @@ def maybe_run_ragas_after_eval(db: Session, eval_run: EvalRun) -> dict[str, Any]
                 details_json=details or None,
             )
         )
-        per_query_phoenix.append(
+        ctxs = _context_strings(by_hits.get(qid, []))
+        rag_est = estimate_ragas_judge_tokens(user_text=qtext, contexts=ctxs, calls=3)
+        rp = int(rag_est * 0.7)
+        rq = max(0, rag_est - rp)
+        _cin, _cout, c_rag = compute_cost_usd(
+            model=settings.ragas_openai_model, input_tokens=rp, output_tokens=rq
+        )
+        db.add(
+            RunMetric(
+                eval_run_id=eval_run.id,
+                metric_name=EFF_RAGAS_ESTIMATED_TOKENS,
+                value=float(rag_est),
+                scope="per_query",
+                dataset_query_id=qid,
+            )
+        )
+        db.add(
+            RunMetric(
+                eval_run_id=eval_run.id,
+                metric_name=COST_RAGAS_ESTIMATED_USD,
+                value=float(c_rag),
+                scope="per_query",
+                dataset_query_id=qid,
+            )
+        )
+        per_query_o11y.append(
             {
                 "external_id": ext,
                 "tier": tier or "",
@@ -300,8 +349,47 @@ def maybe_run_ragas_after_eval(db: Session, eval_run: EvalRun) -> dict[str, Any]
             ctxs = _context_strings(by_hits.get(dq.id, []))
             if not ctxs:
                 continue
-            gen = _generate_answer(question=dq.query_text, contexts=ctxs)
+            gen, ans_meta = _generate_answer(question=dq.query_text, contexts=ctxs)
             _upsert_ragas_sample(db, eval_run.id, dq.id, gen or None)
+            if ans_meta.get("input_tokens", 0) or ans_meta.get("output_tokens", 0):
+                db.add(
+                    RunMetric(
+                        eval_run_id=eval_run.id,
+                        metric_name=EFF_ANSWER_INPUT_TOKENS,
+                        value=float(ans_meta["input_tokens"]),
+                        scope="per_query",
+                        dataset_query_id=dq.id,
+                    )
+                )
+                db.add(
+                    RunMetric(
+                        eval_run_id=eval_run.id,
+                        metric_name=EFF_ANSWER_OUTPUT_TOKENS,
+                        value=float(ans_meta["output_tokens"]),
+                        scope="per_query",
+                        dataset_query_id=dq.id,
+                    )
+                )
+            if ans_meta.get("llm_ms"):
+                db.add(
+                    RunMetric(
+                        eval_run_id=eval_run.id,
+                        metric_name=LATENCY_LLM_MS,
+                        value=float(ans_meta["llm_ms"]),
+                        scope="per_query",
+                        dataset_query_id=dq.id,
+                    )
+                )
+            if ans_meta.get("cost_total_usd"):
+                db.add(
+                    RunMetric(
+                        eval_run_id=eval_run.id,
+                        metric_name=COST_ANSWER_TOTAL_USD,
+                        value=float(ans_meta["cost_total_usd"]),
+                        scope="per_query",
+                        dataset_query_id=dq.id,
+                    )
+                )
             if not gen:
                 continue
             ans_rows.append(
@@ -346,7 +434,7 @@ def maybe_run_ragas_after_eval(db: Session, eval_run: EvalRun) -> dict[str, Any]
                     eval_run.id,
                     res_p2.scores,
                     ans_qids,
-                    per_query_phoenix,
+                    per_query_o11y,
                     queries,
                 )
             except Exception as e:
@@ -363,15 +451,12 @@ def maybe_run_ragas_after_eval(db: Session, eval_run: EvalRun) -> dict[str, Any]
                     raise_exceptions=False,
                     batch_size=settings.ragas_batch_size,
                 )
-                _store_recall_scores(db, eval_run.id, res_r.scores, recall_qids, per_query_phoenix, queries)
+                _store_recall_scores(db, eval_run.id, res_r.scores, recall_qids, per_query_o11y, queries)
             except Exception as e:
                 logger.exception("Ragas context_recall failed")
                 summary["ragas_recall_error"] = str(e)[:2000]
 
     db.flush()
-
-    # Merge Phoenix metrics into per_query_phoenix (IR)
-    _attach_ir_to_phoenix(db, eval_run.id, per_query_phoenix, queries)
 
     return summary
 
@@ -402,7 +487,7 @@ def _store_phase2_scores(
     eval_run_id: str,
     scores: list[dict[str, Any]],
     qids: list[str],
-    per_query_phoenix: list[dict[str, Any]],
+    per_query_o11y: list[dict[str, Any]],
     queries: list[DatasetQuery],
 ) -> None:
     keys = list(scores[0].keys()) if scores else []
@@ -421,7 +506,7 @@ def _store_phase2_scores(
                     dataset_query_id=qid,
                 )
             )
-        _merge_phoenix_row(per_query_phoenix, queries, qid, merged)
+        _merge_o11y_row(per_query_o11y, queries, qid, merged)
     # Aggregate means for phase-2 metrics
     if keys and qids:
         for mk in keys:
@@ -444,7 +529,7 @@ def _store_recall_scores(
     eval_run_id: str,
     scores: list[dict[str, Any]],
     qids: list[str],
-    per_query_phoenix: list[dict[str, Any]],
+    per_query_o11y: list[dict[str, Any]],
     queries: list[DatasetQuery],
 ) -> None:
     key = "context_recall"
@@ -462,7 +547,7 @@ def _store_recall_scores(
                 dataset_query_id=qid,
             )
         )
-        _merge_phoenix_row(per_query_phoenix, queries, qid, {key: val})
+        _merge_o11y_row(per_query_o11y, queries, qid, {key: val})
     if recall_vals:
         db.add(
             RunMetric(
@@ -474,48 +559,18 @@ def _store_recall_scores(
         )
 
 
-def _merge_phoenix_row(
-    per_query_phoenix: list[dict[str, Any]],
+def _merge_o11y_row(
+    per_query_o11y: list[dict[str, Any]],
     queries: list[DatasetQuery],
     qid: str,
     metrics: dict[str, float],
 ) -> None:
     dq = next((q for q in queries if q.id == qid), None)
     ext = dq.external_id if dq else ""
-    for row in per_query_phoenix:
+    for row in per_query_o11y:
         if row.get("external_id") == ext:
             m = dict(row.get("metrics") or {})
             m.update(metrics)
             row["metrics"] = m
             return
 
-
-def _attach_ir_to_phoenix(
-    db: Session,
-    eval_run_id: str,
-    per_query_phoenix: list[dict[str, Any]],
-    queries: list[DatasetQuery],
-) -> None:
-    from gardener_gopedia.metrics_engine import per_query_recall_at_5
-    from gardener_gopedia.models import Qrel
-
-    if not queries:
-        return
-    qrels_rows = db.query(Qrel).filter(Qrel.dataset_id == queries[0].dataset_id).all()
-    qrels_tuples = [(q.query_id, q.target_id, q.relevance) for q in qrels_rows]
-    hits = (
-        db.query(RunHit)
-        .filter(RunHit.eval_run_id == eval_run_id)
-        .order_by(RunHit.dataset_query_id, RunHit.rank)
-        .all()
-    )
-    runs_tuples = [(h.dataset_query_id, h.target_id, h.score) for h in hits]
-    per_r = per_query_recall_at_5(qrels_tuples, runs_tuples, preserve_input_order=True)
-    ext_by_id = {q.id: q.external_id for q in queries}
-    for row in per_query_phoenix:
-        ext = row.get("external_id")
-        qid = next((i for i, e in ext_by_id.items() if e == ext), None)
-        if qid and qid in per_r:
-            m = dict(row.get("metrics") or {})
-            m["ir_recall_at_5"] = float(per_r[qid])
-            row["metrics"] = m
