@@ -139,8 +139,17 @@ def get_queries(run_id: str, db: Session = Depends(get_session)):
     ):
         ragas_by_q[rs.dataset_query_id] = rs.generated_response
 
+    from gardener_gopedia.models import Qrel
+
+    qrels_by_query: dict[str, set[str]] = {}
+    for qr in db.query(Qrel).filter(Qrel.dataset_id == er.dataset_id).all():
+        tid = (qr.target_id or "").strip()
+        if tid:
+            qrels_by_query.setdefault(qr.query_id, set()).add(tid)
+
     out: list[QueryResultOut] = []
     for dq in dqs:
+        relevant_ids = qrels_by_query.get(dq.id, set())
         hits = (
             db.query(RunHit)
             .filter(RunHit.eval_run_id == run_id, RunHit.dataset_query_id == dq.id)
@@ -155,6 +164,7 @@ def get_queries(run_id: str, db: Session = Depends(get_session)):
                 "score": h.score,
                 "title": h.title,
                 "snippet": h.snippet,
+                "is_relevant": h.target_id in relevant_ids,
             }
             for h in hits
         ]

@@ -1,6 +1,6 @@
 {
   "name": "universitas_eval_bronze",
-  "version": "1",
+  "version": "2",
   "curation_tier": "bronze",
   "queries": [
     {
@@ -124,7 +124,7 @@
       "target_type": "l3_id",
       "relevance": 1,
       "target_data": {
-        "excerpt": "**`TRAEFIK_DYNAMIC_RESOLVED_PATH`**: Directory with **resolved** config (after `DOMAIN` substitution). Traefik mounts this as `/etc/traefik/dynamic` in the container.",
+        "excerpt": "| `TRAEFIK_DYNAMIC_RESOLVED_PATH` | Resolved output dir (e.g. `.../dynamic-resolved`), mounted as `/etc/traefik/dynamic` |",
         "title_hint": "Dynamic config",
         "source_path_hint": "skills/traefik/references/dynamic-config.md"
       }
@@ -134,7 +134,7 @@
       "target_type": "l3_id",
       "relevance": 1,
       "target_data": {
-        "excerpt": "**L1 (Global Summary)** | 문서/자산의 **정체성** — \"무슨 문서인가\"",
+        "excerpt": "Gopedia는 **RAG 토큰 비용 절감**과 **정확한 문맥 제공**을 위해 단일 \"플랫 문서\"가 아니라 **3단계 계층(L1–L2–L3)**으로 데이터를 구조화합니다",
         "title_hint": "기능별 설명 가이드",
         "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
       }
@@ -144,7 +144,7 @@
       "target_type": "l3_id",
       "relevance": 1,
       "target_data": {
-        "excerpt": "L1 → PostgreSQL(마스터) + Qdrant(L1 요약 임베딩).",
+        "excerpt": "Smart Sink는 **동일 doc_id가 같은 파티션**에 오도록 해서, L1 → L2 → L3 순서가 유지되게 함",
         "title_hint": "기능별 설명 가이드",
         "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
       }

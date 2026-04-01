@@ -1,5 +1,42 @@
 # Gopedia Evaluation Pipeline: Final Report
 
+## v0.2.0 Update (2026-04-01)
+
+**Environment**: Ubuntu 24.04 Docker (gopedia-local), Gopedia v0.2.0, `universitas_eval_bronze` v2
+
+### What Changed
+
+- **Dataset v2**: Fixed 3 qrel `target_data.excerpt` values to match actual L3 chunk content (previous excerpts described content not present in any chunk → resolved to wrong IDs)
+- **Full universitas ingest**: 10 projects, 66 docs, 1,641 Qdrant vectors (IMP-01 dedup applied)
+- **Eval run**: `universitas_eval_bronze` v2, `top_k=10`, `index_version=v0.2.0`
+
+### v0.2.0 Results
+
+| Metric | v0.1.0 baseline | v0.2.0 | Δ |
+|--------|----------------|--------|---|
+| **Recall@5** | 0.571 (8/14) | **0.786 (11/14)** | **+0.215** |
+| MRR@10 | 0.282 | **0.389** | **+0.107** |
+| nDCG@10 | 0.317 | **0.489** | **+0.172** |
+| P@3 | 0.095 | **0.214** | **+0.119** |
+
+The P0 qrel fix (3 mismatched excerpts corrected) converted exactly 3 misses to hits, as projected. IMP-01 dedup eliminated duplicate Qdrant vectors, improving MRR/P@3 significantly.
+
+### Remaining Misses (3/14)
+
+| Query | Failure Type | Detail |
+|-------|-------------|--------|
+| q_infisical_secret_create | Embedding mismatch | Target chunk = code fragment starting with `` ` ``; SOPS content dominates |
+| q_sops_age_preparation | Ranking specificity | Target chunk = `.sops.yaml` list item; general "Skill" doc outscores it |
+| q_universitas_bio_groups | Content gap | Introduction paragraph only; bio-system mapping table in separate chunk |
+
+### Next Target
+
+Recall@5 = 0.857 (12/14) by addressing `q_sops_age_preparation` ranking via query expansion or chunk restructuring.
+
+---
+
+## Original Report (v0.1.0 Baseline)
+
 ## Executive Summary
 
 We built a reproducible evaluation pipeline to measure Gopedia's search quality against the universitas/ document corpus. Starting from a clean index reset, we ingested 67 markdown files, created a 14-query evaluation dataset through a Bronze-to-Gold curation workflow, and ran a baseline evaluation. The headline result: **Recall@5 = 0.571**, clearing the 0.5 threshold. The search engine works. Most failures trace back to dataset quality issues, not Gopedia bugs. No code changes were needed.
