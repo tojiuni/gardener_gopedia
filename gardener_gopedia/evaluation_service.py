@@ -10,7 +10,7 @@ from datetime import datetime
 from sqlalchemy.orm import Session, selectinload
 
 from gardener_gopedia.core.config import get_settings
-from gardener_gopedia.gopedia_client import GopediaClient, gopedia_json_search_failed
+from gardener_gopedia.ingest.client import GopediaClient, gopedia_json_search_failed
 from gardener_gopedia.metrics_engine import compute_aggregate_metrics, per_query_recall_at_5
 from gardener_gopedia.core.models import DatasetQuery, EvalRun, Qrel, RunHit, RunMetric, RunStatus
 from gardener_gopedia.kpi_aggregate import persist_run_summary_kpis

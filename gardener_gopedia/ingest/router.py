@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from gardener_gopedia.core.config import get_settings
 from gardener_gopedia.core.db import get_session
-from gardener_gopedia.ingest_service import execute_ingest_run
+from gardener_gopedia.ingest.service import execute_ingest_run
 from gardener_gopedia.core.models import IngestRun, RunStatus
 from gardener_gopedia.schemas import IngestRunCreate, IngestRunOut
 
