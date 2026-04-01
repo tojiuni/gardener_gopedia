@@ -13,8 +13,8 @@ from gardener_gopedia.core.config import get_settings
 from gardener_gopedia.ingest.client import GopediaClient, gopedia_json_search_failed
 from gardener_gopedia.metrics_engine import compute_aggregate_metrics, per_query_recall_at_5
 from gardener_gopedia.core.models import DatasetQuery, EvalRun, Qrel, RunHit, RunMetric, RunStatus
-from gardener_gopedia.kpi_aggregate import persist_run_summary_kpis
-from gardener_gopedia.observability_contract import (
+from gardener_gopedia.observability.kpi_aggregate import persist_run_summary_kpis
+from gardener_gopedia.observability.contract import (
     LATENCY_SEARCH_MS,
     PJ_LANGFUSE_POST_EVAL_ERROR,
 )
@@ -217,7 +217,7 @@ def execute_eval_run(db: Session, eval_run_id: str) -> None:
 
         ragas_extra: dict = {}
         try:
-            from gardener_gopedia.ragas_service import maybe_run_ragas_after_eval
+            from gardener_gopedia.observability.ragas import maybe_run_ragas_after_eval
 
             ragas_extra = maybe_run_ragas_after_eval(db, row)
         except Exception:
@@ -233,7 +233,7 @@ def execute_eval_run(db: Session, eval_run_id: str) -> None:
         # End timestamps (before Langfuse export).
         row.ended_at = datetime.utcnow()
         try:
-            from gardener_gopedia.langfuse_export import run_langfuse_post_eval
+            from gardener_gopedia.observability.langfuse_export import run_langfuse_post_eval
 
             lf_extra = run_langfuse_post_eval(db, row, dataset)
             row.params_json = {**(row.params_json or {}), **lf_extra}

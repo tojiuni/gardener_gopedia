@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from gardener_gopedia.core.db import get_session
-from gardener_gopedia.kpi_service import build_roi_query_rows, build_run_kpi_summary
+from gardener_gopedia.observability.kpi_service import build_roi_query_rows, build_run_kpi_summary
 from gardener_gopedia.core.models import EvalRun
 from gardener_gopedia.schemas import RunKpiRoiOut, RunKpiSummaryOut
 
