@@ -4,8 +4,8 @@ set -euo pipefail
 
 # ── Config ──────────────────────────────────────────────────────────────
 GOPEDIA_API="${GOPEDIA_API:-http://127.0.0.1:18787}"
-HOST_BASE="/Users/dong-hoshin/Documents/dev/geneso/universitas"
-CONTAINER_PREFIX="/universitas"
+HOST_BASE="${UNIVERSITAS_PATH:-/Users/dong-hoshin/Documents/dev/geneso/universitas}"
+CONTAINER_PREFIX="${UNIVERSITAS_CONTAINER_PREFIX:-/universitas}"
 DELAY="${DELAY:-0.5}"
 DRY_RUN=false
 
