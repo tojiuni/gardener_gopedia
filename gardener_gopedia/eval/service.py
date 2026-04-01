@@ -11,14 +11,14 @@ from sqlalchemy.orm import Session, selectinload
 
 from gardener_gopedia.core.config import get_settings
 from gardener_gopedia.ingest.client import GopediaClient, gopedia_json_search_failed
-from gardener_gopedia.metrics_engine import compute_aggregate_metrics, per_query_recall_at_5
+from gardener_gopedia.eval.metrics import compute_aggregate_metrics, per_query_recall_at_5
 from gardener_gopedia.core.models import DatasetQuery, EvalRun, Qrel, RunHit, RunMetric, RunStatus
 from gardener_gopedia.observability.kpi_aggregate import persist_run_summary_kpis
 from gardener_gopedia.observability.contract import (
     LATENCY_SEARCH_MS,
     PJ_LANGFUSE_POST_EVAL_ERROR,
 )
-from gardener_gopedia.qrel_resolve_service import (
+from gardener_gopedia.eval.qrel_resolve import (
     dataset_has_unresolved_qrels,
     resolve_dataset_qrels,
 )

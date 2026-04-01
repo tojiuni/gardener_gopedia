@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from gardener_gopedia.core.db import get_session
 from gardener_gopedia.core.models import Dataset, DatasetQuery, Qrel
-from gardener_gopedia.qrel_resolve_service import resolve_dataset_qrels
+from gardener_gopedia.eval.qrel_resolve import resolve_dataset_qrels
 from gardener_gopedia.schemas import DatasetCreate, DatasetOut, QrelInput, QueryInput, ResolveQrelsResult
 
 router = APIRouter()

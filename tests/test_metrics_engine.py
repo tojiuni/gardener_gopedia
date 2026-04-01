@@ -1,6 +1,6 @@
 import math
 
-from gardener_gopedia.metrics_engine import _finite_metric_float, compute_aggregate_metrics
+from gardener_gopedia.eval.metrics import _finite_metric_float, compute_aggregate_metrics
 
 
 def test_finite_metric_float_sanitizes_non_finite():

@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from gardener_gopedia.core.config import get_settings
 from gardener_gopedia.core.db import get_session
-from gardener_gopedia.evaluation_service import execute_eval_run
+from gardener_gopedia.eval.service import execute_eval_run
 from gardener_gopedia.core.models import (
     Dataset,
     DatasetQuery,
