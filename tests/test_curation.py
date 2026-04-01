@@ -12,7 +12,7 @@ from gardener_gopedia.curation_service import (
     list_queue,
     promote_batch_to_gold,
 )
-from gardener_gopedia.models import Dataset, DatasetQuery, LabelCandidate, LabelDecision, Qrel
+from gardener_gopedia.core.models import Dataset, DatasetQuery, LabelCandidate, LabelDecision, Qrel
 
 
 def test_pick_auto_accept_single_high_confidence():

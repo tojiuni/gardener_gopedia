@@ -6,8 +6,8 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from gardener_gopedia.config import get_settings
-from gardener_gopedia.db import init_db
+from gardener_gopedia.core.config import get_settings
+from gardener_gopedia.core.db import init_db
 from gardener_gopedia.routers import compare, curation, datasets, ingest_runs, kpi, reviews, runs
 
 

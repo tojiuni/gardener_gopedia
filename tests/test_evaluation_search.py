@@ -3,7 +3,7 @@ from unittest.mock import patch
 import pytest
 
 from gardener_gopedia.evaluation_service import execute_eval_run
-from gardener_gopedia.models import Dataset, DatasetQuery, EvalRun, RunStatus
+from gardener_gopedia.core.models import Dataset, DatasetQuery, EvalRun, RunStatus
 
 
 def _seed_eval(sess):

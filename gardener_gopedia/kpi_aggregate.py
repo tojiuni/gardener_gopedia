@@ -7,7 +7,7 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from gardener_gopedia.models import DatasetQuery, EvalRun, RunMetric
+from gardener_gopedia.core.models import DatasetQuery, EvalRun, RunMetric
 from gardener_gopedia.observability_contract import (
     IR_RECALL_AT_5,
     SUMMARY_COST_TOTAL_USD,
