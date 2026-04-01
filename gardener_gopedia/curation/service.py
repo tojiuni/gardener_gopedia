@@ -8,7 +8,7 @@ from typing import Any
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from gardener_gopedia.agent_contract import AgentQueryProposal, pick_auto_accept_candidate
+from gardener_gopedia.curation.agent_contract import AgentQueryProposal, pick_auto_accept_candidate
 from gardener_gopedia.core.config import get_settings
 from gardener_gopedia.core.models import (
     Dataset,

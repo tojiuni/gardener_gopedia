@@ -2,8 +2,8 @@
 
 import pytest
 
-from gardener_gopedia.agent_contract import AgentCandidateItem, AgentQueryProposal, pick_auto_accept_candidate
-from gardener_gopedia.curation_service import (
+from gardener_gopedia.curation.agent_contract import AgentCandidateItem, AgentQueryProposal, pick_auto_accept_candidate
+from gardener_gopedia.curation.service import (
     DECISION_AUTO_ACCEPTED,
     DECISION_HUMAN_ACCEPTED,
     DECISION_UNRESOLVED,

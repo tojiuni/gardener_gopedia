@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
-from gardener_gopedia.agent_contract import AgentQueryProposal
-from gardener_gopedia.curation_service import (
+from gardener_gopedia.curation.agent_contract import AgentQueryProposal
+from gardener_gopedia.curation.service import (
     apply_human_decision,
     create_batch_with_proposals,
     list_queue,
