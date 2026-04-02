@@ -8,7 +8,8 @@ from fastapi import FastAPI
 
 from gardener_gopedia.core.config import get_settings
 from gardener_gopedia.core.db import init_db
-from gardener_gopedia.routers import curation, reviews
+from gardener_gopedia.curation.router import router as curation_router
+from gardener_gopedia.curation.reviews_router import router as reviews_router
 from gardener_gopedia.eval.router import router as runs_router
 from gardener_gopedia.eval.compare_router import router as compare_router
 from gardener_gopedia.observability.router import router as kpi_router
@@ -28,8 +29,8 @@ app.include_router(dataset_router, prefix="/datasets", tags=["datasets"])
 app.include_router(ingest_router, prefix="/ingest-runs", tags=["ingest-runs"])
 app.include_router(runs_router, prefix="/runs", tags=["runs"])
 app.include_router(compare_router, prefix="/compare", tags=["compare"])
-app.include_router(reviews.router, prefix="/reviews", tags=["reviews"])
-app.include_router(curation.router, prefix="/curation", tags=["curation"])
+app.include_router(reviews_router, prefix="/reviews", tags=["reviews"])
+app.include_router(curation_router, prefix="/curation", tags=["curation"])
 app.include_router(kpi_router, prefix="/runs", tags=["kpi"])
 
 
