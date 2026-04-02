@@ -10,7 +10,7 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from gardener_gopedia.core.config import get_settings
-from gardener_gopedia.gopedia_client import GopediaClient, gopedia_json_search_failed
+from gardener_gopedia.ingest.client import GopediaClient, gopedia_json_search_failed
 from gardener_gopedia.core.models import DatasetQuery, Qrel
 
 logger = logging.getLogger(__name__)

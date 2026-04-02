@@ -10,7 +10,7 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 
 from gardener_gopedia.core.config import get_settings
-from gardener_gopedia.gopedia_client import GopediaClient
+from gardener_gopedia.ingest.client import GopediaClient
 from gardener_gopedia.core.models import IngestRun, RunStatus
 
 

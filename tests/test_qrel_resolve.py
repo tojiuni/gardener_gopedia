@@ -96,7 +96,7 @@ def test_resolve_single_qrel_picks_best_l3():
     from types import SimpleNamespace
     from unittest.mock import MagicMock
 
-    from gardener_gopedia.gopedia_client import GopediaClient
+    from gardener_gopedia.ingest.client import GopediaClient
 
     client = MagicMock(spec=GopediaClient)
     client.search_json.return_value = {

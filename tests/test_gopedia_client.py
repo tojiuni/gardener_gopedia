@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 
-from gardener_gopedia.gopedia_client import GopediaClient, gopedia_json_search_failed
+from gardener_gopedia.ingest.client import GopediaClient, gopedia_json_search_failed
 
 
 def test_gopedia_json_search_failed_parse_error():
