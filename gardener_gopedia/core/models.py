@@ -14,7 +14,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from gardener_gopedia.db import Base
+from gardener_gopedia.core.db import Base
 
 
 def _uuid() -> str:

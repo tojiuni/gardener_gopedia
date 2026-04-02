@@ -8,16 +8,16 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from gardener_gopedia.config import get_settings
-from gardener_gopedia.langfuse_client import get_langfuse, langfuse_trace_url
-from gardener_gopedia.models import Dataset, DatasetQuery, EvalRun
-from gardener_gopedia.observability_contract import (
+from gardener_gopedia.core.config import get_settings
+from gardener_gopedia.observability.langfuse_client import get_langfuse, langfuse_trace_url
+from gardener_gopedia.core.models import Dataset, DatasetQuery, EvalRun
+from gardener_gopedia.observability.contract import (
     PJ_LANGFUSE_HOST,
     PJ_LANGFUSE_SYNC_ERROR,
     PJ_LANGFUSE_TRACE_ID,
     PJ_LANGFUSE_TRACE_URL,
 )
-from gardener_gopedia.observability_payload import build_per_query_observability_payload
+from gardener_gopedia.observability.payload import build_per_query_observability_payload
 logger = logging.getLogger(__name__)
 
 

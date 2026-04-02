@@ -4,15 +4,15 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
-from gardener_gopedia.agent_contract import AgentQueryProposal
-from gardener_gopedia.curation_service import (
+from gardener_gopedia.curation.agent_contract import AgentQueryProposal
+from gardener_gopedia.curation.service import (
     apply_human_decision,
     create_batch_with_proposals,
     list_queue,
     promote_batch_to_gold,
 )
-from gardener_gopedia.db import get_session
-from gardener_gopedia.models import DatasetQuery, LabelDecision, LabelingBatch
+from gardener_gopedia.core.db import get_session
+from gardener_gopedia.core.models import DatasetQuery, LabelDecision, LabelingBatch
 from gardener_gopedia.schemas import (
     DatasetOut,
     HumanLabelDecisionBody,

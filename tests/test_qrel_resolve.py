@@ -2,9 +2,9 @@
 
 import pytest
 
-from gardener_gopedia.evaluation_service import execute_eval_run
-from gardener_gopedia.models import Dataset, DatasetQuery, EvalRun, Qrel, RunStatus
-from gardener_gopedia.qrel_resolve_service import (
+from gardener_gopedia.eval.service import execute_eval_run
+from gardener_gopedia.core.models import Dataset, DatasetQuery, EvalRun, Qrel, RunStatus
+from gardener_gopedia.eval.qrel_resolve import (
     dataset_has_unresolved_qrels,
     resolve_single_qrel,
     score_hit_for_target_data,
@@ -96,7 +96,7 @@ def test_resolve_single_qrel_picks_best_l3():
     from types import SimpleNamespace
     from unittest.mock import MagicMock
 
-    from gardener_gopedia.gopedia_client import GopediaClient
+    from gardener_gopedia.ingest.client import GopediaClient
 
     client = MagicMock(spec=GopediaClient)
     client.search_json.return_value = {

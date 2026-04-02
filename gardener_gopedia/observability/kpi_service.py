@@ -6,14 +6,14 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from gardener_gopedia.models import Dataset, DatasetQuery, EvalRun, RunMetric
-from gardener_gopedia.observability_contract import (
+from gardener_gopedia.core.models import Dataset, DatasetQuery, EvalRun, RunMetric
+from gardener_gopedia.observability.contract import (
     IR_RECALL_AT_5,
     SUMMARY_COST_TOTAL_USD,
     SUMMARY_QUALITY_SCORE,
     SUMMARY_TOTAL_TOKENS,
 )
-from gardener_gopedia.observability_payload import build_per_query_observability_payload
+from gardener_gopedia.observability.payload import build_per_query_observability_payload
 
 
 def _agg_metrics(db: Session, eval_run_id: str) -> dict[str, float]:

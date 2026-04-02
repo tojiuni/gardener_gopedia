@@ -2,8 +2,8 @@
 
 import pytest
 
-from gardener_gopedia.agent_contract import AgentCandidateItem, AgentQueryProposal, pick_auto_accept_candidate
-from gardener_gopedia.curation_service import (
+from gardener_gopedia.curation.agent_contract import AgentCandidateItem, AgentQueryProposal, pick_auto_accept_candidate
+from gardener_gopedia.curation.service import (
     DECISION_AUTO_ACCEPTED,
     DECISION_HUMAN_ACCEPTED,
     DECISION_UNRESOLVED,
@@ -12,7 +12,7 @@ from gardener_gopedia.curation_service import (
     list_queue,
     promote_batch_to_gold,
 )
-from gardener_gopedia.models import Dataset, DatasetQuery, LabelCandidate, LabelDecision, Qrel
+from gardener_gopedia.core.models import Dataset, DatasetQuery, LabelCandidate, LabelDecision, Qrel
 
 
 def test_pick_auto_accept_single_high_confidence():

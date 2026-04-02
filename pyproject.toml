@@ -34,8 +34,8 @@ eval = [
 
 [project.scripts]
 gardener-api = "gardener_gopedia.cli:run_api"
-gardener-smoke = "gardener_gopedia.smoke:main"
-gardener-init-db = "gardener_gopedia.db_bootstrap:main"
+gardener-smoke = "gardener_gopedia.core.smoke:main"
+gardener-init-db = "gardener_gopedia.core.db_bootstrap:main"
 
 [build-system]
 requires = ["setuptools>=61"]

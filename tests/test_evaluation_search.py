@@ -2,8 +2,8 @@ from unittest.mock import patch
 
 import pytest
 
-from gardener_gopedia.evaluation_service import execute_eval_run
-from gardener_gopedia.models import Dataset, DatasetQuery, EvalRun, RunStatus
+from gardener_gopedia.eval.service import execute_eval_run
+from gardener_gopedia.core.models import Dataset, DatasetQuery, EvalRun, RunStatus
 
 
 def _seed_eval(sess):
@@ -30,7 +30,7 @@ def _seed_eval(sess):
     return er.id
 
 
-@patch("gardener_gopedia.evaluation_service.GopediaClient")
+@patch("gardener_gopedia.eval.service.GopediaClient")
 def test_execute_eval_ok_false_counts_failure(mock_client_cls, memory_session):
     run_id = _seed_eval(memory_session)
     inst = mock_client_cls.return_value
@@ -45,8 +45,8 @@ def test_execute_eval_ok_false_counts_failure(mock_client_cls, memory_session):
     inst.search_json.assert_called_once()
 
 
-@patch("gardener_gopedia.evaluation_service.GopediaClient")
-@patch("gardener_gopedia.evaluation_service.time.sleep", return_value=None)
+@patch("gardener_gopedia.eval.service.GopediaClient")
+@patch("gardener_gopedia.eval.service.time.sleep", return_value=None)
 def test_execute_eval_retryable_then_success(mock_sleep, mock_client_cls, memory_session):
     run_id = _seed_eval(memory_session)
     inst = mock_client_cls.return_value

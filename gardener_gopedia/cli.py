@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import uvicorn
 
-from gardener_gopedia.config import get_settings
+from gardener_gopedia.core.config import get_settings
 
 
 def run_api() -> None:

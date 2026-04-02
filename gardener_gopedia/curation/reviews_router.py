@@ -3,8 +3,8 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from gardener_gopedia.db import get_session
-from gardener_gopedia.models import EvalRun, Review
+from gardener_gopedia.core.db import get_session
+from gardener_gopedia.core.models import EvalRun, Review
 from gardener_gopedia.schemas import ReviewCreate, ReviewOut
 
 router = APIRouter()

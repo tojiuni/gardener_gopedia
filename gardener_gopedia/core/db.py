@@ -3,7 +3,7 @@ from collections.abc import Generator
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
-from gardener_gopedia.config import get_settings
+from gardener_gopedia.core.config import get_settings
 
 Base = declarative_base()
 _engine = None
@@ -32,7 +32,7 @@ def get_engine():
 
 
 def init_db() -> None:
-    from gardener_gopedia import models  # noqa: F401
+    from gardener_gopedia.core import models  # noqa: F401
 
     Base.metadata.create_all(bind=get_engine())
 

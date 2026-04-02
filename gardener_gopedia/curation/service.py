@@ -8,9 +8,9 @@ from typing import Any
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from gardener_gopedia.agent_contract import AgentQueryProposal, pick_auto_accept_candidate
-from gardener_gopedia.config import get_settings
-from gardener_gopedia.models import (
+from gardener_gopedia.curation.agent_contract import AgentQueryProposal, pick_auto_accept_candidate
+from gardener_gopedia.core.config import get_settings
+from gardener_gopedia.core.models import (
     Dataset,
     DatasetQuery,
     LabelCandidate,
@@ -283,7 +283,7 @@ def apply_human_decision(
         raise ValueError(f"unknown action: {action}")
 
     if mirror_review_eval_run_id:
-        from gardener_gopedia.models import EvalRun
+        from gardener_gopedia.core.models import EvalRun
 
         if not db.get(EvalRun, mirror_review_eval_run_id):
             raise ValueError("mirror_review_eval_run_id not found")
