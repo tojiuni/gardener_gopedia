@@ -5,10 +5,10 @@ import time
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from gardener_gopedia.config import get_settings
-from gardener_gopedia.db import get_session
+from gardener_gopedia.core.config import get_settings
+from gardener_gopedia.core.db import get_session
 from gardener_gopedia.evaluation_service import execute_eval_run
-from gardener_gopedia.models import (
+from gardener_gopedia.core.models import (
     Dataset,
     DatasetQuery,
     EvalRun,
@@ -69,7 +69,7 @@ def start_eval(
 
 
 def _run_eval(eval_run_id: str) -> None:
-    from gardener_gopedia.db import get_engine
+    from gardener_gopedia.core.db import get_engine
     from sqlalchemy.orm import sessionmaker
 
     SessionLocal = sessionmaker(bind=get_engine())
@@ -139,7 +139,7 @@ def get_queries(run_id: str, db: Session = Depends(get_session)):
     ):
         ragas_by_q[rs.dataset_query_id] = rs.generated_response
 
-    from gardener_gopedia.models import Qrel
+    from gardener_gopedia.core.models import Qrel
 
     qrels_by_query: dict[str, set[str]] = {}
     for qr in db.query(Qrel).filter(Qrel.dataset_id == er.dataset_id).all():

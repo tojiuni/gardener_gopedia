@@ -11,8 +11,8 @@ from gardener_gopedia.curation_service import (
     list_queue,
     promote_batch_to_gold,
 )
-from gardener_gopedia.db import get_session
-from gardener_gopedia.models import DatasetQuery, LabelDecision, LabelingBatch
+from gardener_gopedia.core.db import get_session
+from gardener_gopedia.core.models import DatasetQuery, LabelDecision, LabelingBatch
 from gardener_gopedia.schemas import (
     DatasetOut,
     HumanLabelDecisionBody,

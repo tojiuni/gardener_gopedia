@@ -3,10 +3,10 @@ from __future__ import annotations
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from gardener_gopedia.config import get_settings
-from gardener_gopedia.db import get_session
+from gardener_gopedia.core.config import get_settings
+from gardener_gopedia.core.db import get_session
 from gardener_gopedia.ingest_service import execute_ingest_run
-from gardener_gopedia.models import IngestRun, RunStatus
+from gardener_gopedia.core.models import IngestRun, RunStatus
 from gardener_gopedia.schemas import IngestRunCreate, IngestRunOut
 
 router = APIRouter()
@@ -36,7 +36,7 @@ def start_ingest(
 
 
 def _run_ingest(ingest_run_id: str) -> None:
-    from gardener_gopedia.db import get_engine
+    from gardener_gopedia.core.db import get_engine
     from sqlalchemy.orm import sessionmaker
 
     SessionLocal = sessionmaker(bind=get_engine())

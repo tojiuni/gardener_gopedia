@@ -9,10 +9,10 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session, selectinload
 
-from gardener_gopedia.config import get_settings
+from gardener_gopedia.core.config import get_settings
 from gardener_gopedia.gopedia_client import GopediaClient, gopedia_json_search_failed
 from gardener_gopedia.metrics_engine import compute_aggregate_metrics, per_query_recall_at_5
-from gardener_gopedia.models import DatasetQuery, EvalRun, Qrel, RunHit, RunMetric, RunStatus
+from gardener_gopedia.core.models import DatasetQuery, EvalRun, Qrel, RunHit, RunMetric, RunStatus
 from gardener_gopedia.kpi_aggregate import persist_run_summary_kpis
 from gardener_gopedia.observability_contract import (
     LATENCY_SEARCH_MS,
@@ -85,7 +85,7 @@ def execute_eval_run(db: Session, eval_run_id: str) -> None:
         skip_on_ingest = row.params_json.get("skip_if_ingest_failed", True)
 
     if row.ingest_run_id and skip_on_ingest:
-        from gardener_gopedia.models import IngestRun
+        from gardener_gopedia.core.models import IngestRun
 
         ing = db.get(IngestRun, row.ingest_run_id)
         if ing and ing.status != RunStatus.completed.value:

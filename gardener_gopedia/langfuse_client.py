@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from gardener_gopedia.config import get_settings
+from gardener_gopedia.core.config import get_settings
 
 if TYPE_CHECKING:
     from langfuse import Langfuse

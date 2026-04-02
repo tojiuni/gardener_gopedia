@@ -26,9 +26,9 @@ def gardener_pg_url(monkeypatch):
 
 @pytest.fixture
 def memory_session(monkeypatch, gardener_pg_url):
-    from gardener_gopedia.config import get_settings
-    from gardener_gopedia.db import Base, get_engine, init_db
-    import gardener_gopedia.db as dbm
+    from gardener_gopedia.core.config import get_settings
+    from gardener_gopedia.core.db import Base, get_engine, init_db
+    import gardener_gopedia.core.db as dbm
 
     get_settings.cache_clear()
     dbm._engine = None
@@ -50,9 +50,9 @@ def memory_session(monkeypatch, gardener_pg_url):
 
 @pytest.fixture
 def postgres_app_client(monkeypatch, gardener_pg_url):
-    from gardener_gopedia.config import get_settings
-    from gardener_gopedia.db import Base, get_engine, init_db
-    import gardener_gopedia.db as dbm
+    from gardener_gopedia.core.config import get_settings
+    from gardener_gopedia.core.db import Base, get_engine, init_db
+    import gardener_gopedia.core.db as dbm
 
     get_settings.cache_clear()
     dbm._engine = None
@@ -73,10 +73,10 @@ def postgres_app_client(monkeypatch, gardener_pg_url):
 @pytest.fixture
 def client(monkeypatch, gardener_pg_url):
     """(TestClient, dataset_id, dataset_query_id) for /curation API tests."""
-    from gardener_gopedia.config import get_settings
-    from gardener_gopedia.db import Base, get_engine, init_db
-    from gardener_gopedia.models import Dataset, DatasetQuery
-    import gardener_gopedia.db as dbm
+    from gardener_gopedia.core.config import get_settings
+    from gardener_gopedia.core.db import Base, get_engine, init_db
+    from gardener_gopedia.core.models import Dataset, DatasetQuery
+    import gardener_gopedia.core.db as dbm
 
     get_settings.cache_clear()
     dbm._engine = None

@@ -8,7 +8,7 @@ from sqlalchemy import create_engine, text
 
 
 def ensure_postgres_schema() -> None:
-    from gardener_gopedia.config import get_settings
+    from gardener_gopedia.core.config import get_settings
 
     s = get_settings()
     url = (s.database_url or "").strip()
@@ -24,8 +24,8 @@ def ensure_postgres_schema() -> None:
 
 
 def run_init_db() -> None:
-    from gardener_gopedia.config import get_settings
-    from gardener_gopedia.db import init_db
+    from gardener_gopedia.core.config import get_settings
+    from gardener_gopedia.core.db import init_db
 
     ensure_postgres_schema()
     s = get_settings()
@@ -34,7 +34,7 @@ def run_init_db() -> None:
 
 
 def main() -> None:
-    from gardener_gopedia.config import get_settings
+    from gardener_gopedia.core.config import get_settings
 
     get_settings.cache_clear()
     try:
