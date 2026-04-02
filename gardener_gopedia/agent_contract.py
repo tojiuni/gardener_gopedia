@@ -31,12 +31,6 @@ class AgentQueryProposal(BaseModel):
     candidates: list[AgentCandidateItem] = Field(default_factory=list)
 
 
-class AgentBatchPayload(BaseModel):
-    """Top-level body for POST /curation/batches (proposals array)."""
-
-    proposals: list[AgentQueryProposal] = Field(..., min_length=1)
-
-
 def pick_auto_accept_candidate(
     candidates: list[AgentCandidateItem],
     *,

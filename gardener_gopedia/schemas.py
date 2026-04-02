@@ -227,11 +227,6 @@ class ReviewOut(BaseModel):
     created_at: datetime
 
 
-class CompareQuery(BaseModel):
-    baseline: str
-    candidate: str
-
-
 class FailureItem(BaseModel):
     dataset_query_id: str
     external_id: str
