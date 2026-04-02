@@ -1,0 +1,713 @@
+{
+  "name": "universitas_factual_v1",
+  "version": "1",
+  "curation_tier": "bronze",
+  "queries": [
+    {
+      "external_id": "q_net_driver_parent",
+      "text": "neunexus Docker 네트워크의 driver와 parent interface는 무엇인가?",
+      "tier": "easy",
+      "reference_answer": "driver는 macvlan이고, parent interface는 enp5s0이다."
+    },
+    {
+      "external_id": "q_net_subnet_gateway",
+      "text": "neunexus Macvlan 네트워크의 서브넷과 게이트웨이 IP는?",
+      "tier": "easy",
+      "reference_answer": "서브넷은 192.168.0.0/24, 게이트웨이는 192.168.0.1이다."
+    },
+    {
+      "external_id": "q_net_reserved_ips",
+      "text": "neunexus 네트워크에서 aux-address로 예약된 IP 두 개는?",
+      "tier": "easy",
+      "reference_answer": "reserved1=192.168.0.11, reserved2=192.168.0.43이다."
+    },
+    {
+      "external_id": "q_traefik_macvlan_ip",
+      "text": "Traefik 컨테이너의 neunexus 네트워크 고정 IP는?",
+      "tier": "easy",
+      "reference_answer": "192.168.0.3이다."
+    },
+    {
+      "external_id": "q_traefik_three_networks",
+      "text": "Traefik이 사용하는 세 가지 Docker 네트워크와 각 역할은?",
+      "tier": "medium",
+      "reference_answer": "neunexus(Macvlan, 외부 LAN 직접 연결), traefik-net(컨테이너 간 내부 통신), traefik_ports(브리지, 80/443/222/8077 포트 포워딩)이다."
+    },
+    {
+      "external_id": "q_traefik_image",
+      "text": "neunexus에서 사용하는 Traefik 컨테이너 이미지는?",
+      "tier": "easy",
+      "reference_answer": "traefik:latest이다."
+    },
+    {
+      "external_id": "q_traefik_dashboard_port",
+      "text": "Traefik 대시보드는 호스트 어느 포트에서 컨테이너 어느 포트로 매핑되나?",
+      "tier": "easy",
+      "reference_answer": "호스트 8077 → 컨테이너 8080으로 매핑된다."
+    },
+    {
+      "external_id": "q_traefik_port_mapping",
+      "text": "Traefik의 브리지(traefik_ports) 네트워크 포트 매핑 전체 목록은?",
+      "tier": "medium",
+      "reference_answer": "80→80(HTTP), 443→443(HTTPS), 222→222(SSH), 8077→8080(Traefik 대시보드)이다."
+    },
+    {
+      "external_id": "q_traefik_docker_sock",
+      "text": "Traefik이 Docker 서비스 디스커버리를 위해 마운트하는 소켓 경로는?",
+      "tier": "easy",
+      "reference_answer": "/var/run/docker.sock이다."
+    },
+    {
+      "external_id": "q_traefik_dynamic_path",
+      "text": "TRAEFIK_DYNAMIC_CONFIG_PATH의 기본 경로는?",
+      "tier": "easy",
+      "reference_answer": "/morphogen/neunexus/lymphhub/config/traefik/dynamic이다."
+    },
+    {
+      "external_id": "q_traefik_resolved_path",
+      "text": "Traefik이 실제로 마운트하는 dynamic resolved config 디렉토리 역할은?",
+      "tier": "medium",
+      "reference_answer": "DOMAIN 변수 치환 후 생성된 결과물이 저장되는 디렉토리로, 컨테이너 내부에서는 /etc/traefik/dynamic로 마운트된다. 보통 .gitignore에 포함된다."
+    },
+    {
+      "external_id": "q_traefik_cf_token",
+      "text": "Traefik에서 CF_DNS_API_TOKEN 환경변수는 어떤 용도인가?",
+      "tier": "easy",
+      "reference_answer": "Cloudflare DNS challenge를 통한 TLS 인증서 발급에 사용된다."
+    },
+    {
+      "external_id": "q_traefik_label_rule",
+      "text": "컨테이너에 Traefik 라우터 규칙(Host(), entrypoint, TLS)을 라벨에 직접 두는 것은 권장되는가?",
+      "tier": "easy",
+      "reference_answer": "아니다. 라우터 규칙·entrypoint·TLS·미들웨어는 모두 dynamic config 파일에만 정의하고, 컨테이너 라벨에는 traefik.enable=true와 필요 시 traefik.docker.network만 둔다."
+    },
+    {
+      "external_id": "q_host_ip_reserved1",
+      "text": "Docker 호스트(현재 서버)의 neunexus 네트워크 IP는?",
+      "tier": "easy",
+      "reference_answer": "192.168.0.11 (reserved1로 예약된 IP)이다."
+    },
+    {
+      "external_id": "q_os_distro_version",
+      "text": "neunexus 서버의 OS 배포판과 버전은?",
+      "tier": "easy",
+      "reference_answer": "Rocky Linux 9.6 (Blue Onyx)이다."
+    },
+    {
+      "external_id": "q_os_kernel",
+      "text": "neunexus 서버의 커널 버전은?",
+      "tier": "easy",
+      "reference_answer": "5.14.0-570.58.1.el9_6.x86_64이다."
+    },
+    {
+      "external_id": "q_os_hostname",
+      "text": "neunexus 서버의 호스트명은?",
+      "tier": "easy",
+      "reference_answer": "mail.lyckabc.xyz이다."
+    },
+    {
+      "external_id": "q_os_docker_version",
+      "text": "neunexus 서버에 설치된 Docker 버전은?",
+      "tier": "easy",
+      "reference_answer": "24.0.9 (build 2936816)이다."
+    },
+    {
+      "external_id": "q_os_python_version",
+      "text": "neunexus 서버에 설치된 Python 버전은?",
+      "tier": "easy",
+      "reference_answer": "3.9.21이다."
+    },
+    {
+      "external_id": "q_os_selinux",
+      "text": "neunexus 서버의 SELinux 상태는?",
+      "tier": "easy",
+      "reference_answer": "Permissive이다."
+    },
+    {
+      "external_id": "q_os_support_end",
+      "text": "Rocky Linux 9.6의 공식 지원 종료일은?",
+      "tier": "easy",
+      "reference_answer": "2032-05-31이다."
+    },
+    {
+      "external_id": "q_pg_container_image",
+      "text": "PostgreSQL 컨테이너 이름과 이미지는?",
+      "tier": "easy",
+      "reference_answer": "컨테이너 이름은 postgres_db, 이미지는 postgres:15-alpine이다."
+    },
+    {
+      "external_id": "q_pg_static_ip",
+      "text": "PostgreSQL 컨테이너의 neunexus 네트워크 고정 IP는?",
+      "tier": "easy",
+      "reference_answer": "192.168.0.89이다."
+    },
+    {
+      "external_id": "q_pgadmin_hostname",
+      "text": "pgAdmin 웹 UI에 접근하는 호스트명 패턴은?",
+      "tier": "easy",
+      "reference_answer": "rdb.${DOMAIN} 형태이며, 예를 들어 rdb.toji.homes이다."
+    },
+    {
+      "external_id": "q_pgadmin_container_port",
+      "text": "pgAdmin 컨테이너 내부에서 리스닝하는 포트는?",
+      "tier": "easy",
+      "reference_answer": "80이다."
+    },
+    {
+      "external_id": "q_registry_image",
+      "text": "Private Docker Registry에 사용하는 이미지와 버전은?",
+      "tier": "easy",
+      "reference_answer": "registry:2.8.2이다."
+    },
+    {
+      "external_id": "q_registry_url",
+      "text": "Private Docker Registry와 Registry UI의 URL은?",
+      "tier": "easy",
+      "reference_answer": "Registry: https://registry.toji.homes/, Registry UI: https://registry-ui.toji.homes/이다."
+    },
+    {
+      "external_id": "q_registry_auth",
+      "text": "Private Docker Registry의 인증 방식은?",
+      "tier": "easy",
+      "reference_answer": "htpasswd 방식이며, 패스워드 파일은 /auth/registry.password에 위치한다."
+    },
+    {
+      "external_id": "q_registry_container_port",
+      "text": "Registry 컨테이너 내부에서 리스닝하는 포트는?",
+      "tier": "easy",
+      "reference_answer": "0.0.0.0:5000이다."
+    },
+    {
+      "external_id": "q_registry_ui_proxy",
+      "text": "Registry UI가 프록시하는 URL은?",
+      "tier": "easy",
+      "reference_answer": "http://registry:5000이다."
+    },
+    {
+      "external_id": "q_morphso_image",
+      "text": "Morphso 컨테이너 이미지는?",
+      "tier": "easy",
+      "reference_answer": "registry.toji.homes/morphso:latest이다."
+    },
+    {
+      "external_id": "q_morphso_port",
+      "text": "Morphso 서비스가 리스닝하는 포트는?",
+      "tier": "easy",
+      "reference_answer": "8011이다."
+    },
+    {
+      "external_id": "q_morphso_api",
+      "text": "Morphso로 PostgreSQL 데이터베이스를 생성할 때 호출하는 API endpoint는?",
+      "tier": "easy",
+      "reference_answer": "POST http://<host>:8011/api/v1/rdb/database/create이다."
+    },
+    {
+      "external_id": "q_gopedia_l1_role",
+      "text": "Gopedia L1 계층의 역할과 분류 기준은?",
+      "tier": "medium",
+      "reference_answer": "문서의 정체성을 나타내며, 1 document = 1 L1이다. 도메인·의도·대상 독자 기준으로 요약하고, core_abstract(1-2문장)와 keywords(5-10개)를 포함한다."
+    },
+    {
+      "external_id": "q_gopedia_l2_role",
+      "text": "Gopedia L2 계층의 역할과 분류 기준은?",
+      "tier": "medium",
+      "reference_answer": "ToC/섹션 요약으로 '어느 섹션을 볼지' 라우팅하는 지도 역할이다. Markdown ##, JSON 키, 코드 모듈/클래스 등 구조적 단위로 나누며, 섹션당 최대 300 토큰의 sectional_summary를 생성한다."
+    },
+    {
+      "external_id": "q_gopedia_l3_role",
+      "text": "Gopedia L3 계층의 역할과 분류 기준은?",
+      "tier": "medium",
+      "reference_answer": "LLM이 인용할 최소 단위(Atomic Chunk)로 증거 역할을 한다. 고정 토큰 범위(예: 512-1024 토큰)로 분할하며, 반드시 Breadcrumb으로 부모 L1/L2 문맥을 포함한다."
+    },
+    {
+      "external_id": "q_gopedia_postgresql_role",
+      "text": "Gopedia 아키텍처에서 PostgreSQL이 저장하는 데이터는?",
+      "tier": "medium",
+      "reference_answer": "L1 메타데이터, 문서 마스터, machine_registry(Identity) 등 마스터 메타·레코드를 저장한다."
+    },
+    {
+      "external_id": "q_gopedia_typedb_role",
+      "text": "Gopedia 아키텍처에서 TypeDB가 저장하는 데이터와 용도는?",
+      "tier": "medium",
+      "reference_answer": "L1/L2 엔티티(Document, Section)와 L3-parent 관계, calls/inherits 등 코드 온톨로지를 저장한다. 관계 추론과 코드·인프라 관계 질의에 사용된다."
+    },
+    {
+      "external_id": "q_gopedia_qdrant_role",
+      "text": "Gopedia 아키텍처에서 Qdrant가 저장하는 데이터는?",
+      "tier": "medium",
+      "reference_answer": "L1/L2 요약 임베딩과 L3 청크 임베딩을 저장한다. payload에는 doc_id, machine_key, toc_path 등 경량 메타데이터만 포함한다."
+    },
+    {
+      "external_id": "q_gopedia_clickhouse_role",
+      "text": "Gopedia 아키텍처에서 ClickHouse가 저장하는 데이터와 용도는?",
+      "tier": "medium",
+      "reference_answer": "L3 원문, 로그/감사용 플랫 테이블을 저장한다. 키워드 정밀 검색(BM25)과 원본 그대로 보존이 필요할 때 사용한다."
+    },
+    {
+      "external_id": "q_docker_network_create_cmd",
+      "text": "neunexus Macvlan 네트워크를 생성하는 docker network create 명령의 핵심 옵션들은?",
+      "tier": "medium",
+      "reference_answer": "docker network create -d macvlan --subnet=192.168.0.0/24 --gateway=192.168.0.1 --aux-address=\"reserved1=192.168.0.11\" --aux-address=\"reserved2=192.168.0.43\" -o parent=enp5s0 neunexus"
+    },
+    {
+      "external_id": "q_macvlan_port_mapping_caveat",
+      "text": "Macvlan 네트워크만 사용할 때 Docker -p 포트 매핑이 동작하지 않는 경우, 외부 접근을 위한 해결 방법은?",
+      "tier": "medium",
+      "reference_answer": "브리지 네트워크(예: traefik_ports)에도 함께 연결하여 포트 매핑을 사용한다."
+    },
+    {
+      "external_id": "q_registry_push_steps",
+      "text": "Private Registry에 이미지를 push하는 순서는?",
+      "tier": "medium",
+      "reference_answer": "1) docker login registry.toji.homes 2) docker build -t registry.toji.homes/<이미지>:<태그> <경로> 3) docker push registry.toji.homes/<이미지>:<태그> 4) registry-ui.toji.homes에서 확인"
+    },
+    {
+      "external_id": "q_os_arch",
+      "text": "neunexus 서버의 CPU 아키텍처는?",
+      "tier": "easy",
+      "reference_answer": "x86_64이다."
+    }
+  ],
+  "qrels": [
+    {
+      "query_external_id": "q_net_driver_parent",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Driver: macvlan | Parent interface: enp5s0",
+        "title_hint": "Docker Network neunexus overview",
+        "source_path_hint": "neunexus/skills/docker-network/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_net_subnet_gateway",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Subnet: 192.168.0.0/24 | Gateway: 192.168.0.1",
+        "title_hint": "Docker Network neunexus overview",
+        "source_path_hint": "neunexus/skills/docker-network/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_net_reserved_ips",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Aux reserved IPs: 192.168.0.11 (reserved1), 192.168.0.43 (reserved2)",
+        "title_hint": "Docker Network neunexus overview",
+        "source_path_hint": "neunexus/skills/docker-network/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_traefik_macvlan_ip",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Traefik static IP: 192.168.0.3",
+        "title_hint": "Traefik neunexus overview",
+        "source_path_hint": "neunexus/skills/traefik/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_traefik_three_networks",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Traefik uses three networks: neunexus (Macvlan), traefik-net (External), traefik_ports (Bridge)",
+        "title_hint": "Traefik neunexus overview",
+        "source_path_hint": "neunexus/skills/traefik/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_traefik_image",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Image: traefik:latest | Container name: traefik",
+        "title_hint": "Traefik service static config",
+        "source_path_hint": "neunexus/skills/traefik/references/service.md"
+      }
+    },
+    {
+      "query_external_id": "q_traefik_dashboard_port",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "8077 | 8080 | Traefik dashboard (inbound 8080)",
+        "title_hint": "Traefik service static config",
+        "source_path_hint": "neunexus/skills/traefik/references/service.md"
+      }
+    },
+    {
+      "query_external_id": "q_traefik_port_mapping",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "80:80 HTTP, 443:443 HTTPS, 222:222 SSH, 8077:8080 Traefik dashboard",
+        "title_hint": "Traefik service static config",
+        "source_path_hint": "neunexus/skills/traefik/references/service.md"
+      }
+    },
+    {
+      "query_external_id": "q_traefik_docker_sock",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "/var/run/docker.sock | Docker provider (service discovery)",
+        "title_hint": "Traefik service static config",
+        "source_path_hint": "neunexus/skills/traefik/references/service.md"
+      }
+    },
+    {
+      "query_external_id": "q_traefik_dynamic_path",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "TRAEFIK_DYNAMIC_CONFIG_PATH: /morphogen/neunexus/lymphhub/config/traefik/dynamic",
+        "title_hint": "Traefik dynamic config",
+        "source_path_hint": "neunexus/skills/traefik/references/dynamic-config.md"
+      }
+    },
+    {
+      "query_external_id": "q_traefik_resolved_path",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "TRAEFIK_DYNAMIC_RESOLVED_PATH: resolved config after DOMAIN substitution. Traefik mounts this as /etc/traefik/dynamic",
+        "title_hint": "Traefik dynamic config",
+        "source_path_hint": "neunexus/skills/traefik/references/dynamic-config.md"
+      }
+    },
+    {
+      "query_external_id": "q_traefik_cf_token",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "CF_DNS_API_TOKEN | Cloudflare DNS challenge; use Infisical or env, do not hardcode",
+        "title_hint": "Traefik service static config",
+        "source_path_hint": "neunexus/skills/traefik/references/service.md"
+      }
+    },
+    {
+      "query_external_id": "q_traefik_label_rule",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Do not put router rules, Host(), entrypoints, or TLS in labels; keep them in dynamic YAML files",
+        "title_hint": "Traefik container labels",
+        "source_path_hint": "neunexus/skills/traefik/references/labels.md"
+      }
+    },
+    {
+      "query_external_id": "q_host_ip_reserved1",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Docker 호스트(현재 서버): 192.168.0.11 | Macvlan 예약 IP(reserved1)",
+        "title_hint": "80/443 포워딩 경로 추적",
+        "source_path_hint": "neunexus/skills/traefik/references/port-forward-trace-80-443.md"
+      }
+    },
+    {
+      "query_external_id": "q_os_distro_version",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Distro: Rocky Linux 9.6 (Blue Onyx)",
+        "title_hint": "Server OS overview",
+        "source_path_hint": "osteon/skills/server-os/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_os_kernel",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Kernel: 5.14.0-570.58.1.el9_6.x86_64",
+        "title_hint": "Server OS overview",
+        "source_path_hint": "osteon/skills/server-os/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_os_hostname",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Hostname: mail.lyckabc.xyz",
+        "title_hint": "Server OS overview",
+        "source_path_hint": "osteon/skills/server-os/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_os_docker_version",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Docker: 24.0.9 (build 2936816)",
+        "title_hint": "Server OS runtime",
+        "source_path_hint": "osteon/skills/server-os/references/runtime.md"
+      }
+    },
+    {
+      "query_external_id": "q_os_python_version",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Python: 3.9.21",
+        "title_hint": "Server OS runtime",
+        "source_path_hint": "osteon/skills/server-os/references/runtime.md"
+      }
+    },
+    {
+      "query_external_id": "q_os_selinux",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "SELinux: Permissive",
+        "title_hint": "Server OS overview",
+        "source_path_hint": "osteon/skills/server-os/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_os_support_end",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "SUPPORT_END: 2032-05-31",
+        "title_hint": "Server OS release",
+        "source_path_hint": "osteon/skills/server-os/references/os-release.md"
+      }
+    },
+    {
+      "query_external_id": "q_pg_container_image",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "PostgreSQL: postgres:15-alpine | container: postgres_db",
+        "title_hint": "RDB PostgreSQL stack overview",
+        "source_path_hint": "taxon/storages/rdb/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_pg_static_ip",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "PostgreSQL static IP (neunexus): 192.168.0.89",
+        "title_hint": "RDB PostgreSQL stack overview",
+        "source_path_hint": "taxon/storages/rdb/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_pgadmin_hostname",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Access hostname: rdb.${DOMAIN} (e.g. rdb.toji.homes)",
+        "title_hint": "pgAdmin Traefik",
+        "source_path_hint": "taxon/storages/rdb/references/pgadmin.md"
+      }
+    },
+    {
+      "query_external_id": "q_pgadmin_container_port",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "pgAdmin listens on port 80 inside the container; Traefik routes HTTPS to it",
+        "title_hint": "pgAdmin Traefik",
+        "source_path_hint": "taxon/storages/rdb/references/pgadmin.md"
+      }
+    },
+    {
+      "query_external_id": "q_registry_image",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Registry: registry:2.8.2",
+        "title_hint": "Docker Registry stack overview",
+        "source_path_hint": "osteon/skills/docker/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_registry_url",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Registry: https://registry.toji.homes/ | Registry UI: https://registry-ui.toji.homes/",
+        "title_hint": "Docker Registry stack overview",
+        "source_path_hint": "osteon/skills/docker/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_registry_auth",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "auth via htpasswd at /auth/registry.password",
+        "title_hint": "Docker Registry stack overview",
+        "source_path_hint": "osteon/skills/docker/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_registry_container_port",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Registry listens on 0.0.0.0:5000 inside the container",
+        "title_hint": "Docker Registry stack overview",
+        "source_path_hint": "osteon/skills/docker/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_registry_ui_proxy",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Registry UI proxies to http://registry:5000",
+        "title_hint": "Docker Registry stack overview",
+        "source_path_hint": "osteon/skills/docker/references/overview.md"
+      }
+    },
+    {
+      "query_external_id": "q_morphso_image",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "image: registry.toji.homes/morphso:latest",
+        "title_hint": "Morphso compose snippet",
+        "source_path_hint": "taxon/storages/rdb/references/morphso-compose.md"
+      }
+    },
+    {
+      "query_external_id": "q_morphso_port",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "ports: 8011:8011",
+        "title_hint": "Morphso compose snippet",
+        "source_path_hint": "taxon/storages/rdb/references/morphso-compose.md"
+      }
+    },
+    {
+      "query_external_id": "q_morphso_api",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "POST http://<host>:8011/api/v1/rdb/database/create",
+        "title_hint": "Morphso create database",
+        "source_path_hint": "taxon/storages/rdb/references/morphso-create-db.md"
+      }
+    },
+    {
+      "query_external_id": "q_gopedia_l1_role",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "L1 (Global Summary): 문서의 정체성. 1 document = 1 L1. core_abstract(1-2문장), keywords(5-10개)",
+        "title_hint": "Gopedia L1/L2/L3 계층",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "q_gopedia_l2_role",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "L2 (ToC / Sectional Summary): 지도. 구조적 단위(Markdown ##, JSON 키, 코드 모듈/클래스). sectional_summary 최대 300 토큰",
+        "title_hint": "Gopedia L1/L2/L3 계층",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "q_gopedia_l3_role",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "L3 (Atomic Chunk): 증거. 고정 토큰(512-1024). 반드시 Breadcrumb으로 부모 L1/L2 문맥 포함",
+        "title_hint": "Gopedia L1/L2/L3 계층",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "q_gopedia_postgresql_role",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "PostgreSQL: 마스터 메타·레코드·머신 레지스트리. L1 메타데이터, machine_registry(Identity)",
+        "title_hint": "Gopedia 폴리글랏 저장",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "q_gopedia_typedb_role",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "TypeDB: 그래프·온톨로지·관계. L1/L2 엔티티, L3-parent 관계, Processed_By·Installed_On 등",
+        "title_hint": "Gopedia 폴리글랏 저장",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "q_gopedia_qdrant_role",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Qdrant: 벡터·시맨틱 검색. L1/L2 요약 임베딩, L3 청크 임베딩. payload는 경량만",
+        "title_hint": "Gopedia 폴리글랏 저장",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "q_gopedia_clickhouse_role",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "ClickHouse: 분석·BM25·원문 보존. L3 원문, 로그/감사용 플랫 테이블",
+        "title_hint": "Gopedia 폴리글랏 저장",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "q_docker_network_create_cmd",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "docker network create -d macvlan --subnet=192.168.0.0/24 --gateway=192.168.0.1 --aux-address=\"reserved1=192.168.0.11\" --aux-address=\"reserved2=192.168.0.43\" -o parent=enp5s0 neunexus",
+        "title_hint": "Docker Network create command",
+        "source_path_hint": "neunexus/skills/docker-network/references/create-command.md"
+      }
+    },
+    {
+      "query_external_id": "q_macvlan_port_mapping_caveat",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "With Macvlan alone, Docker -p (port forwarding) may not work. Services that need external access should also be attached to a bridge network (e.g. traefik_ports)",
+        "title_hint": "Docker Network neunexus notes",
+        "source_path_hint": "neunexus/skills/docker-network/references/notes.md"
+      }
+    },
+    {
+      "query_external_id": "q_registry_push_steps",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "docker login registry.toji.homes → docker build -t registry.toji.homes/<image>:<tag> → docker push → verify in registry-ui.toji.homes",
+        "title_hint": "Docker Registry push",
+        "source_path_hint": "osteon/skills/docker/references/registry-push.md"
+      }
+    },
+    {
+      "query_external_id": "q_os_arch",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Arch: x86_64",
+        "title_hint": "Server OS overview",
+        "source_path_hint": "osteon/skills/server-os/references/overview.md"
+      }
+    }
+  ]
+}
