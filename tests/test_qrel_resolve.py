@@ -2,9 +2,9 @@
 
 import pytest
 
-from gardener_gopedia.evaluation_service import execute_eval_run
+from gardener_gopedia.eval.service import execute_eval_run
 from gardener_gopedia.core.models import Dataset, DatasetQuery, EvalRun, Qrel, RunStatus
-from gardener_gopedia.qrel_resolve_service import (
+from gardener_gopedia.eval.qrel_resolve import (
     dataset_has_unresolved_qrels,
     resolve_single_qrel,
     score_hit_for_target_data,

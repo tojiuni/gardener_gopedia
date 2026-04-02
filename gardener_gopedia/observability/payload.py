@@ -6,7 +6,7 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from gardener_gopedia.metrics_engine import per_query_recall_at_5
+from gardener_gopedia.eval.metrics import per_query_recall_at_5
 from gardener_gopedia.core.models import DatasetQuery, EvalRun, Qrel, RunHit, RunMetric
 from gardener_gopedia.observability.contract import (
     COST_ANSWER_TOTAL_USD,
