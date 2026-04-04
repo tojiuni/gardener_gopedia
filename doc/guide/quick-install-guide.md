@@ -11,7 +11,7 @@
 ## 설치 (복사-붙여넣기)
 
 ```bash
-cd /neunexus/gardener_gopedia
+cd /path/to/gardener_gopedia
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e .
 cp .env.example .env

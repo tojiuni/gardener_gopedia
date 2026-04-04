@@ -21,7 +21,7 @@
 ## 2) 설치 (5분 이내)
 
 ```bash
-cd /neunexus/gardener_gopedia
+cd /path/to/gardener_gopedia
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
