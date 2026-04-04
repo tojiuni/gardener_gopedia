@@ -41,6 +41,38 @@ See [doc/runbook.md](doc/runbook.md) for API flow, Gopedia stack alignment, and 
 
 Contract and local stack are documented in the Gopedia repo under `doc/guide/`. With a typical sibling checkout, paths are `../gopedia/doc/guide/README.md`, `../gopedia/doc/guide/agent-interop.md`, and `../gopedia/doc/guide/run.md`.
 
+## 설치/시나리오 가이드 (Korean)
+
+사전 요구 사항 : 설치에 필요한 최소 환경 (K8s 버전, CPU/Memory, 필수 도구 등)
+
+- K8s `v1.28+` 또는 Python + Postgres 로컬 환경
+- 최소 `2 vCPU / 4GB RAM` (Gopedia 동시 구동 시 권장 `8 vCPU / 16GB RAM`)
+- 필수 도구: `git`, `python 3.11+`, `pip`/`uv`, Postgres
+
+설치 (5분 이내)
+
+- 복사-붙여넣기 가능한 설치 명령어 (Helm 또는 kubectl)
+- 빠른 로컬 설치 명령은 가이드 문서에 포함
+- 상세: [`doc/guide/install-guide.md`](./doc/guide/install-guide.md)
+- 요약: [`doc/guide/quick-install-guide.md`](./doc/guide/quick-install-guide.md)
+
+설치 확인 방법 ("이 화면이 뜨면 성공")
+
+- `curl http://127.0.0.1:18880/health` 응답 JSON이 오면 성공
+- `gardener-smoke` 실행 시 run id 생성되면 정상
+
+삭제 방법
+
+- `pkill -f "uvicorn gardener_gopedia.main:app" || true`
+
+첫 번째 시나리오 (10분 이내)
+
+- 설치 직후 바로 실행할 수 있는 데모 시나리오 1개
+- Obsidian 문서를 Gopedia에 ingest 후 Gardener smoke 평가 실행
+- Streamlit에서 결과를 확인하고 오답 라벨링
+
+다음 단계 안내 : 프로덕션 적용을 원하시면 [contact@cloudbro.ai](mailto:contact@cloudbro.ai)로 문의 - 컨택 채널은 꼭 cloudbro로 부탁드립니다!
+
 ## Environment
 
 | Variable | Default |
