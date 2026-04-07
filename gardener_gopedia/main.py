@@ -7,6 +7,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from gardener_gopedia.core.config import get_settings
+from gardener_gopedia.dataset.presets import PRESET_JSON_PATHS, list_quality_preset_names
 from gardener_gopedia.core.db import init_db
 from gardener_gopedia.curation.router import router as curation_router
 from gardener_gopedia.curation.reviews_router import router as reviews_router
@@ -43,6 +44,8 @@ def health():
 def config_defaults():
     s = get_settings()
     return {
+        "quality_presets": list_quality_preset_names(),
+        "quality_preset_files": {k: str(v) for k, v in PRESET_JSON_PATHS.items()},
         "gopedia_base_url": s.gopedia_base_url,
         "default_top_k": s.default_top_k,
         "default_query_timeout_s": s.default_query_timeout_s,

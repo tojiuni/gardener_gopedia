@@ -90,7 +90,15 @@ class IngestRunOut(BaseModel):
 
 
 class EvalRunCreate(BaseModel):
-    dataset_id: str
+    dataset_id: str | None = Field(
+        default=None,
+        description="Existing dataset UUID from POST /datasets.",
+    )
+    quality_preset: str | None = Field(
+        default=None,
+        description='Bundled quality dataset (e.g. "osteon" → dataset/sample_osteon_guide_30_v2.json). '
+        "Mutually exclusive with dataset_id.",
+    )
     target_url: str | None = None
     ingest_run_id: str | None = None
     top_k: int = 10
@@ -113,6 +121,14 @@ class EvalRunCreate(BaseModel):
         default=False,
         description="If true, run qrel resolution (Gopedia search) for unresolved target_data qrels before eval.",
     )
+
+    @model_validator(mode="after")
+    def dataset_id_xor_quality_preset(self) -> EvalRunCreate:
+        did = (self.dataset_id or "").strip()
+        preset = (self.quality_preset or "").strip()
+        if bool(did) == bool(preset):
+            raise ValueError("Provide exactly one of dataset_id or quality_preset")
+        return self
 
 
 class EvalRunOut(BaseModel):
