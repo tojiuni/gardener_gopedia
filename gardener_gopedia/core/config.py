@@ -6,9 +6,16 @@ from dotenv import load_dotenv
 from pydantic import AliasChoices, Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+# gardener_gopedia/core/config.py -> parents[2] == project root (where .env lives)
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="GARDENER_", env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_prefix="GARDENER_",
+        env_file=str(_REPO_ROOT / ".env"),
+        extra="ignore",
+    )
 
     database_url: str = ""
     """When using PostgreSQL with a dedicated schema, set e.g. gardener_eval and create the schema in DB."""
@@ -112,9 +119,8 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    # Ensure values from ".env" are also present in os.environ for places that
+    # Ensure values from project-root ".env" are also present in os.environ for places that
     # read directly from environment variables (e.g., Ragas/OpenAI).
     # Without this, Pydantic can populate Settings but os.environ may stay empty.
-    dotenv_path = Path(__file__).resolve().parent.parent / ".env"
-    load_dotenv(dotenv_path=dotenv_path, override=False)
+    load_dotenv(dotenv_path=_REPO_ROOT / ".env", override=False)
     return Settings()
