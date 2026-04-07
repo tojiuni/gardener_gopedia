@@ -33,6 +33,12 @@ streamlit run streamlit_app/app.py
 
 See [doc/runbook.md](doc/runbook.md) for API flow, Gopedia stack alignment, and CI smoke details.
 
+## Service test guide
+
+Use [doc/reproducible_eval.md](doc/reproducible_eval.md) for an end-to-end service test runbook.
+It includes copy-paste commands to reset the index, ingest documents, register/resolve a dataset, run evaluation, and verify metrics.
+Follow it when you need reproducible validation of both Gopedia (`:18787`) and Gardener (`:18880`) integration.
+
 **AI + human dataset curation:** agent proposals and Gold promotion — [doc/agent-label-contract.md](doc/agent-label-contract.md), `POST /curation/batches`, Streamlit tab **Curation queue**.
 
 **Agent qrels (`target_data`):** [doc/agent-dataset-qrel.md](doc/agent-dataset-qrel.md), `POST /datasets/{id}/resolve-qrels`, optional `resolve_before_eval` on `POST /runs`.
