@@ -1,0 +1,489 @@
+{
+  "name": "sample_osteon_guide_30_v2",
+  "version": "2",
+  "curation_tier": "bronze",
+  "queries": [
+    {
+      "external_id": "osteon_01_base_os",
+      "text": "Osteon 00 Overview 레이어 구조 코드블록에서 베이스 OS 한 줄로 쓰인 값은? (Ubuntu 24.04 LTS (Base OS), OpenStack Dalmatian 윗줄)",
+      "tier": "easy",
+      "reference_answer": "Ubuntu 24.04 LTS (Base OS)"
+    },
+    {
+      "external_id": "osteon_02_openstack_release",
+      "text": "가이드에서 OpenStack IaaS로 명시한 릴리스(코드네임)는 무엇인가? (00 Overview, OpenStack Dalmatian, kolla-ansible)",
+      "tier": "easy",
+      "reference_answer": "OpenStack Dalmatian (IaaS)"
+    },
+    {
+      "external_id": "osteon_03_bastion_hostname",
+      "text": "kolla-ansible 실행과 AI Agent 접속 기점으로 쓰는 Deploy 노드의 호스트네임은 무엇인가?",
+      "tier": "easy",
+      "reference_answer": "`ost-deploy`"
+    },
+    {
+      "external_id": "osteon_04_controller_hostname",
+      "text": "Controller 역할 노드의 호스트네임 예시는 무엇인가? (00 Overview, 노드 구성 및 호스트네임 규칙, Keystone Glance Horizon Neutron, ost-ctrl-01)",
+      "tier": "easy",
+      "reference_answer": "`ost-ctrl-01`"
+    },
+    {
+      "external_id": "osteon_05_storage_hostname",
+      "text": "Storage 역할(Cinder, LVM) 노드의 호스트네임 예시는 무엇인가? (00 Overview, ost-stor-01, Cinder LVM)",
+      "tier": "easy",
+      "reference_answer": "`ost-stor-01`"
+    },
+    {
+      "external_id": "osteon_06_cinder_disk",
+      "text": "개요 레이어에서 Cinder 블록 스토리지에 예시로 든 디스크 용량은 얼마인가? (00 Overview, Block Storage HDD 4TB)",
+      "tier": "easy",
+      "reference_answer": "HDD 4TB"
+    },
+    {
+      "external_id": "osteon_07_k8s_install_method",
+      "text": "Kubernetes는 가이드에서 어떤 방식으로 설치한다고 되어 있는가? (00 Overview, kubeadm 직접 설치, cloud-provider-openstack)",
+      "tier": "easy",
+      "reference_answer": "kubeadm 직접 설치"
+    },
+    {
+      "external_id": "osteon_08_iac_tool",
+      "text": "OpenStack 리소스와 K8s manifest를 선언적으로 관리한다고 명시한 IaC 도구는 무엇인가?",
+      "tier": "easy",
+      "reference_answer": "OpenTofu (IaC)"
+    },
+    {
+      "external_id": "osteon_09_iptime_api_repo",
+      "text": "ipTIME-API(Go)로 안내하는 GitHub 저장소 경로는 무엇인가?",
+      "tier": "medium",
+      "reference_answer": "`github.com/Lyckabc/ipTIME-API`"
+    },
+    {
+      "external_id": "osteon_10_mgmt_cidr",
+      "text": "네트워크 설계에서 OpenStack Management 대역은 무엇으로 잡혀 있는가?",
+      "tier": "easy",
+      "reference_answer": "`192.168.10.0/24`"
+    },
+    {
+      "external_id": "osteon_11_tunnel_cidr",
+      "text": "OpenStack Tunnel(VXLAN)용으로 설계된 대역은 무엇인가?",
+      "tier": "easy",
+      "reference_answer": "`192.168.20.0/24`"
+    },
+    {
+      "external_id": "osteon_12_storage_cidr",
+      "text": "OpenStack Storage(Cinder 트래픽)용으로 설계된 대역은 무엇인가?",
+      "tier": "easy",
+      "reference_answer": "`192.168.30.0/24`"
+    },
+    {
+      "external_id": "osteon_13_floating_pool",
+      "text": "Floating IP 풀로 예약된 주소 범위는 무엇인가?",
+      "tier": "easy",
+      "reference_answer": "`192.168.0.200` ~ `192.168.0.250`"
+    },
+    {
+      "external_id": "osteon_14_dhcp_range",
+      "text": "ipTIME DHCP 범위를 Floating IP 풀과 겹치지 않게 조정할 때 가이드에 나온 범위는 무엇인가?",
+      "tier": "easy",
+      "reference_answer": "`192.168.0.2` ~ `192.168.0.199`"
+    },
+    {
+      "external_id": "osteon_15_kolla_vip",
+      "text": "예시로 든 kolla_internal_vip_address(VIP) 값은 무엇인가?",
+      "tier": "easy",
+      "reference_answer": "`192.168.10.100`"
+    },
+    {
+      "external_id": "osteon_16_iptime_lan",
+      "text": "ipTIME LAN(External/Provider)으로 설계 문서에 적힌 대역은 무엇인가?",
+      "tier": "easy",
+      "reference_answer": "`192.168.0.0/16`"
+    },
+    {
+      "external_id": "osteon_17_cpu_virt_check",
+      "text": "하드웨어 체크리스트에서 CPU 가상화 지원을 확인하는 egrep 명령 패턴은 무엇인가?",
+      "tier": "medium",
+      "reference_answer": "`egrep -c '(vmx|svm)' /proc/cpuinfo`"
+    },
+    {
+      "external_id": "osteon_18_ram_controller",
+      "text": "총 RAM이 64GB 이상일 때 권장 역할 배정은 무엇인가? (01 Hardware Checklist, 1-2 RAM, free -h, 64GB Controller + Compute 겸용 가능)",
+      "tier": "easy",
+      "reference_answer": "Controller + Compute 겸용 가능"
+    },
+    {
+      "external_id": "osteon_19_kolla_ansible_version",
+      "text": "kolla-ansible Dalmatian 설치에 맞춰 pip로 지정하는 버전 대역은 무엇인가? (04 Kolla Ansible, 4-1 kolla-ansible 설치, Dalmatian 2024.2 19.x pip install)",
+      "tier": "medium",
+      "reference_answer": "`kolla-ansible==19.*`"
+    },
+    {
+      "external_id": "osteon_20_kolla_genpwd",
+      "text": "kolla 설정에서 패스워드 파일을 생성하는 명령은 무엇인가?",
+      "tier": "easy",
+      "reference_answer": "`kolla-genpwd`"
+    },
+    {
+      "external_id": "osteon_21_kolla_etc_path",
+      "text": "kolla-ansible 설정 파일이 위치하는 기본 경로는 어디인가?",
+      "tier": "easy",
+      "reference_answer": "`/etc/kolla`"
+    },
+    {
+      "external_id": "osteon_22_multinode_deployment",
+      "text": "multinode 인벤토리에서 deployment 그룹에 정의된 localhost 연결 방식은 무엇인가? (04 Kolla Ansible 4-3, [deployment] 그룹, localhost ansible_connection=local, ost-stor-01 다음 블록)",
+      "tier": "medium",
+      "reference_answer": "`localhost ansible_connection=local`"
+    },
+    {
+      "external_id": "osteon_23_k8s_network_name",
+      "text": "K8s용 OpenStack 네트워크를 만들 때 예시로 쓰는 네트워크 이름은 무엇인가?",
+      "tier": "easy",
+      "reference_answer": "`k8s-net`"
+    },
+    {
+      "external_id": "osteon_24_k8s_subnet_cidr",
+      "text": "k8s-subnet 생성 예시에서 subnet-range로 제시된 CIDR은 무엇인가? (05 Kubernetes, openstack subnet create k8s-subnet 10.0.0.0/24)",
+      "tier": "easy",
+      "reference_answer": "`10.0.0.0/24`"
+    },
+    {
+      "external_id": "osteon_25_k8s_keypair_name",
+      "text": "K8s VM용 OpenStack keypair 생성 예시에서 사용하는 키 이름은 무엇인가? (05 Kubernetes, 5-1 K8s용 VM, K8s SSH 키페어 등록 id_rsa.pub osteon-k8s-key)",
+      "tier": "easy",
+      "reference_answer": "`osteon-k8s-key`"
+    },
+    {
+      "external_id": "osteon_26_opentofu_install",
+      "text": "OpenTofu를 deb 방식으로 설치할 때 사용하는 설치 스크립트 URL은 무엇인가?",
+      "tier": "medium",
+      "reference_answer": "`https://get.opentofu.org/install-opentofu.sh`"
+    },
+    {
+      "external_id": "osteon_27_clouds_yaml_cloud",
+      "text": "clouds.yaml 예시에서 정의한 cloud 키 이름은 무엇인가?",
+      "tier": "easy",
+      "reference_answer": "`osteon`"
+    },
+    {
+      "external_id": "osteon_28_iac_root",
+      "text": "IaC 디렉토리 구조 예시에서 홈 아래 루트 폴더 이름은 무엇인가? (06 Opentofu 6-3, mkdir -p ~/osteon-iac/{openstack,kubernetes}, 루트 폴더 osteon-iac)",
+      "tier": "easy",
+      "reference_answer": "`~/osteon-iac`"
+    },
+    {
+      "external_id": "osteon_29_hosts_ost_deploy",
+      "text": "Ubuntu 설정에서 /etc/hosts에 넣는 ost-deploy의 Management IP 예시는 무엇인가?",
+      "tier": "easy",
+      "reference_answer": "`192.168.10.10`"
+    },
+    {
+      "external_id": "osteon_30_troubleshoot_k8s02",
+      "text": "트러블슈팅 가이드 [K8S-02]에서 Calico IPPool을 어떤 CIDR로 마이그레이션했다고 적혀 있는가?",
+      "tier": "medium",
+      "reference_answer": "`10.244.0.0/16`"
+    }
+  ],
+  "qrels": [
+    {
+      "query_external_id": "osteon_01_base_os",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Ubuntu 24.04 LTS (Base OS)\n  └─ OpenStack Dalmatian (IaaS) ← kolla-ansible 배포\n       ├─ Nova (Compute)",
+        "title_hint": "00 Overview",
+        "source_path_hint": "00_overview.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_02_openstack_release",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "OpenStack Dalmatian (IaaS) ← kolla-ansible 배포\n       ├─ Nova (Compute)\n       ├─ Neutron (Network)\n       └─ Cinder (Block Storage, HDD 4TB)",
+        "title_hint": "00 Overview",
+        "source_path_hint": "00_overview.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_03_bastion_hostname",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "`ost-deploy`",
+        "title_hint": "00 Overview",
+        "source_path_hint": "morphso/doc/guide/osteon/00_overview.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_04_controller_hostname",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 노드 구성 및 호스트네임 규칙\n\n| 역할 | 호스트네임 | 비고 |\n|------|-----------|------|\n| Controller | `ost-ctrl-01` | Keystone, Glance, Horizon, Neutron API |",
+        "title_hint": "00 Overview",
+        "source_path_hint": "00_overview.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_05_storage_hostname",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| Storage | `ost-stor-01` | Cinder, LVM on HDD 4TB |",
+        "title_hint": "00 Overview",
+        "source_path_hint": "00_overview.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_06_cinder_disk",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "└─ Cinder (Block Storage, HDD 4TB)\n            └─ Kubernetes (kubeadm 직접 설치)",
+        "title_hint": "00 Overview",
+        "source_path_hint": "00_overview.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_07_k8s_install_method",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Kubernetes (kubeadm 직접 설치)\n                 ├─ cloud-provider-openstack (Cinder CSI 연동)\n                 └─ Traefik (LoadBalancer ← Octavia Floating IP)",
+        "title_hint": "00 Overview",
+        "source_path_hint": "00_overview.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_08_iac_tool",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "OpenTofu (IaC)",
+        "title_hint": "00 Overview",
+        "source_path_hint": "morphso/doc/guide/osteon/00_overview.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_09_iptime_api_repo",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "github.com/Lyckabc/ipTIME-API",
+        "title_hint": "00 Overview",
+        "source_path_hint": "morphso/doc/guide/osteon/00_overview.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_10_mgmt_cidr",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "192.168.10.0/24",
+        "title_hint": "02 Network Design",
+        "source_path_hint": "morphso/doc/guide/osteon/02_network_design.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_11_tunnel_cidr",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "192.168.20.0/24",
+        "title_hint": "02 Network Design",
+        "source_path_hint": "morphso/doc/guide/osteon/02_network_design.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_12_storage_cidr",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "192.168.30.0/24",
+        "title_hint": "02 Network Design",
+        "source_path_hint": "morphso/doc/guide/osteon/02_network_design.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_13_floating_pool",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "192.168.0.200 ~ 192.168.0.250",
+        "title_hint": "02 Network Design",
+        "source_path_hint": "morphso/doc/guide/osteon/02_network_design.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_14_dhcp_range",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "192.168.0.2 ~ 192.168.0.199",
+        "title_hint": "00 Overview",
+        "source_path_hint": "morphso/doc/guide/osteon/00_overview.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_15_kolla_vip",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "192.168.10.100",
+        "title_hint": "02 Network Design",
+        "source_path_hint": "morphso/doc/guide/osteon/02_network_design.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_16_iptime_lan",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "192.168.0.0/16",
+        "title_hint": "02 Network Design",
+        "source_path_hint": "morphso/doc/guide/osteon/02_network_design.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_17_cpu_virt_check",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "egrep -c '(vmx|svm)' /proc/cpuinfo",
+        "title_hint": "01 Hardware Checklist",
+        "source_path_hint": "morphso/doc/guide/osteon/01_hardware_checklist.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_18_ram_controller",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "**역할 배정 기준**\n| 총 RAM | 권장 역할 |\n|--------|----------|\n| 64GB 이상 | Controller + Compute 겸용 가능 |\n| 32GB~63GB | Compute 전용 |",
+        "title_hint": "01 Hardware Checklist",
+        "source_path_hint": "01_hardware_checklist.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_19_kolla_ansible_version",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "# kolla-ansible Dalmatian(2024.2) 설치 — Dalmatian은 19.x 필요\npip install 'kolla-ansible==19.*'\n\n# Ansible 갤럭시 의존성 설치\nkolla-ansible install-deps",
+        "title_hint": "04 Kolla Ansible",
+        "source_path_hint": "04_kolla_ansible.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_20_kolla_genpwd",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "kolla-genpwd",
+        "title_hint": "04 Kolla Ansible",
+        "source_path_hint": "morphso/doc/guide/osteon/04_kolla_ansible.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_21_kolla_etc_path",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "/etc/kolla",
+        "title_hint": "04 Kolla Ansible",
+        "source_path_hint": "morphso/doc/guide/osteon/04_kolla_ansible.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_22_multinode_deployment",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "[storage]\nost-stor-01 ansible_user=<SSH_USER>\n\n[deployment]\nlocalhost ansible_connection=local\nEOF",
+        "title_hint": "04 Kolla Ansible",
+        "source_path_hint": "04_kolla_ansible.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_23_k8s_network_name",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "openstack network create k8s-net",
+        "title_hint": "05 Kubernetes",
+        "source_path_hint": "morphso/doc/guide/osteon/05_kubernetes.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_24_k8s_subnet_cidr",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "openstack subnet create k8s-subnet \\\n  --network k8s-net \\\n  --subnet-range 10.0.0.0/24 \\\n  --gateway 10.0.0.1 \\\n  --dns-nameserver 8.8.8.8",
+        "title_hint": "05 Kubernetes",
+        "source_path_hint": "05_kubernetes.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_25_k8s_keypair_name",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "openstack keypair create --public-key ~/.ssh/id_rsa.pub osteon-k8s-key",
+        "title_hint": "05 Kubernetes",
+        "source_path_hint": "05_kubernetes.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_26_opentofu_install",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "get.opentofu.org/install-opentofu.sh",
+        "title_hint": "06 Opentofu",
+        "source_path_hint": "morphso/doc/guide/osteon/06_opentofu.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_27_clouds_yaml_cloud",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "osteon:",
+        "title_hint": "06 Opentofu",
+        "source_path_hint": "morphso/doc/guide/osteon/06_opentofu.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_28_iac_root",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "mkdir -p ~/osteon-iac/{openstack,kubernetes}\ncd ~/osteon-iac\n\n디렉토리 구조:\nosteon-iac/\n├── openstack/          # OpenStack 리소스",
+        "title_hint": "06 Opentofu",
+        "source_path_hint": "06_opentofu.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_29_hosts_ost_deploy",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "192.168.10.10  ost-deploy",
+        "title_hint": "03 Ubuntu Setup",
+        "source_path_hint": "morphso/doc/guide/osteon/03_ubuntu_setup.md"
+      }
+    },
+    {
+      "query_external_id": "osteon_30_troubleshoot_k8s02",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "10.244.0.0/16",
+        "title_hint": "07 Troubleshooting",
+        "source_path_hint": "morphso/doc/guide/osteon/07_troubleshooting.md"
+      }
+    }
+  ]
+}

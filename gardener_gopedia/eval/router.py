@@ -7,6 +7,8 @@ from sqlalchemy.orm import Session
 
 from gardener_gopedia.core.config import get_settings
 from gardener_gopedia.core.db import get_session
+from gardener_gopedia.dataset.persist import persist_dataset_create
+from gardener_gopedia.dataset.presets import load_quality_preset
 from gardener_gopedia.eval.service import execute_eval_run
 from gardener_gopedia.core.models import (
     Dataset,
@@ -28,10 +30,24 @@ def start_eval(
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_session),
 ):
-    if not db.get(Dataset, body.dataset_id):
-        raise HTTPException(404, "dataset not found")
-
     settings = get_settings()
+    preset_key = (body.quality_preset or "").strip()
+
+    if preset_key:
+        try:
+            dataset_create = load_quality_preset(preset_key)
+        except FileNotFoundError as e:
+            raise HTTPException(400, str(e)) from e
+        ds_row = persist_dataset_create(db, dataset_create)
+        dataset_id = ds_row.id
+        resolve_before_eval = True
+    else:
+        did = (body.dataset_id or "").strip()
+        if not did or not db.get(Dataset, did):
+            raise HTTPException(404, "dataset not found")
+        dataset_id = did
+        resolve_before_eval = body.resolve_before_eval
+
     params = {
         "top_k": body.top_k,
         "query_timeout_s": body.query_timeout_s or settings.default_query_timeout_s,
@@ -49,10 +65,13 @@ def start_eval(
         "ragas_answer_metrics": body.ragas_answer_metrics
         if body.ragas_answer_metrics is not None
         else settings.ragas_answer_metrics,
-        "resolve_before_eval": body.resolve_before_eval,
+        "resolve_before_eval": resolve_before_eval,
     }
+    if preset_key:
+        params["quality_preset"] = preset_key.lower()
+
     row = EvalRun(
-        dataset_id=body.dataset_id,
+        dataset_id=dataset_id,
         target_url=body.target_url or settings.gopedia_base_url,
         ingest_run_id=body.ingest_run_id,
         git_sha=body.git_sha,
@@ -181,6 +200,63 @@ def get_queries(run_id: str, db: Session = Depends(get_session)):
             )
         )
     return out
+
+
+@router.get("/{run_id}/details")
+def get_run_details(run_id: str, db: Session = Depends(get_session)):
+    """
+    Per-query summary for debugging: Recall@5 and top-1 hit id (l3 when applicable).
+    Compatible with scripts that expect rows[].query_external_id, recall_at_5, top1_l3_id.
+    """
+    er = db.get(EvalRun, run_id)
+    if not er:
+        raise HTTPException(404, "run not found")
+
+    recall_rows = (
+        db.query(RunMetric)
+        .filter(
+            RunMetric.eval_run_id == run_id,
+            RunMetric.scope == "per_query",
+            RunMetric.metric_name == "Recall@5",
+        )
+        .all()
+    )
+    recall_by_q = {m.dataset_query_id: float(m.value) for m in recall_rows if m.dataset_query_id}
+
+    dqs = (
+        db.query(DatasetQuery)
+        .filter(DatasetQuery.dataset_id == er.dataset_id)
+        .order_by(DatasetQuery.external_id)
+        .all()
+    )
+
+    rows: list[dict] = []
+    for dq in dqs:
+        qhits = (
+            db.query(RunHit)
+            .filter(RunHit.eval_run_id == run_id, RunHit.dataset_query_id == dq.id)
+            .order_by(RunHit.rank)
+            .all()
+        )
+        top = qhits[0] if qhits else None
+        top1_l3_id = None
+        if top is not None:
+            tt = (top.target_type or "l3_id").lower()
+            if tt == "l3_id":
+                top1_l3_id = top.target_id
+        rows.append(
+            {
+                "query_external_id": dq.external_id,
+                "query_text": dq.query_text,
+                "recall_at_5": recall_by_q.get(dq.id),
+                "top1_l3_id": top1_l3_id,
+                "top1_target_id": top.target_id if top else None,
+                "top1_target_type": top.target_type if top else None,
+                "top1_title": top.title if top else None,
+            }
+        )
+
+    return {"eval_run_id": run_id, "rows": rows}
 
 
 @router.post("/{run_id}/wait", response_model=EvalRunOut)
