@@ -1,0 +1,489 @@
+{
+  "name": "template_level1_markdown_direct_fact_30",
+  "version": "1",
+  "curation_tier": "bronze",
+  "queries": [
+    {
+      "external_id": "l1_md_01_health_path",
+      "text": "Gopedia 프로세스 liveness 확인용 API 경로는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "GET /api/health"
+    },
+    {
+      "external_id": "l1_md_02_deps_path",
+      "text": "Postgres/Qdrant/TypeDB/Phloem 의존성 상태를 확인하는 API 경로는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "GET /api/health/deps"
+    },
+    {
+      "external_id": "l1_md_03_search_default_format",
+      "text": "GET /api/search에서 format 파라미터를 생략하면 기본 응답 포맷은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "markdown"
+    },
+    {
+      "external_id": "l1_md_04_summary_fields",
+      "text": "search JSON에서 detail=summary일 때 포함되는 대표 식별 필드는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "doc_id, l3_id, score, title, snippet, source_path"
+    },
+    {
+      "external_id": "l1_md_05_standard_extra",
+      "text": "detail=standard가 summary 대비 추가로 포함하는 계층 식별 필드 2개는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "l1_id, l2_id (및 project_id, section_heading, breadcrumb)"
+    },
+    {
+      "external_id": "l1_md_06_fields_override",
+      "text": "search JSON에서 fields와 detail을 함께 주면 어떤 옵션이 우선되는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "fields가 detail을 override한다."
+    },
+    {
+      "external_id": "l1_md_07_invalid_detail_status",
+      "text": "알 수 없는 detail 값이나 fields 키를 넣으면 HTTP 상태 코드는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "HTTP 400"
+    },
+    {
+      "external_id": "l1_md_08_sync_ingest_path",
+      "text": "동기 ingest API 경로는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "POST /api/ingest"
+    },
+    {
+      "external_id": "l1_md_09_async_ingest_path",
+      "text": "비동기 ingest job 생성 API 경로는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "POST /api/ingest/jobs"
+    },
+    {
+      "external_id": "l1_md_10_job_poll_path",
+      "text": "ingest job 상태 조회 API 경로 패턴은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "GET /api/jobs/{id}"
+    },
+    {
+      "external_id": "l1_md_11_ingest_idempotency_header",
+      "text": "비동기 ingest 재시도 안전성을 위해 권장되는 헤더 이름은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "Idempotency-Key"
+    },
+    {
+      "external_id": "l1_md_12_structured_error_key",
+      "text": "ingest/search 실패를 구조적으로 담는 응답 객체 키 이름은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "failure"
+    },
+    {
+      "external_id": "l1_md_13_retryable_field",
+      "text": "failure 객체에서 재시도 가능 여부를 나타내는 필드 이름은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "retryable"
+    },
+    {
+      "external_id": "l1_md_14_request_id_header",
+      "text": "요청-로그 상관관계를 위해 전달 권장되는 헤더는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "X-Request-ID"
+    },
+    {
+      "external_id": "l1_md_15_network_env_var",
+      "text": "dev 스택 스크립트 실행 전 Docker 네트워크를 지정하는 환경변수 이름은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "DOCKER_NETWORK_EXTERNAL"
+    },
+    {
+      "external_id": "l1_md_16_dev_network_name",
+      "text": "가이드에서 권장하는 로컬 dev Docker 네트워크 이름은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "gopedia-dev"
+    },
+    {
+      "external_id": "l1_md_17_run_ingestion_network_note",
+      "text": "run_ingestion_docker.sh가 하드코딩한 네트워크 이름은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "neunexus"
+    },
+    {
+      "external_id": "l1_md_18_compose_http_port",
+      "text": "docker-compose.dev에서 Gopedia HTTP API 기본 publish 포트는 몇 번인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "18787"
+    },
+    {
+      "external_id": "l1_md_19_cli_server_default_port",
+      "text": "gopedia server 커맨드의 기본 포트는 몇 번인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "8787"
+    },
+    {
+      "external_id": "l1_md_20_qdrant_collection_consistency",
+      "text": ".env/compose/scripts에서 일관되게 맞춰야 하는 벡터 컬렉션 변수 이름은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "QDRANT_COLLECTION"
+    },
+    {
+      "external_id": "l1_md_21_l1_definition",
+      "text": "Gopedia 계층에서 L1의 역할은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "문서 정체성을 나타내는 Global Summary"
+    },
+    {
+      "external_id": "l1_md_22_l2_definition",
+      "text": "Gopedia 계층에서 L2의 역할은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "섹션 라우팅을 위한 ToC/Sectional Summary"
+    },
+    {
+      "external_id": "l1_md_23_l3_definition",
+      "text": "Gopedia 계층에서 L3의 역할은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "LLM 인용 최소 단위인 Atomic Chunk"
+    },
+    {
+      "external_id": "l1_md_24_smart_sink_l1_store",
+      "text": "Smart Sink에서 L1은 기본적으로 어떤 저장소 조합에 기록되는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "PostgreSQL + Qdrant"
+    },
+    {
+      "external_id": "l1_md_25_smart_sink_l2_store",
+      "text": "Smart Sink에서 L2는 기본적으로 어떤 저장소 조합에 기록되는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "TypeDB + Qdrant"
+    },
+    {
+      "external_id": "l1_md_26_smart_sink_l3_store",
+      "text": "Smart Sink에서 L3는 기본적으로 어떤 저장소 조합에 기록되는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "Qdrant + ClickHouse"
+    },
+    {
+      "external_id": "l1_md_27_envelope_structure",
+      "text": "Gopedia Envelope의 핵심 구성 2가지는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "GopediaHeader + google.protobuf.Any payload"
+    },
+    {
+      "external_id": "l1_md_28_core_metaphor",
+      "text": "Gopedia의 Core Metaphor는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "Rhizome"
+    },
+    {
+      "external_id": "l1_md_29_key_value_count",
+      "text": "Gopedia가 제시하는 Key Value 개수는 몇 개인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "4개"
+    },
+    {
+      "external_id": "l1_md_30_key_values_names",
+      "text": "Gopedia의 네 가지 Key Value 이름은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "Pluggable, Scalable, Relational, Actionable"
+    }
+  ],
+  "qrels": [
+    {
+      "query_external_id": "l1_md_01_health_path",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "GET /api/health — process liveness.",
+        "title_hint": "Agent interoperability",
+        "source_path_hint": "doc/guide/agent-interop.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_02_deps_path",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "GET /api/health/deps — Dependency checks with latency.",
+        "title_hint": "Agent interoperability",
+        "source_path_hint": "doc/guide/agent-interop.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_03_search_default_format",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Search (default format = markdown).",
+        "title_hint": "Agent interoperability",
+        "source_path_hint": "doc/guide/agent-interop.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_04_summary_fields",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "detail=summary | Compact hits: doc_id, l3_id, score, title, snippet, source_path.",
+        "title_hint": "Search JSON",
+        "source_path_hint": "doc/guide/agent-interop.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_05_standard_extra",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "detail=standard | summary plus project_id, l1_id, l2_id, section_heading, breadcrumb.",
+        "title_hint": "Search JSON",
+        "source_path_hint": "doc/guide/agent-interop.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_06_fields_override",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "fields=a,b,c | sparse fieldset ... overrides detail when non-empty.",
+        "title_hint": "Search JSON",
+        "source_path_hint": "doc/guide/agent-interop.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_07_invalid_detail_status",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Invalid detail or unknown fields key -> HTTP 400.",
+        "title_hint": "Search JSON",
+        "source_path_hint": "doc/guide/agent-interop.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_08_sync_ingest_path",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "POST /api/ingest | Synchronous ingest.",
+        "title_hint": "Endpoints",
+        "source_path_hint": "doc/guide/agent-interop.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_09_async_ingest_path",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "POST /api/ingest/jobs | Async ingest job.",
+        "title_hint": "Endpoints",
+        "source_path_hint": "doc/guide/agent-interop.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_10_job_poll_path",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "GET /api/jobs/{id} | Job status.",
+        "title_hint": "Endpoints",
+        "source_path_hint": "doc/guide/agent-interop.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_11_ingest_idempotency_header",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "send header Idempotency-Key for safe retries.",
+        "title_hint": "Recommended call sequence",
+        "source_path_hint": "doc/guide/agent-interop.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_12_structured_error_key",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "failure (object, when present): code, message, details, retryable, request_id.",
+        "title_hint": "Structured errors",
+        "source_path_hint": "doc/guide/agent-interop.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_13_retryable_field",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Use failure.retryable for backoff retries.",
+        "title_hint": "Structured errors",
+        "source_path_hint": "doc/guide/agent-interop.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_14_request_id_header",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Pass X-Request-ID to correlate logs.",
+        "title_hint": "Structured errors",
+        "source_path_hint": "doc/guide/agent-interop.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_15_network_env_var",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "export DOCKER_NETWORK_EXTERNAL=gopedia-dev",
+        "title_hint": "Run guide",
+        "source_path_hint": "doc/guide/run.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_16_dev_network_name",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "local dev ... network gopedia-dev",
+        "title_hint": "Overview",
+        "source_path_hint": "doc/guide/overview.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_17_run_ingestion_network_note",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "run_ingestion_docker.sh hardcodes the network name neunexus.",
+        "title_hint": "Run guide",
+        "source_path_hint": "doc/guide/run.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_18_compose_http_port",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "HTTP API | 18787",
+        "title_hint": "Default published ports",
+        "source_path_hint": "doc/guide/run.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_19_cli_server_default_port",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "The default host port for gopedia server is 8787.",
+        "title_hint": "Run local API server",
+        "source_path_hint": "doc/guide/run.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_20_qdrant_collection_consistency",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "QDRANT_COLLECTION: use one value consistently across .env, compose, and scripts.",
+        "title_hint": "Run guide",
+        "source_path_hint": "doc/guide/run.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_21_l1_definition",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "L1 (Global Summary): 문서/자산의 정체성 — 무슨 문서인가.",
+        "title_hint": "기능별 설명 가이드",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_22_l2_definition",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "L2 (ToC / Sectional Summary): 지도 — 어느 섹션을 볼지 라우팅.",
+        "title_hint": "기능별 설명 가이드",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_23_l3_definition",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "L3 (Atomic Chunk): 증거 — LLM이 인용할 최소 단위.",
+        "title_hint": "기능별 설명 가이드",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_24_smart_sink_l1_store",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "L1 -> PostgreSQL(마스터) + Qdrant(L1 요약 임베딩).",
+        "title_hint": "Smart Sink",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_25_smart_sink_l2_store",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "L2 -> TypeDB(ToC/관계) + Qdrant(섹션 임베딩).",
+        "title_hint": "Smart Sink",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_26_smart_sink_l3_store",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "L3 -> Qdrant(청크 임베딩) + ClickHouse(원문/감사).",
+        "title_hint": "Smart Sink",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_27_envelope_structure",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "GopediaEnvelope: GopediaHeader + google.protobuf.Any payload.",
+        "title_hint": "Envelope",
+        "source_path_hint": "gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_28_core_metaphor",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Core Metaphor: Rhizome",
+        "title_hint": "Gopedia",
+        "source_path_hint": "gopedia/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_29_key_value_count",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Key Value는 총 4개로 정의된다.",
+        "title_hint": "Gopedia",
+        "source_path_hint": "gopedia/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "l1_md_30_key_values_names",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Pluggable, Scalable, Relational, Actionable",
+        "title_hint": "Gopedia",
+        "source_path_hint": "gopedia/SKILL.md"
+      }
+    }
+  ]
+}

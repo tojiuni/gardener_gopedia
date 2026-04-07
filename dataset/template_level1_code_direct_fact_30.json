@@ -1,0 +1,489 @@
+{
+  "name": "template_level1_code_direct_fact_30",
+  "version": "1",
+  "curation_tier": "bronze",
+  "queries": [
+    {
+      "external_id": "l1_code_01_source_type",
+      "text": "코드 도메인 검색 히트에서 코드 문서 식별용 source_type 값은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "code"
+    },
+    {
+      "external_id": "l1_code_02_l1_mapping",
+      "text": "코드 도메인에서 knowledge_l1은 무엇 기준으로 1개 행이 생성되는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "소스 파일 1개당 1개 L1"
+    },
+    {
+      "external_id": "l1_code_03_l2_mapping",
+      "text": "코드 도메인에서 knowledge_l2는 어떤 단위로 생성되는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "함수/클래스 등 top-level anchor 경계 단위"
+    },
+    {
+      "external_id": "l1_code_04_l3_mapping",
+      "text": "코드 도메인에서 knowledge_l3는 어떤 단위로 생성되는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "소스 코드 1줄당 1개 L3"
+    },
+    {
+      "external_id": "l1_code_05_sort_order_formula",
+      "text": "코드 L3의 sort_order 계산식은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "line_num * 1000"
+    },
+    {
+      "external_id": "l1_code_06_metadata_line_num",
+      "text": "knowledge_l3.source_metadata에서 원본 라인 번호를 담는 키는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "line_num"
+    },
+    {
+      "external_id": "l1_code_07_metadata_node_type",
+      "text": "knowledge_l3.source_metadata에서 tree-sitter 노드 타입을 담는 키는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "node_type"
+    },
+    {
+      "external_id": "l1_code_08_metadata_is_anchor",
+      "text": "knowledge_l3.source_metadata에서 anchor 라인 여부를 담는 키는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "is_anchor"
+    },
+    {
+      "external_id": "l1_code_09_only_anchor_embedded",
+      "text": "Qdrant 벡터 임베딩은 코드 L3 중 어떤 라인에만 생성되는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "함수/클래스 정의 같은 anchor 라인"
+    },
+    {
+      "external_id": "l1_code_10_parent_id_rule",
+      "text": "코드 내 함수 본문 라인의 parent_id는 어떤 L3를 가리키는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "해당 함수의 top-level anchor L3"
+    },
+    {
+      "external_id": "l1_code_11_run_code_module",
+      "text": "gRPC 기반 코드 ingest에 사용하는 Python 모듈 커맨드는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "python -m property.root_props.run_code"
+    },
+    {
+      "external_id": "l1_code_12_grpc_env_default",
+      "text": "GOPEDIA_PHLOEM_GRPC_ADDR 기본값은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "localhost:50051"
+    },
+    {
+      "external_id": "l1_code_13_http_ingest_path",
+      "text": "HTTP 방식으로 코드 파일 ingest할 때 사용하는 API 경로는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "POST /api/ingest"
+    },
+    {
+      "external_id": "l1_code_14_py_language_tag",
+      "text": ".py 확장자는 code ingest에서 어떤 language tag로 매핑되는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "python"
+    },
+    {
+      "external_id": "l1_code_15_go_language_tag",
+      "text": ".go 확장자는 code ingest에서 어떤 language tag로 매핑되는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "go"
+    },
+    {
+      "external_id": "l1_code_16_ts_language_tag",
+      "text": ".ts/.tsx 확장자는 code ingest에서 어떤 language tag로 매핑되는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "typescript"
+    },
+    {
+      "external_id": "l1_code_17_js_language_tag",
+      "text": ".js/.jsx 확장자는 code ingest에서 어떤 language tag로 처리되는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "typescript grammar 경로"
+    },
+    {
+      "external_id": "l1_code_18_fallback_language_tag",
+      "text": ".java/.rs/.cpp/.c/.h 확장자의 fallback language tag는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "python (regex fallback)"
+    },
+    {
+      "external_id": "l1_code_19_code_hit_title",
+      "text": "코드 검색 결과에서 파일 경로 식별에 주로 쓰는 필드는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "title"
+    },
+    {
+      "external_id": "l1_code_20_code_hit_snippet",
+      "text": "코드 검색 결과에서 매칭된 함수/클래스 정의 라인을 담는 필드는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "snippet"
+    },
+    {
+      "external_id": "l1_code_21_surrounding_context_role",
+      "text": "코드 검색 결과의 surrounding_context는 어떤 범위의 내용을 담는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "같은 L2 chunk의 인접 라인 컨텍스트"
+    },
+    {
+      "external_id": "l1_code_22_detail_summary_use",
+      "text": "코드 검색에서 detail=summary는 주로 어떤 목적에 적합한가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "저비용으로 함수명/파일경로 빠른 탐색"
+    },
+    {
+      "external_id": "l1_code_23_detail_standard_use",
+      "text": "코드 검색에서 detail=standard를 쓰면 function body 복원에 유용한 어떤 ID를 얻을 수 있는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "l2_id"
+    },
+    {
+      "external_id": "l1_code_24_detail_full_use",
+      "text": "코드 검색에서 detail=full 기본 응답은 어떤 컨텍스트 필드를 포함하는가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "surrounding_context"
+    },
+    {
+      "external_id": "l1_code_25_restore_l1_func",
+      "text": "L1 기준으로 원본 소스 파일 전체를 복원하는 함수 이름은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "restore_content_for_l1"
+    },
+    {
+      "external_id": "l1_code_26_restore_l2_func",
+      "text": "L2 기준으로 함수/섹션 코드를 복원하는 함수 이름은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "restore_code_for_l2"
+    },
+    {
+      "external_id": "l1_code_27_restore_snippet_func",
+      "text": "l3_id 기준 코드 스니펫을 가져오는 함수 이름은 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "fetch_code_snippet"
+    },
+    {
+      "external_id": "l1_code_28_anchor_sql_filter",
+      "text": "SQL에서 anchor 라인만 조회할 때 source_metadata에서 사용하는 bool 키는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "is_anchor"
+    },
+    {
+      "external_id": "l1_code_29_no_pipeline_fix",
+      "text": "no pipeline registered for domain: code 오류 시 가이드의 기본 조치는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "API 이미지 rebuild 후 재기동"
+    },
+    {
+      "external_id": "l1_code_30_resolve_zero_fix",
+      "text": "code dataset에서 resolve-qrels가 0 resolved일 때 우선 확인할 조치는 무엇인가?",
+      "tier": "level1_direct_fact",
+      "reference_answer": "먼저 run_code로 코드 파일 ingest 수행"
+    }
+  ],
+  "qrels": [
+    {
+      "query_external_id": "l1_code_01_source_type",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Code hits have source_type: \"code\" in the Qdrant payload.",
+        "title_hint": "Code domain",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_02_l1_mapping",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "knowledge_l1 | One row per source file",
+        "title_hint": "L1/L2/L3 mapping",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_03_l2_mapping",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "knowledge_l2 | One chunk per top-level anchor",
+        "title_hint": "L1/L2/L3 mapping",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_04_l3_mapping",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "knowledge_l3 | One row per source line",
+        "title_hint": "L1/L2/L3 mapping",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_05_sort_order_formula",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "sort_order = line_num * 1000",
+        "title_hint": "L1/L2/L3 mapping",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_06_metadata_line_num",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "\"line_num\": 26",
+        "title_hint": "source_metadata schema",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_07_metadata_node_type",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "\"node_type\": \"function_definition\"",
+        "title_hint": "source_metadata schema",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_08_metadata_is_anchor",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "\"is_anchor\": true",
+        "title_hint": "source_metadata schema",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_09_only_anchor_embedded",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "only these lines get Qdrant vectors",
+        "title_hint": "source_metadata schema",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_10_parent_id_rule",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Inner lines point to their enclosing anchor.",
+        "title_hint": "parent_id hierarchy",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_11_run_code_module",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "python -m property.root_props.run_code path/to/file.py",
+        "title_hint": "Ingesting code files",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_12_grpc_env_default",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "GOPEDIA_PHLOEM_GRPC_ADDR | default localhost:50051",
+        "title_hint": "Environment variables",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_13_http_ingest_path",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "curl -X POST http://127.0.0.1:18787/api/ingest",
+        "title_hint": "Via HTTP API",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_14_py_language_tag",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": ".py | python",
+        "title_hint": "Supported languages",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_15_go_language_tag",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": ".go | go",
+        "title_hint": "Supported languages",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_16_ts_language_tag",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": ".ts .tsx | typescript",
+        "title_hint": "Supported languages",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_17_js_language_tag",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": ".js .jsx | typescript (covered by typescript grammar)",
+        "title_hint": "Supported languages",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_18_fallback_language_tag",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": ".java .rs .cpp .c .h | python (fallback)",
+        "title_hint": "Supported languages",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_19_code_hit_title",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "use title (absolute file path) ... to identify code hits",
+        "title_hint": "Identifying code hits",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_20_code_hit_snippet",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "snippet (matched anchor line)",
+        "title_hint": "Identifying code hits",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_21_surrounding_context_role",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "surrounding_context contains neighboring L3 lines within the same L2 chunk.",
+        "title_hint": "Searching code",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_22_detail_summary_use",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "detail=summary | File path + function signature; low token use.",
+        "title_hint": "Detail presets for code",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_23_detail_standard_use",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "detail=standard ... enough to fetch full chunk via restore",
+        "title_hint": "Detail presets for code",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_24_detail_full_use",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "full (default) includes surrounding_context",
+        "title_hint": "Detail presets for code",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_25_restore_l1_func",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Full file restore — restore_content_for_l1",
+        "title_hint": "Restoring code from PostgreSQL",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_26_restore_l2_func",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Function / section restore — restore_code_for_l2",
+        "title_hint": "Restoring code from PostgreSQL",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_27_restore_snippet_func",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Snippet for a search hit — fetch_code_snippet",
+        "title_hint": "Restoring code from PostgreSQL",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_28_anchor_sql_filter",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "(source_metadata->>'is_anchor')::bool = true",
+        "title_hint": "Verify ingested structure",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_29_no_pipeline_fix",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "no pipeline registered for domain: code ... Rebuild image",
+        "title_hint": "Troubleshooting",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    },
+    {
+      "query_external_id": "l1_code_30_resolve_zero_fix",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "resolve-qrels returns 0 resolved | Code files not yet ingested",
+        "title_hint": "Troubleshooting",
+        "source_path_hint": "doc/guide/code-domain.md"
+      }
+    }
+  ]
+}

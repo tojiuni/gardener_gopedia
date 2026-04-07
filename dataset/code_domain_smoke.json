@@ -1,0 +1,99 @@
+{
+  "name": "code_domain_smoke",
+  "version": "1",
+  "curation_tier": "bronze",
+  "queries": [
+    {
+      "external_id": "q_pg_connect_func",
+      "text": "postgres 연결 함수 정의",
+      "tier": "easy",
+      "reference_answer": "def _pg_connect(): 함수가 psycopg.connect()를 호출하여 환경변수 POSTGRES_HOST, PORT, DB, USER, PASSWORD로 연결한다."
+    },
+    {
+      "external_id": "q_code_chunker_struct",
+      "text": "CodeChunker 구조체 정의",
+      "tier": "easy",
+      "reference_answer": "type CodeChunker struct { Parser *toc.CodeTOCParser } — Parser 필드 하나를 갖는 구조체다."
+    },
+    {
+      "external_id": "q_l3_lines_field",
+      "text": "Chunk에서 1 line = 1 L3 저장을 위한 필드",
+      "tier": "medium",
+      "reference_answer": "types.Chunk에 L3Lines []CodeLine 필드가 추가되어 코드 라인 단위 L3 저장을 지원한다."
+    },
+    {
+      "external_id": "q_build_code_chunks",
+      "text": "buildCodeChunks 함수 역할",
+      "tier": "medium",
+      "reference_answer": "buildCodeChunks(content, lines []CodeLine)는 CodeLine 목록을 top-level anchor 경계로 그룹화해 []types.Chunk를 반환한다."
+    },
+    {
+      "external_id": "q_restore_code_l2",
+      "text": "L2 단위 코드 복원 함수 사용법",
+      "tier": "medium",
+      "reference_answer": "restore_code_for_l2(conn, l2_id)는 해당 L2의 L3 행을 sort_order 순으로 조회해 원본 소스 코드 라인을 개행 문자로 이어 붙여 반환한다."
+    },
+    {
+      "external_id": "q_xylem_verify_schema",
+      "text": "xylem verify flow에서 knowledge_l2 스키마 확인 함수",
+      "tier": "hard",
+      "reference_answer": "_require_knowledge_l2_schema(cur) 함수가 title_id 컬럼과 source_metadata 컬럼 존재 여부를 검사하고, 없으면 SystemExit(4)를 반환한다."
+    }
+  ],
+  "qrels": [
+    {
+      "query_external_id": "q_pg_connect_func",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "def _pg_connect():",
+        "source_path_hint": "verify_xylem_flow.py"
+      }
+    },
+    {
+      "query_external_id": "q_code_chunker_struct",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "type CodeChunker struct {",
+        "source_path_hint": "chunker/code.go"
+      }
+    },
+    {
+      "query_external_id": "q_l3_lines_field",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "L3Lines []CodeLine",
+        "source_path_hint": "chunker/code.go"
+      }
+    },
+    {
+      "query_external_id": "q_build_code_chunks",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "func buildCodeChunks(content string, lines []types.CodeLine) []types.Chunk {",
+        "source_path_hint": "chunker/code.go"
+      }
+    },
+    {
+      "query_external_id": "q_restore_code_l2",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "def restore_code_for_l2",
+        "source_path_hint": "verify_xylem_flow.py"
+      }
+    },
+    {
+      "query_external_id": "q_xylem_verify_schema",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "def _require_knowledge_l2_schema",
+        "source_path_hint": "verify_xylem_flow.py"
+      }
+    }
+  ]
+}
