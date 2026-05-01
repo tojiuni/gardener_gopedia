@@ -297,36 +297,101 @@ kubectl rollout restart deployment/openclaw -n ai-assistant
 
 ---
 
-### TG-02: Cogito가 gardener-gopedia capability를 라우팅하지 못함 *(미해결)*
+### TG-02: Cogito가 gardener-gopedia capability를 라우팅하지 못함 *(해결됨)*
 
 **현상**
 
-"gardener-gopedia 헬스 체크해줘" 전송 시 cogito가 `steps=1` replan을 생성하지만  
+"gardener-gopedia 헬스 체크해줘" 전송 시 cogito가 `steps=0 ambiguous=True` 를 반환하고  
 gardener-gopedia bot `/execute` 에 실제 호출이 도달하지 않음.
 
-**원인**
+**원인 (복합)**
 
-Cogito는 gopedia(RAG)에서 내부 문서를 검색해 `target_bot`과 `capability`를 결정함.  
-gopedia에 `gardener-gopedia` 봇의 SOUL.md / capabilities 문서가 인덱싱되어 있지 않아  
-cogito가 적절한 봇 매핑을 생성하지 못함.
+| # | 원인 |
+|---|------|
+| 1 | cogito `BOT_REGISTRY` 에 `gardener-gopedia` 미등록 (오래된 이미지 배포) |
+| 2 | gopedia 인덱스에 SOUL.md 없음 — cogito LLM이 capability 를 찾지 못함 |
+
+Cogito는 gopedia RAG 검색 결과와 `BOT_REGISTRY` 를 결합해 `target_bot` / `capability` 를 결정한다.  
+두 조건이 모두 충족되어야 `steps=1 ambiguous=False` plan이 생성된다.
 
 **재현 조건**
 
 ```
-Telegram → OpenClaw → Cogito → (gopedia 검색 실패) → gardener-gopedia 미호출
+Telegram → OpenClaw → Cogito → (BOT_REGISTRY 미등록 or gopedia 검색 실패) → steps=0 또는 잘못된 bot 호출
 ```
 
-**해결 방법 (TODO)**
+**해결**
 
-1. `services/bots/gardener-gopedia/SOUL.md` (capabilities 포함) 를 neunexus 레포에 생성
-2. gopedia에 해당 문서 ingest
-3. cogito 재시작 (새 문서 반영)
+1. `services/bots/gardener-gopedia/SOUL.md` 를 neunexus 레포에 추가 (neunexus PR #90)
+2. gopedia에 SOUL.md ingest:
+   ```bash
+   # SSH 터널 확인 후 pod에 파일 복사
+   POD=$(kubectl get pod -n gopedia-svc -l app=gopedia-svc -o jsonpath='{.items[0].metadata.name}')
+   kubectl cp /path/to/SOUL.md gopedia-svc/$POD:/tmp/SOUL.md
+   # MCP 도구로 ingest
+   # gopedia_ingest(path="/tmp/SOUL.md")
+   ```
+3. cogito BOT_REGISTRY 최신 이미지 배포:
+   ```bash
+   # Woodpecker 파이프라인 재실행 (neunexus 레포 bots.yml)
+   woodpecker-cli pipeline start tojiuni/neunexus <latest-pipeline-number>
+   # ArgoCD Application kustomize image 수동 업데이트 (Image Updater 오류 시)
+   kubectl patch application cogito -n metaflow --type json \
+     -p '[{"op":"replace","path":"/spec/source/kustomize/images/0","value":"artifacts.toji.homes/neunexus/cogito-bot:latest@sha256:<new-digest>"}]'
+   ```
+4. 인덱싱 확인:
+   ```bash
+   curl -s "http://127.0.0.1:18787/api/search?q=gardener+gopedia+capability&format=json" \
+     | jq '.results[].title'
+   ```
+
+> **E2E 검증 결과**: "gardener gopedia 상태 확인해줘" → cogito `steps=1 ambiguous=False` →  
+> gardener-gopedia `/execute capability=gardener.health` 호출 성공 (2026-05-02)
+
+---
+
+### TG-03: ArgoCD Image Updater — `digest` 전략 오류로 cogito 이미지 자동 업데이트 실패
+
+**현상**
+
+```
+Could not get tags from registry: cannot use update strategy 'digest' for image
+'app=artifacts.toji.homes/neunexus/cogito-bot' without a version constraint
+```
+
+새 cogito 이미지가 빌드되어도 ArgoCD가 자동으로 배포하지 않음.
+
+**원인**
+
+ArgoCD Image Updater가 이전에 `kustomize.images` override 를 `latest@sha256:OLD` 로 설정한 후,  
+다음 업데이트 시도에서 현재 image_tag 를 `sha256:OLD` (digest만) 로 읽어 version constraint 없이 처리.
+
+`image-list` annotation 이 `cogito-bot` (`:latest` 없음) 으로 저장되어 있으면 동일 오류 발생.
+
+**임시 해결 (수동 digest 업데이트)**
 
 ```bash
-# 인덱싱 확인
-curl -s http://gopedia-svc:18787/api/search \
-  -d '{"query":"gardener gopedia capability"}' | jq '.results[].title'
+# 1. 레지스트리에서 새 digest 확인
+curl -sI -u "woodpecker:<REGISTRY_TOKEN>" \
+  "https://artifacts.toji.homes/v2/neunexus/cogito-bot/manifests/latest" \
+  -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+  | grep docker-content-digest
+
+# 2. ArgoCD Application 패치
+NEW_DIGEST="sha256:<new-digest>"
+kubectl patch application cogito -n metaflow --type json \
+  -p "[{\"op\":\"replace\",\"path\":\"/spec/source/kustomize/images/0\",\"value\":\"artifacts.toji.homes/neunexus/cogito-bot:latest@${NEW_DIGEST}\"}]"
 ```
+
+**영구 해결 (TODO)**
+
+`deploy/argocd-apps/cogito.yaml` 에서 `image-list` 에 `:latest` version constraint 가 포함되어 있는지 확인:
+
+```yaml
+argocd-image-updater.argoproj.io/image-list: "app=artifacts.toji.homes/neunexus/cogito-bot:latest"
+```
+
+Image Updater 가 override 를 쓸 때 `:latest` 를 유지하도록 ArgoCD Application 을 재생성하면 자동 업데이트가 복구된다.
 
 ---
 
