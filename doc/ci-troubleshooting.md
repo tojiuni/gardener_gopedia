@@ -121,7 +121,7 @@ kubectl get svc -n dagger
 
 `.woodpecker/ci.yml` 에 path filter 가 없어 모든 PR이 빌드 검증을 실행합니다.
 
-**해결** (선택적 적용)
+**해결** ([gardener_gopedia#17](https://github.com/tojiuni/gardener_gopedia/pull/17))
 
 ```yaml
 steps:
@@ -134,13 +134,15 @@ steps:
             - "Dockerfile"
             - "pyproject.toml"
             - "alembic/**"
+            - "ci/**"
           exclude:
             - "doc/**"
             - "dataset/**"
             - "*.md"
 ```
 
-path filter를 추가하면 코드 변경이 없는 PR에서는 빌드 단계를 건너뜁니다.
+`ci/**` 도 include에 추가해 CI 스크립트 변경 시 검증이 실행되도록 합니다.
+path filter를 적용하면 코드 변경이 없는 PR에서는 빌드 단계를 건너뜁니다.
 
 ---
 
@@ -191,9 +193,9 @@ pipeline의 `clone` 단계가 60–90초 걸립니다. (정상 레포 대비 느
 `dataset/` 디렉토리에 대용량 JSON 파일이 체크인되어 있습니다 (각 489KB, 6개 이상).
 Woodpecker agent 가 전체 히스토리를 클론합니다.
 
-**해결** (선택적)
+**해결** ([gardener_gopedia#17](https://github.com/tojiuni/gardener_gopedia/pull/17))
 
-`.woodpecker/ci.yml` 에 shallow clone 설정 추가:
+`.woodpecker/ci.yml` 최상단에 shallow clone 설정 추가:
 
 ```yaml
 clone:
@@ -202,8 +204,6 @@ clone:
     settings:
       depth: 1   # shallow clone — 히스토리 1개만
 ```
-
-또는 `.woodpeckerignore` 로 대용량 파일 제외 (Woodpecker는 .gitignore 스타일이 아닌 경로 기반):
 
 > 현재 Woodpecker에서 clone 단계의 파일 필터링은 지원하지 않습니다. shallow clone이 가장 효과적입니다.
 
