@@ -4,12 +4,6 @@
 # Woodpecker Secrets 필요:
 #   REGISTRY_TOKEN   — artifacts.toji.homes woodpecker-ci 유저 API 토큰
 
-# shallow clone: 히스토리 1개만 (dataset/ JSON 파일 클론 시간 단축)
-# image 미지정 — Woodpecker 기본 clone 이미지 사용 (커스텀 이미지는 allow list 필요)
-clone:
-  git:
-    settings:
-      depth: 1
 
 when:
   - event: push
