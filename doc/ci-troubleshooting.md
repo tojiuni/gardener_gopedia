@@ -1,6 +1,6 @@
-# CI 트러블슈팅 가이드
+# 트러블슈팅 가이드
 
-Woodpecker CI (ci.toji.homes) + Dagger 파이프라인에서 발생할 수 있는 문제와 해결 방법을 정리합니다.
+Woodpecker CI (ci.toji.homes) + Dagger 파이프라인 및 K8s 운영 중 발생할 수 있는 문제와 해결 방법을 정리합니다.
 
 ---
 
@@ -210,6 +210,123 @@ Woodpecker agent 가 전체 히스토리를 클론합니다.
 ```
 
 > 현재 Woodpecker에서 clone 단계의 파일 필터링은 지원하지 않습니다.
+
+---
+
+---
+
+## Eval 파이프라인 이슈
+
+---
+
+### EVAL-01: `quality_preset` 모드 — 컨테이너에 dataset 파일 없음
+
+**현상**
+
+```
+{"detail": "preset file missing for 'osteon': /app/dataset/sample_osteon_guide_30_v2.json"}
+```
+
+**원인**
+
+`Dockerfile`에 `COPY dataset/ ./dataset/` 가 없어서 컨테이너 내부에 dataset JSON 파일이 없었음.
+
+**해결** (gardener_gopedia PR #20)
+
+```dockerfile
+COPY dataset/ ./dataset/
+```
+
+> `ci/run.py`의 `BUILD_INCLUDE`에 `"dataset/**"`도 함께 추가해야 Dagger 빌드 컨텍스트에 포함됨.
+
+---
+
+### EVAL-02: unresolved qrels로 eval run 전체 실패
+
+**현상**
+
+```
+dataset has qrels without target_id (unresolved target_data).
+POST /datasets/{id}/resolve-qrels or pass resolve_before_eval=true on the eval run.
+```
+
+`resolve_before_eval=true`를 전달해도 일부 qrel이 resolve 실패하면 run 전체가 fail 처리됨.
+
+**원인**
+
+`eval/service.py` 가 unresolved qrel이 1개라도 있으면 즉시 run을 `failed` 로 설정.
+eval loop는 이미 `target_id=null` 인 qrel을 자연스럽게 skip하는 코드가 있었으나 그 앞에 hard block이 있었음.
+
+**해결** (gardener_gopedia PR #20)
+
+unresolved qrel이 있어도 warn + skip으로 처리. resolved가 0개일 때만 fail:
+
+```python
+if resolved_count == 0:
+    # fail
+else:
+    logger.warning("run %s: %d/%d qrels unresolved — skipping", ...)
+```
+
+---
+
+## Telegram / OpenClaw 라우팅 이슈
+
+---
+
+### TG-01: gardener-gopedia가 OpenClaw bot-registry에 미등록
+
+**현상**
+
+Telegram에서 `/gardener-gopedia` 명령 전송 시 `IntentType.READ bot=openclaw` 만 처리되고 `/execute` 미호출.
+
+**원인**
+
+`ai-assistant/bot-registry` ConfigMap에 `gardener-gopedia` 항목이 없었음.
+
+**해결**
+
+```bash
+kubectl patch configmap -n ai-assistant bot-registry \
+  --type merge \
+  -p '{"data":{"gardener-gopedia":"http://gardener-gopedia.gardener-gopedia.svc.cluster.local:8080"}}'
+kubectl rollout restart deployment/openclaw -n ai-assistant
+```
+
+> 등록 후 OpenClaw를 재시작해야 변경된 registry를 로드함.
+
+---
+
+### TG-02: Cogito가 gardener-gopedia capability를 라우팅하지 못함 *(미해결)*
+
+**현상**
+
+"gardener-gopedia 헬스 체크해줘" 전송 시 cogito가 `steps=1` replan을 생성하지만  
+gardener-gopedia bot `/execute` 에 실제 호출이 도달하지 않음.
+
+**원인**
+
+Cogito는 gopedia(RAG)에서 내부 문서를 검색해 `target_bot`과 `capability`를 결정함.  
+gopedia에 `gardener-gopedia` 봇의 SOUL.md / capabilities 문서가 인덱싱되어 있지 않아  
+cogito가 적절한 봇 매핑을 생성하지 못함.
+
+**재현 조건**
+
+```
+Telegram → OpenClaw → Cogito → (gopedia 검색 실패) → gardener-gopedia 미호출
+```
+
+**해결 방법 (TODO)**
+
+1. `services/bots/gardener-gopedia/SOUL.md` (capabilities 포함) 를 neunexus 레포에 생성
+2. gopedia에 해당 문서 ingest
+3. cogito 재시작 (새 문서 반영)
+
+```bash
+# 인덱싱 확인
+curl -s http://gopedia-svc:18787/api/search \
+  -d '{"query":"gardener gopedia capability"}' | jq '.results[].title'
+```
 
 ---
 
