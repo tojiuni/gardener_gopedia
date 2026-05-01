@@ -200,11 +200,13 @@ Woodpecker agent 가 전체 히스토리를 클론합니다.
 ```yaml
 clone:
   git:
-    image: woodpecker/plugin-git
     settings:
       depth: 1   # shallow clone — 히스토리 1개만
 ```
 
+> **주의**: `image:` 를 명시하면 Woodpecker allow list 미등록 시 `netrc is not injected` 오류가 발생합니다.
+> `image:` 를 생략하면 Woodpecker 기본 clone 이미지가 사용되며 `settings.depth` 는 그대로 적용됩니다.
+>
 > 현재 Woodpecker에서 clone 단계의 파일 필터링은 지원하지 않습니다. shallow clone이 가장 효과적입니다.
 
 ---
