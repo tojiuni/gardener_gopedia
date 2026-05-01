@@ -193,21 +193,23 @@ pipeline의 `clone` 단계가 60–90초 걸립니다. (정상 레포 대비 느
 `dataset/` 디렉토리에 대용량 JSON 파일이 체크인되어 있습니다 (각 489KB, 6개 이상).
 Woodpecker agent 가 전체 히스토리를 클론합니다.
 
-**해결** ([gardener_gopedia#17](https://github.com/tojiuni/gardener_gopedia/pull/17))
+**현재 상태**: 미적용 (Woodpecker 서버 제약으로 보류)
 
-`.woodpecker/ci.yml` 최상단에 shallow clone 설정 추가:
+`clone:` 블록을 `.woodpecker/ci.yml` 에 추가하면 Woodpecker 린터가 다음 두 오류 중 하나로 파이프라인 전체를 block합니다:
 
-```yaml
-clone:
-  git:
-    settings:
-      depth: 1   # shallow clone — 히스토리 1개만
+| 설정 | 오류 |
+|------|------|
+| `image: woodpecker/plugin-git` 명시 | `Specified clone image does not match allow list, netrc is not injected` |
+| `image:` 생략 | `Invalid or missing image` |
+
+커스텀 `clone` 블록을 쓰려면 서버 설정 `WOODPECKER_PLUGINS_TRUSTED` 에 해당 이미지를 등록해야 합니다. 등록 전까지는 `clone:` 블록 없이 기본 full clone 을 사용합니다.
+
+```bash
+# Woodpecker 서버에서 (운영자 설정)
+# WOODPECKER_PLUGINS_TRUSTED=woodpecker/plugin-git 환경변수 추가 후 재시작
 ```
 
-> **주의**: `image:` 를 명시하면 Woodpecker allow list 미등록 시 `netrc is not injected` 오류가 발생합니다.
-> `image:` 를 생략하면 Woodpecker 기본 clone 이미지가 사용되며 `settings.depth` 는 그대로 적용됩니다.
->
-> 현재 Woodpecker에서 clone 단계의 파일 필터링은 지원하지 않습니다. shallow clone이 가장 효과적입니다.
+> 현재 Woodpecker에서 clone 단계의 파일 필터링은 지원하지 않습니다.
 
 ---
 
