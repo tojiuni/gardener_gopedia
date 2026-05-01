@@ -12,13 +12,22 @@ REGISTRY = "artifacts.toji.homes"
 IMAGE_NAME = "gardener-gopedia-svc"
 
 
+BUILD_INCLUDE = [
+    "gardener_gopedia/**",
+    "alembic/**",
+    "dataset/**",
+    "pyproject.toml",
+    "Dockerfile",
+]
+
+
 async def _build_and_push(
     client: dagger.Client, token: dagger.Secret, sha: str, version_tag: str | None = None
 ) -> str:
     tag = sha[:7]
     container = (
         client.host()
-        .directory(".")
+        .directory(".", include=BUILD_INCLUDE)
         .docker_build(dockerfile="Dockerfile")
         .with_registry_auth(REGISTRY, "woodpecker", token)
     )
@@ -37,7 +46,7 @@ async def _build_and_push(
 async def _validate(client: dagger.Client) -> str:
     await (
         client.host()
-        .directory(".")
+        .directory(".", include=BUILD_INCLUDE)
         .docker_build(dockerfile="Dockerfile")
     )
     return f"✓ {IMAGE_NAME}: build OK"
