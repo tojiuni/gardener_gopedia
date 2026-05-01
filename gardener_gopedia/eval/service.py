@@ -115,14 +115,23 @@ def execute_eval_run(db: Session, eval_run_id: str) -> None:
 
     qrels_rows = db.query(Qrel).filter(Qrel.dataset_id == dataset.id).all()
     if dataset_has_unresolved_qrels(db, dataset.id):
-        row.status = RunStatus.failed.value
-        row.error_message = (
-            "dataset has qrels without target_id (unresolved target_data). "
-            "POST /datasets/{id}/resolve-qrels or pass resolve_before_eval=true on the eval run."
+        unresolved_count = sum(1 for q in qrels_rows if not (q.target_id or "").strip())
+        resolved_count = len(qrels_rows) - unresolved_count
+        if resolved_count == 0:
+            row.status = RunStatus.failed.value
+            row.error_message = (
+                "dataset has no resolved qrels — all target_data entries are unresolved. "
+                "POST /datasets/{id}/resolve-qrels or pass resolve_before_eval=true on the eval run."
+            )
+            row.ended_at = datetime.utcnow()
+            db.commit()
+            return
+        logger.warning(
+            "run %s: %d/%d qrels unresolved — skipping those queries in eval",
+            row.id,
+            unresolved_count,
+            len(qrels_rows),
         )
-        row.ended_at = datetime.utcnow()
-        db.commit()
-        return
 
     qrels_by_query: dict[str, list[Qrel]] = {}
     for q in qrels_rows:

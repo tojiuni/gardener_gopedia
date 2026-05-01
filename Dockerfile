@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir .
 
 COPY gardener_gopedia/ ./gardener_gopedia/
 COPY alembic/ ./alembic/
+COPY dataset/ ./dataset/
 
 EXPOSE 18880
 CMD ["uvicorn", "gardener_gopedia.main:app", "--host", "0.0.0.0", "--port", "18880"]
