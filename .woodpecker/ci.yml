@@ -4,6 +4,13 @@
 # Woodpecker Secrets 필요:
 #   REGISTRY_TOKEN   — artifacts.toji.homes woodpecker-ci 유저 API 토큰
 
+# shallow clone: 히스토리 1개만 (dataset/ JSON 파일 클론 시간 단축)
+clone:
+  git:
+    image: woodpecker/plugin-git
+    settings:
+      depth: 1
+
 when:
   - event: push
     branch: main
@@ -13,6 +20,8 @@ when:
 
 steps:
   # ── PR: 빌드 검증만 (push 없음) ─────────────────────────────────────────
+  # path filter: 코드/설정 변경이 있는 PR에서만 Docker build 검증 실행
+  # doc/**·dataset/**·*.md 만 바뀐 PR은 건너뜀
   - name: validate-pr
     image: python:3.12-slim
     environment:
@@ -22,6 +31,17 @@ steps:
       - python ci/run.py validate
     when:
       - event: pull_request
+        path:
+          include:
+            - "gardener_gopedia/**"
+            - "Dockerfile"
+            - "pyproject.toml"
+            - "alembic/**"
+            - "ci/**"
+          exclude:
+            - "doc/**"
+            - "dataset/**"
+            - "*.md"
 
   # ── main push / manual / tag: 빌드 + registry push ─────────────────────
   - name: build-push
