@@ -16,10 +16,9 @@ from gardener_gopedia.core.models import (
     EvalRun,
     RunHit,
     RunMetric,
-    RunRagasSample,
     RunStatus,
 )
-from gardener_gopedia.schemas import EvalRunCreate, EvalRunOut, QueryResultOut, RunMetricOut, eval_run_to_out
+from gardener_gopedia.schemas import EvalRunCreate, EvalRunOut, QueryTopKOut, QrelRankOut, RunMetricOut, eval_run_to_out
 
 router = APIRouter()
 
@@ -124,8 +123,11 @@ def get_metrics(run_id: str, db: Session = Depends(get_session)):
     ]
 
 
-@router.get("/{run_id}/queries", response_model=list[QueryResultOut])
+@router.get("/{run_id}/queries", response_model=list[QueryTopKOut])
 def get_queries(run_id: str, db: Session = Depends(get_session)):
+    """Return per-query top-k hit list with qrel ranks and per-query metrics."""
+    from gardener_gopedia.core.models import Qrel
+
     er = db.get(EvalRun, run_id)
     if not er:
         raise HTTPException(404, "run not found")
@@ -136,67 +138,54 @@ def get_queries(run_id: str, db: Session = Depends(get_session)):
         .order_by(DatasetQuery.external_id)
         .all()
     )
-    metrics = db.query(RunMetric).filter(RunMetric.eval_run_id == run_id, RunMetric.scope == "per_query").all()
-    m_by_q: dict[str, list[RunMetricOut]] = {}
-    for m in metrics:
+
+    # Index per-query metrics by (dataset_query_id, metric_name)
+    per_query_metrics: dict[str, dict[str, float]] = {}
+    for m in db.query(RunMetric).filter(
+        RunMetric.eval_run_id == run_id, RunMetric.scope == "per_query"
+    ).all():
         if m.dataset_query_id:
-            m_by_q.setdefault(m.dataset_query_id, []).append(
-                RunMetricOut(
-                    metric_name=m.metric_name,
-                    value=m.value,
-                    scope=m.scope,
-                    dataset_query_id=m.dataset_query_id,
-                    details_json=m.details_json,
-                )
-            )
+            per_query_metrics.setdefault(m.dataset_query_id, {})[m.metric_name] = float(m.value)
 
-    ragas_by_q: dict[str, str | None] = {}
-    for rs in (
-        db.query(RunRagasSample)
-        .filter(RunRagasSample.eval_run_id == run_id)
-        .all()
-    ):
-        ragas_by_q[rs.dataset_query_id] = rs.generated_response
-
-    from gardener_gopedia.core.models import Qrel
-
-    qrels_by_query: dict[str, set[str]] = {}
+    # Index qrels: query_id → list of (target_id, relevance)
+    qrels_by_query: dict[str, list[tuple[str, int]]] = {}
     for qr in db.query(Qrel).filter(Qrel.dataset_id == er.dataset_id).all():
         tid = (qr.target_id or "").strip()
         if tid:
-            qrels_by_query.setdefault(qr.query_id, set()).add(tid)
+            qrels_by_query.setdefault(qr.query_id, []).append((tid, int(qr.relevance)))
 
-    out: list[QueryResultOut] = []
+    out: list[QueryTopKOut] = []
     for dq in dqs:
-        relevant_ids = qrels_by_query.get(dq.id, set())
         hits = (
             db.query(RunHit)
             .filter(RunHit.eval_run_id == run_id, RunHit.dataset_query_id == dq.id)
             .order_by(RunHit.rank)
             .all()
         )
-        hit_dicts = [
-            {
-                "rank": h.rank,
-                "target_id": h.target_id,
-                "target_type": h.target_type,
-                "score": h.score,
-                "title": h.title,
-                "snippet": h.snippet,
-                "is_relevant": h.target_id in relevant_ids,
-            }
-            for h in hits
+
+        # Build ordered list of l3_ids from hits (1-based rank = index+1)
+        top_k_hits: list[str] = [h.target_id for h in hits]
+        hit_rank_map: dict[str, int] = {h.target_id: h.rank for h in hits}
+
+        # Build qrel entries with rank in top_k_hits
+        qrel_entries: list[QrelRankOut] = [
+            QrelRankOut(
+                l3_id=tid,
+                relevance=rel,
+                rank=hit_rank_map.get(tid),  # None if not in hits
+            )
+            for tid, rel in qrels_by_query.get(dq.id, [])
         ]
+
+        qm = per_query_metrics.get(dq.id, {})
         out.append(
-            QueryResultOut(
+            QueryTopKOut(
                 dataset_query_id=dq.id,
-                external_id=dq.external_id,
-                query_text=dq.query_text,
-                tier=dq.tier,
-                reference_answer=dq.reference_answer,
-                metrics=m_by_q.get(dq.id, []),
-                hits=hit_dicts,
-                ragas_generated_response=ragas_by_q.get(dq.id),
+                query=dq.query_text,
+                top_k_hits=top_k_hits,
+                qrels=qrel_entries,
+                recall_at_5=qm.get("Recall@5"),
+                precision_at_3=qm.get("P@3"),
             )
         )
     return out
