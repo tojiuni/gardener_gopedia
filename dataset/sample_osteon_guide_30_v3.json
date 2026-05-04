@@ -486,16 +486,6 @@
       }
     },
     {
-      "query_external_id": "osteon_01_base_os",
-      "target_type": "l3_id",
-      "relevance": 1,
-      "target_data": {
-        "excerpt": "| Step 4 | OpenStack Dalmatian 설치 | ☐ |",
-        "title_hint": "06 Opentofu",
-        "source_path_hint": "06_opentofu.md"
-      }
-    },
-    {
       "query_external_id": "osteon_02_openstack_release",
       "target_type": "l3_id",
       "relevance": 1,
@@ -556,46 +546,6 @@
       }
     },
     {
-      "query_external_id": "osteon_14_dhcp_range",
-      "target_type": "l3_id",
-      "relevance": 1,
-      "target_data": {
-        "excerpt": "→ ipTIME DHCP 범위를 `192.168.0.100~192.168.0.199` 로 제한 필요",
-        "title_hint": "02 Network Design",
-        "source_path_hint": "02_network_design.md"
-      }
-    },
-    {
-      "query_external_id": "osteon_15_kolla_vip",
-      "target_type": "l3_id",
-      "relevance": 1,
-      "target_data": {
-        "excerpt": "kolla_internal_vip_address: \"192.168.1.11\"",
-        "title_hint": "08 Current State",
-        "source_path_hint": "08_current_state.md"
-      }
-    },
-    {
-      "query_external_id": "osteon_17_cpu_virt_check",
-      "target_type": "l3_id",
-      "relevance": 1,
-      "target_data": {
-        "excerpt": "grep -m1 'model name' /proc/cpuinfo",
-        "title_hint": "01 Hardware Checklist",
-        "source_path_hint": "01_hardware_checklist.md"
-      }
-    },
-    {
-      "query_external_id": "osteon_18_ram_controller",
-      "target_type": "l3_id",
-      "relevance": 1,
-      "target_data": {
-        "excerpt": "| 32GB~63GB | Compute 전용 |",
-        "title_hint": "01 Hardware Checklist",
-        "source_path_hint": "01_hardware_checklist.md"
-      }
-    },
-    {
       "query_external_id": "osteon_19_kolla_ansible_version",
       "target_type": "l3_id",
       "relevance": 1,
@@ -630,9 +580,9 @@
       "target_type": "l3_id",
       "relevance": 1,
       "target_data": {
-        "excerpt": "k8s_subnet",
-        "title_hint": "06 Opentofu",
-        "source_path_hint": "06_opentofu.md"
+        "excerpt": "openstack subnet create k8s-subnet \\\n  --network k8s-net \\\n  --subnet-range 10.0.0.0/24",
+        "title_hint": "05 Kubernetes",
+        "source_path_hint": "05_kubernetes.md"
       }
     },
     {
