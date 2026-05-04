@@ -223,6 +223,25 @@ class QueryResultOut(BaseModel):
     ragas_generated_response: str | None = None
 
 
+class QrelRankOut(BaseModel):
+    """A single qrel entry with its rank in the top-k hit list."""
+
+    l3_id: str
+    relevance: int
+    rank: int | None = None  # 1-based position in top_k_hits; None if not in hits
+
+
+class QueryTopKOut(BaseModel):
+    """Per-query result exposing the raw top-k hit list alongside qrel ranks."""
+
+    dataset_query_id: str
+    query: str
+    top_k_hits: list[str]
+    qrels: list[QrelRankOut]
+    recall_at_5: float | None = None
+    precision_at_3: float | None = None
+
+
 class ReviewCreate(BaseModel):
     eval_run_id: str
     dataset_query_id: str
