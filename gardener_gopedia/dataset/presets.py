@@ -14,6 +14,7 @@ _REPO_ROOT: Final = Path(__file__).resolve().parent.parent.parent
 # Preset key (API) -> path under repo dataset/
 PRESET_JSON_PATHS: Final[dict[str, Path]] = {
     "osteon": _REPO_ROOT / "dataset" / "sample_osteon_guide_30_v2.json",
+    "geneso": _REPO_ROOT / "dataset" / "sample_geneso_guide_100.json",
 }
 
 

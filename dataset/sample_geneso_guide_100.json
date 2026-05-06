@@ -1,0 +1,1509 @@
+{
+  "name": "geneso_qa_100",
+  "version": "2",
+  "curation_tier": "bronze",
+  "queries": [
+    {
+      "external_id": "geneso_01_universitas_groups",
+      "text": "Universitas 그룹(Workspace) 구조에서 gopedia의 역할은 무엇인가? (Central Nervous & Logic, 중앙 온톨로지·지식)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_02_universitas_osteon_role",
+      "text": "Universitas에서 osteon 그룹의 역할은 무엇이라고 정의되어 있는가? (Skeletal Structure)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_03_universitas_lymphhub_role",
+      "text": "Universitas에서 lymphhub 그룹의 역할은 무엇인가? (Immune & Defense, 면역계)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_04_universitas_workspace_count",
+      "text": "Universitas에 정의된 그룹(Workspace)은 총 몇 개이며, 7번 그룹의 이름은 무엇인가? (proprio, Sensory Perception)",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_05_universitas_llm_path",
+      "text": "Universitas 공통(Cross-Workspace) 경로 중 LLM·프롬프트 관리 용도로 쓰이는 디렉터리는 어디인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_06_universitas_metaflow_role",
+      "text": "Universitas에서 metaflow 그룹의 역할은 무엇인가? (Metabolism & Flow, 대사·연결)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_07_cogito_mission",
+      "text": "cogito 봇의 미션(mission)은 무엇인가? (SOUL.md, eliminate ambiguity before actions are taken)",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_08_cogito_llm_chain",
+      "text": "cogito의 LLM 백엔드 체인에서 1순위(primary)는 무엇인가? (OllamaBackend, ai-worker GPU)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_09_cogito_intent_schema",
+      "text": "cogito가 생성하는 Intent Object에 포함되는 auth_level의 가능한 값은 무엇인가? (read, write-low, write-mid, write-high)",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_10_gardener_grade_action",
+      "text": "gardener 봇의 Grade → Action Matrix에서 Grade D일 때 취하는 액션은 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_11_gardener_weighted_score",
+      "text": "gardener 봇이 품질 점수를 산출할 때 auto와 human의 가중치 비율은 어떻게 되는가? (0.4*auto + 0.6*human)",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_12_scribe_imnot_ai_grade_a",
+      "text": "scribe 봇의 im-not-ai 파이프라인에서 Grade A의 기준은 무엇인가? (S1=0, S2<=2)",
+      "tier": "hard"
+    },
+    {
+      "external_id": "geneso_13_morphso_phase_map_p1",
+      "text": "Morphso 설치 가이드의 Phase 맵에서 P1은 어떤 서비스이며 어떤 레이어에 속하는가? (Vault, lymphhub)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_14_morphso_p3_storages",
+      "text": "Morphso Phase 맵의 P3 Storages에 포함된 5개 DB 서비스는 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_15_morphso_p7_dependencies",
+      "text": "Morphso Phase 맵에서 P7 gopedia의 의존성(Dependencies)으로 명시된 Phase들은 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_16_morphso_config_proxy",
+      "text": "Morphso config에서 proxy manager의 구현체(implementation)는 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_17_morphso_config_networks",
+      "text": "Morphso config에서 정의된 네트워크 중 Macvlan L2 직접 연결용 네트워크의 이름은 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_18_morphso_p4_service",
+      "text": "Morphso Phase 맵에서 P4의 서비스는 무엇이며 어떤 목적인가? (ZITADEL + SpiceDB, SSO/IAM 확립)",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_19_toji_registry_api_register",
+      "text": "Toji Registry API에서 project_machine_id를 발급받는 엔드포인트는 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_20_toji_registry_port",
+      "text": "Toji Registry의 Docker Compose 기본 호스트 포트는 무엇인가? (8010, 8000 충돌 방지)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_21_toji_homepage_badge",
+      "text": "Toji 홈페이지 Hero 영역의 한국어 Badge 텍스트는 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_22_neunexus_gopedia_url",
+      "text": "neunexus에서 배포된 Gopedia API의 서비스 URL은 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_23_toji_neunexus_description",
+      "text": "Toji 프로젝트 문서에서 neunexus의 description은 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_24_toji_gardener_repo",
+      "text": "Toji 프로젝트의 gopedia 문서에서 gardener_gopedia의 설명(description)은 무엇인가? (MVP service, quality evaluation)",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_25_geneso_skill_principle",
+      "text": "GeneSo Skills 작성 가이드의 기본 원칙 중 Constraint-First란 무엇을 의미하는가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_26_geneso_phase3",
+      "text": "GeneSo의 Token Efficiency 로드맵에서 Phase 3의 방식과 특징은 무엇인가? (Toon Format)",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_27_formats_sidecar_ref",
+      "text": "GeneSo File Format Guides에서 본문에서 sidecar 데이터를 참조할 때 사용하는 통일된 형식은 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_28_id_generation_chunk",
+      "text": "ID Generation Standard에서 chunk_id의 권장 포맷은 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_29_geneso_central_storage",
+      "text": "GeneSo README에서 Central Storage로 명시한 도구와 동기화에 사용하는 플러그인은 무엇인가?",
+      "tier": "hard"
+    },
+    {
+      "external_id": "geneso_30_gopedia_config_machine_id",
+      "text": "gopedia 프로젝트의 .gopedia/config.json에 저장된 project_machine_id 값은 무엇인가?",
+      "tier": "hard"
+    },
+    {
+      "external_id": "geneso_31_universitas_metaviewer_role",
+      "text": "Universitas에서 metaviewer 그룹의 역할은 무엇인가? (Perception & Expression)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_32_universitas_taxon_role",
+      "text": "Universitas에서 taxon 그룹의 역할은 무엇인가? (Digestion & Memory)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_33_universitas_neunexus_role",
+      "text": "Universitas에서 neunexus 그룹의 역할은 무엇인가? (Communication & Signal)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_34_universitas_arch_doc",
+      "text": "Universitas 루트 문서 중 전체 아키텍처 블루프린트(진입점) 파일명은 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_35_osteon_services",
+      "text": "osteon 워크스페이스에 정의된 서비스 2가지는 무엇인가? (OpenTofu, Kubernetes)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_36_lymphhub_services",
+      "text": "lymphhub 워크스페이스에 정의된 3개 서비스는 무엇인가? (ZITADEL, SpiceDB, Vault)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_37_taxon_services",
+      "text": "taxon 워크스페이스의 Storages에 포함된 DB 종류 4가지는 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_38_metaflow_services",
+      "text": "metaflow 워크스페이스에서 Synapse의 구현체와 역할은 무엇인가? (Redpanda, 실시간 이벤트 스트리밍)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_39_proprio_services",
+      "text": "proprio 워크스페이스의 LGTM Stack에 포함된 3가지 컴포넌트는 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_40_operations_structure",
+      "text": "Operations Knowledge Base의 하위 디렉터리 3개는 무엇인가? (infra, cicd, bots)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_41_operations_ingest",
+      "text": "Operations 문서의 gopedia ingest 호출 시 사용하는 capability는 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_42_gopedia_design_principles",
+      "text": "Gopedia의 설계 원칙(Design Principles) 3가지는 무엇인가? (Purpose-driven, Consistency, Modularity)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_43_gopedia_rhizome_metaphor",
+      "text": "Gopedia의 Core Metaphor인 Rhizome은 무엇을 의미하는가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_44_gopedia_stem_xylem_phloem",
+      "text": "Gopedia 명명 규칙에서 Stem의 두 하위 흐름(Sub-name)은 무엇이며 각각 어떤 역할인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_45_gopedia_verify_markdown_target",
+      "text": "Gopedia Verify 단계에서 gopedia-markdown-origin 서브스킬의 구현 기간은 며칠인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_46_gopedia_l1_l2_l3",
+      "text": "Gopedia feature guide에서 L1(Global Summary)의 역할과 나누는 기준은 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_47_gopedia_l3_breadcrumb",
+      "text": "Gopedia L3(Atomic Chunk)에서 Context Loss를 방지하기 위해 사용하는 방법은 무엇인가? (Breadcrumb)",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_48_gopedia_polyglot_qdrant",
+      "text": "Gopedia 폴리글랏 저장소에서 Qdrant의 주 용도와 저장하는 것은 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_49_gopedia_smart_sink",
+      "text": "Gopedia Smart Sink에서 L1 레벨 데이터가 기록되는 저장소 2곳은 어디인가?",
+      "tier": "hard"
+    },
+    {
+      "external_id": "geneso_50_gopedia_envelope",
+      "text": "Gopedia Envelope 전략에서 GopediaEnvelope의 구성 요소는 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_51_gopedia_machine_id_vs_key",
+      "text": "Gopedia feature guide에서 Machine ID와 Machine Key의 차이점은 무엇인가?",
+      "tier": "hard"
+    },
+    {
+      "external_id": "geneso_52_gopedia_idempotency",
+      "text": "Gopedia의 Idempotency에서 message_id를 생성하는 결정적 해시 공식은 무엇인가?",
+      "tier": "hard"
+    },
+    {
+      "external_id": "geneso_53_gopedia_skill_engine_search",
+      "text": "Gopedia Skill Engine의 검색 순서 3단계는 무엇인가?",
+      "tier": "hard"
+    },
+    {
+      "external_id": "geneso_54_gopedia_code_origin_timeline",
+      "text": "Gopedia Code Origin의 Day 3-4에서 수행하는 Relationship Mapping 3가지는 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_55_gopedia_code_origin_success",
+      "text": "Gopedia Code Origin의 성공 기준 중 Link Integrity의 검증 포인트는 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_56_gopedia_markdown_origin_identity",
+      "text": "Gopedia Markdown Origin의 Identity-so에서 생성하는 64-bit ID의 구성 예시는 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_57_gopedia_roadmap_expand",
+      "text": "Gopedia RoadMap에서 Phase 4.2 Expand의 구현 완료 target-day는 언제인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_58_gopedia_roadmap_connect",
+      "text": "Gopedia RoadMap에서 Phase 4.3 Connect의 구현 완료 target-day는 언제인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_59_forge_mission",
+      "text": "forge 봇의 미션(mission)은 무엇인가? (produce correct, secure, and maintainable code)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_60_forge_owasp",
+      "text": "forge 봇이 코드 리뷰 시 검사하는 보안 기준은 무엇인가? (OWASP Top 10)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_61_forge_denied_actions",
+      "text": "forge 봇이 수행하지 않는(Denied) 작업 중 프론트엔드 관련 제한은 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_62_lymphhub_bot_mission",
+      "text": "lymphhub 봇의 미션(mission)은 무엇인가? (auth stack healthy, correctly configured)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_63_lymphhub_vault_auth_flow",
+      "text": "lymphhub SOUL.md의 Vault Auth Flow에서 AI bot이 사용하는 인증 방식은 무엇인가? (AppRole login)",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_64_lymphhub_zitadel_port",
+      "text": "lymphhub SOUL.md의 ZITADEL Service Reference에서 HTTP 포트와 gRPC 포트는 각각 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_65_osteon_bot_topology",
+      "text": "osteon 봇 SOUL.md에 명시된 neunexus-master 노드의 ens3 IP 주소는 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_66_osteon_storage_class",
+      "text": "osteon 봇의 StorageClass Reference에서 cinder-fast의 Backend Device는 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_67_osteon_known_issues",
+      "text": "osteon SOUL.md에서 Cinder CSI NodeGetInfo 실패의 원인은 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_68_taxon_bot_mission",
+      "text": "taxon 봇의 미션(mission)은 무엇인가? (data layer healthy, correctly provisioned, backed up)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_69_taxon_postgres_host",
+      "text": "taxon SOUL.md에서 Shared PostgreSQL Cluster의 호스트 주소는 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_70_taxon_service_db_gopedia",
+      "text": "taxon의 Service Database Registry에서 gopedia 서비스의 Vault Path는 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_71_taxon_redis_use",
+      "text": "taxon SOUL.md에서 Redis의 용도(Use)는 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_72_tojismith_mission",
+      "text": "tojismith 봇의 미션(mission)은 무엇인가? (repository workflows reliable, reviewable, low-risk)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_73_tojismith_gopedia_hook",
+      "text": "tojismith가 커밋 성공 후 gopedia에 보내는 webhook 페이로드에 포함되는 3가지 필드는 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_74_tojismith_nuclex_events",
+      "text": "tojismith가 Redis Streams에 발행하는 이벤트 중 pr.merged의 suggested_action은 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_75_vikunja_mission",
+      "text": "vikunja 봇의 미션(mission)은 무엇인가? (team work organized, trackable, actionable)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_76_vikunja_api_base",
+      "text": "vikunja SOUL.md의 Service Reference에서 API Base URL은 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_77_nuclex_identity",
+      "text": "nuclex 봇의 이름은 무엇에서 유래되었는가? (Nucleus + Executive)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_78_nuclex_operating_principles",
+      "text": "nuclex 봇의 Operating Principles 5단계 프로세스는 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_79_nuclex_sprint_cadence",
+      "text": "nuclex SOUL.md에서 기본 스프린트 길이(Default sprint length)는 얼마인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_80_nuclex_cross_bot_gopedia",
+      "text": "nuclex의 Cross-bot Coordination에서 gopedia quality grade D일 때 어떤 조치를 취하는가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_81_nuclex_event_schema",
+      "text": "nuclex가 소비하는 Cross-bot Event Schema에서 event_type의 가능한 값들은 무엇인가?",
+      "tier": "hard"
+    },
+    {
+      "external_id": "geneso_82_proguide_mission",
+      "text": "proguide 봇의 미션(mission)은 무엇인가? (accurate, up-to-date, accessible documentation)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_83_proguide_doc_types",
+      "text": "proguide SOUL.md에서 정의한 문서 유형(Document Types) 6가지는 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_84_gopedia_bot_mission",
+      "text": "gopedia 봇 SOUL.md의 미션(mission)은 무엇인가? (internal knowledge instantly retrievable)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_85_gopedia_bot_search_levels",
+      "text": "gopedia 봇의 Staged search detail levels 3가지는 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_86_gopedia_bot_chunking",
+      "text": "gopedia 봇의 Standard chunking strategy에서 토큰 크기와 overlap은 각각 얼마인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_87_gopedia_qa_quality_grades",
+      "text": "gopedia-qa SOUL.md에서 Grade C의 기준과 조치(Action)는 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_88_gopedia_qa_feedback_lifecycle",
+      "text": "gopedia-qa의 Reranking Feedback Lifecycle 5단계는 무엇인가?",
+      "tier": "hard"
+    },
+    {
+      "external_id": "geneso_89_critic_composite_formula",
+      "text": "critic 봇의 Composite score 산출 공식은 무엇인가?",
+      "tier": "hard"
+    },
+    {
+      "external_id": "geneso_90_critic_scoring_dimensions",
+      "text": "critic 봇이 평가하는 4가지 차원(dimensions)은 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_91_metacortex_mission",
+      "text": "metacortex 봇의 미션(mission)은 무엇인가? (correct, secure, well-documented backend APIs)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_92_metacortex_contract_workflow",
+      "text": "metacortex의 OpenAPI Contract Workflow에서 breaking change 발견 시 필요한 조건은 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_93_metaviewer_tech_stack",
+      "text": "metaviewer 봇의 프론트엔드 프레임워크와 컴포넌트 라이브러리는 무엇인가? (Refine, shadcn/ui)",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_94_metaflow_windmill",
+      "text": "metaflow 봇이 Temporal 대신 Windmill을 선택한 이유 중 RAM 사용량 비교는 어떻게 되는가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_95_proprio_lgtm_stack",
+      "text": "proprio 봇의 Observability Stack에서 Mimir의 역할은 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_96_proprio_alert_severity",
+      "text": "proprio SOUL.md에서 critical 경고(alert)를 silence하려면 어떤 인증 레벨이 필요한가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_97_openstack_bot_topology",
+      "text": "openstack 봇 SOUL.md에서 AIO 호스트의 이름과 IP 주소는 무엇인가?",
+      "tier": "easy"
+    },
+    {
+      "external_id": "geneso_98_ai_assistant_openclaw",
+      "text": "ai-assistant SOUL.md에서 OpenClaw의 두 가지 라우팅 모드(Sync/Async)의 차이점은 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_99_plane_workspace_slug",
+      "text": "plane 봇 SOUL.md에서 기본 Workspace slug와 Helm chart 버전은 무엇인가?",
+      "tier": "medium"
+    },
+    {
+      "external_id": "geneso_100_plane_default_states",
+      "text": "plane 봇의 프로젝트 생성 시 자동 추가되는 Default States 5가지는 무엇인가?",
+      "tier": "hard"
+    }
+  ],
+  "qrels": [
+    {
+      "query_external_id": "geneso_01_universitas_groups",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| 3 | **gopedia** | Central Nervous & Logic (중앙 온톨로지·지식) | [gopedia/](./gopedia/) |",
+        "title_hint": "Universitas README",
+        "source_path_hint": "universitas/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_02_universitas_osteon_role",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| 8 | **osteon** | Skeletal Structure (골격·인프라) | [osteon/](./osteon/) |",
+        "title_hint": "Universitas README",
+        "source_path_hint": "universitas/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_03_universitas_lymphhub_role",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| 2 | **lymphhub** | Immune & Defense (면역계) | [lymphhub/](./lymphhub/) |",
+        "title_hint": "Universitas README",
+        "source_path_hint": "universitas/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_04_universitas_workspace_count",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| 7 | **proprio** | Sensory Perception (관측성) | [proprio/](./proprio/) |",
+        "title_hint": "Universitas README",
+        "source_path_hint": "universitas/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_05_universitas_llm_path",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 공통(Cross-Workspace)\n\n| 경로 | 용도 |\n|------|------|\n| [llm/](./llm/) | LLM·프롬프트 관리 (prompt-manager skill 등) — 그룹 공통 |",
+        "title_hint": "Universitas README",
+        "source_path_hint": "universitas/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_06_universitas_metaflow_role",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| 5 | **metaflow** | Metabolism & Flow (대사·연결) | [metaflow/](./metaflow/) |",
+        "title_hint": "Universitas README",
+        "source_path_hint": "universitas/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_07_cogito_mission",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "cogito's mission is to eliminate ambiguity before actions are taken.\nEvery response must produce a structured intent object that OpenClaw can route with confidence, or a clarification question that the user can answer in one step.",
+        "title_hint": "SOUL.md - cogito",
+        "source_path_hint": "ai-pragma/cogito/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_08_cogito_llm_chain",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 8) LLM Backend\ncogito uses the shared `llm_client` package with the following backend chain:\n1. OllamaBackend — ai-worker GPU (primary, low-latency)\n2. OllamaBackend — Mac WireGuard (secondary)\n3. GeminiBackend — fallback\n\nBackend selection is driven by the `LLM_CHAIN` environment variable from the `llm-config` ConfigMap.",
+        "title_hint": "SOUL.md - cogito",
+        "source_path_hint": "ai-pragma/cogito/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_09_cogito_intent_schema",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 7) Intent Object Schema\n```json\n{\n  \"intent\": \"confirmed\",\n  \"target_bot\": \"<bot-name>\",\n  \"capability\": \"<domain>.<resource>.<action>\",\n  \"auth_level\": \"read | write-low | write-mid | write-high\",\n  \"payload\": { \"<field>\": \"<value>\" },\n  \"confidence\": 0.0–1.0,\n  \"reasoning\": \"<brief explanation>\"\n}",
+        "title_hint": "SOUL.md - cogito",
+        "source_path_hint": "ai-pragma/cogito/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_10_gardener_grade_action",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 8) Grade → Action Matrix\n| Grade | Action |\n|-------|--------|\n| A | No action, schedule next cycle |\n| B | Log, flag for next cycle review |\n| C | Trigger human reranking session (gopedia-qa) |\n| D | Trigger re-ingest proposal + human reranking |",
+        "title_hint": "SOUL.md - gardener",
+        "source_path_hint": "ai-pragma/gardener/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_11_gardener_weighted_score",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 7) Quality Run Workflow\n```\ngardener\n  1. Load test query set (from repository or ad-hoc input)\n  2. POST /api/search → gopedia (detail=standard)\n  3. Send query-response pairs → critic (automated scoring)\n  4. Read gopedia-qa feedback store (human scores)\n  5. Combine: weighted_score = 0.4*auto + 0.6*human (if human available)\n  6. Grade: A≥90% B≥75% C≥60% D<60%",
+        "title_hint": "SOUL.md - gardener",
+        "source_path_hint": "ai-pragma/gardener/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_12_scribe_imnot_ai_grade_a",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 7) im-not-ai Humanization Pipeline\n5-stage pipeline for Korean and English:\n1. **Detect**: score AI-marker density (S1=structural, S2=lexical)\n2. **Rewrite**: reduce AI patterns, preserve meaning\n3. **Fidelity audit**: `>30%` change → warning, `>50%` change → stop, escalate\n4. **Naturalness review**: confirm output reads as natural human writing\n5. **Grade**:\n   - A: S1=0, S2≤2 — commit immediately\n   - B: S1=0, S2≤4 — commit with log\n   - C: trigger second rewrite round\n   - D: escalate to human review before commit",
+        "title_hint": "SOUL.md - scribe",
+        "source_path_hint": "ai-pragma/scribe/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_13_morphso_phase_map_p1",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "### P1 — Vault (기반 보안) `lymphhub`\n\n> 가이드: [`p1_vault/`](./p1_vault/01_vault.md)\n\n| 항목 | 내용 |\n|------|------|\n| 레이어 | `[Immune & Defense]` lymphhub |\n| 서비스 | HashiCorp Vault |\n| 왜 가장 먼저 | Vault는 Raft 내장 스토리지로 Postgres 없이 독립 실행 가능. 이후 모든 서비스가 `${VAULT_PATH/SECRET_KEY}` 포맷으로 시크릿을 주입받으므로 최우선 확립 |",
+        "title_hint": "Morphso Installation Guide — Overview",
+        "source_path_hint": "morphso/doc/guide/00_overview.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_14_morphso_p3_storages",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| 서비스 | Postgres, Redis, TypeDB, Qdrant, ClickHouse |",
+        "title_hint": "Morphso Installation Guide — Overview",
+        "source_path_hint": "morphso/doc/guide/00_overview.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_15_morphso_p7_dependencies",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| 의존성 | Vault(P1), Postgres + TypeDB + Qdrant(P3), Redpanda(P6) |",
+        "title_hint": "Morphso Installation Guide — Overview",
+        "source_path_hint": "morphso/doc/guide/00_overview.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_16_morphso_config_proxy",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| **proxy manager** | Traefik | 라우팅·TLS는 dynamic config, 컨테이너에는 traefik 라벨만. [traefik SKILL](../universitas/neunexus/skills/traefik/SKILL.md) |",
+        "title_hint": "Morphso Config",
+        "source_path_hint": "morphso/references/config.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_17_morphso_config_networks",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| `neunexus` | Macvlan, L2 직접 연결. 서비스 간·외부와 통신 | [docker-network SKILL](../universitas/neunexus/skills/docker-network/SKILL.md) |",
+        "title_hint": "Morphso Config",
+        "source_path_hint": "morphso/references/config.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_18_morphso_p4_service",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "### P4 — ZITADEL + SpiceDB (인증) `lymphhub`\n\n> 가이드: [`p4_zitadel/`](./p4_zitadel/)\n\n| 항목 | 내용 |\n|------|------|\n| 레이어 | `[Immune & Defense]` lymphhub |\n| 서비스 | ZITADEL (OIDC/IAM), SpiceDB (ReBAC) |\n| 의존성 | Postgres(P3), Traefik(P2) |\n| 왜 저장소 직후 | 이 시점부터 SSO 계정 체계 확립. 이후 Grafana(P5), Appsmith·Forgejo(P8) 등이 처음부터 OIDC 통합 상태로 올라옴 |",
+        "title_hint": "Morphso Installation Guide — Overview",
+        "source_path_hint": "morphso/doc/guide/00_overview.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_19_toji_registry_api_register",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- `POST /v1/project-machine-id/register` — body: `email`, `project_name`, optional `source_path`",
+        "title_hint": "Toji Registry README",
+        "source_path_hint": "toji/toji_registry/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_20_toji_registry_port",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "호스트 포트는 기본 **8010** (8000 충돌 방지). `REGISTRY_URL=http://localhost:8010` 로 bootstrap 하세요.",
+        "title_hint": "Toji Registry README",
+        "source_path_hint": "toji/toji_registry/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_21_toji_homepage_badge",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- Badge (KR): `데이터 · 성장 · 자립`",
+        "title_hint": "Homepage",
+        "source_path_hint": "toji/homepage/home.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_22_neunexus_gopedia_url",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- Gopedia API: [gopedia.toji.homes](https://gopedia.toji.homes)",
+        "title_hint": "neunexus",
+        "source_path_hint": "toji/neunexus.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_23_toji_neunexus_description",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- Description: enterprise Infrastructure as Code management project",
+        "title_hint": "neunexus",
+        "source_path_hint": "toji/neunexus.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_24_toji_gardener_repo",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- [gardener_gopedia](https://github.com/tojiuni/gardener_gopedia): MVP service for gopedia search quality evaluation (datasets/qrels, batch runs, IR metrics, baseline comparison, Streamlit review UI)",
+        "title_hint": "gopedia",
+        "source_path_hint": "toji/gopedia.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_25_geneso_skill_principle",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "* **Constraint-First:** '무엇을 할지'보다 '무엇을 하지 말지'를 명확히 정의하여 토큰 낭비를 방지합니다.",
+        "title_hint": "GeneSo README",
+        "source_path_hint": "README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_26_geneso_phase3",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| **Phase 3 (Next)** | **Toon Format** | 자연어의 의미적 핵심만 남긴 압축 포맷, 토큰 소모 극최소화 |",
+        "title_hint": "GeneSo README",
+        "source_path_hint": "README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_27_formats_sidecar_ref",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- 본문 참조는 `[[data-ref:<dataset_id>]]`로 통일합니다.",
+        "title_hint": "GeneSo File Format Guides",
+        "source_path_hint": "geneso/formats/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_28_id_generation_chunk",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- `chunk_id`:\n  - `{file_id}-ck-{chunk_seq}`",
+        "title_hint": "ID Generation Standard",
+        "source_path_hint": "geneso/identifiers/id-generation.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_29_geneso_central_storage",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "* **Central Storage:** Obsidian을 통해 지식을 구조화하고 시각화합니다.\n* **Sync:** `Remotely Save` 플러그인을 사용하여 **MinIO** 오브젝트 스토리지와 실시간 동기화됩니다.",
+        "title_hint": "GeneSo README",
+        "source_path_hint": "README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_30_gopedia_config_machine_id",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "\"project_machine_id\": \"tji-fmenzmy9-bbr8gfrg\"",
+        "title_hint": "gopedia config.json",
+        "source_path_hint": "universitas/gopedia/.gopedia/config.json"
+      }
+    },
+    {
+      "query_external_id": "geneso_31_universitas_metaviewer_role",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| 4 | **metaviewer** | Perception & Expression (감각·인터페이스) | [metaviewer/](./metaviewer/) |",
+        "title_hint": "Universitas README",
+        "source_path_hint": "universitas/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_32_universitas_taxon_role",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| 6 | **taxon** | Digestion & Memory (소화·저장) | [taxon/](./taxon/) |",
+        "title_hint": "Universitas README",
+        "source_path_hint": "universitas/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_33_universitas_neunexus_role",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| 1 | **neunexus** | Communication & Signal (신경계) | [neunexus/](./neunexus/) |",
+        "title_hint": "Universitas README",
+        "source_path_hint": "universitas/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_34_universitas_arch_doc",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| [Universitas_System_Architecture_Blueprint.md](./Universitas_System_Architecture_Blueprint.md) | 전체 아키텍처 블루프린트 (진입점) |",
+        "title_hint": "Universitas README",
+        "source_path_hint": "universitas/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_35_osteon_services",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| **OpenTofu** | 클라우드 인프라 선언적 관리(IaC) |\n| **Kubernetes** | 컨테이너 오케스트레이션 |",
+        "title_hint": "osteon README",
+        "source_path_hint": "universitas/osteon/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_36_lymphhub_services",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "# lymphhub — Immune & Defense (면역계)\n\n시스템의 보안, 인증 및 접근 제어를 담당하는 워크스페이스입니다.\n\n## 서비스\n\n| 서비스 | 역할 |\n|--------|------|\n| **ZITADEL** | 사용자 인증(OIDC), 계정 관리(IAM) |\n| **SpiceDB** | 관계 기반 권한 제어(ReBAC), 미세 권한 관리 |\n| **Vault** | 기밀 정보 중앙 관리 (`${VAULT_PATH/...}`) |",
+        "title_hint": "lymphhub README",
+        "source_path_hint": "universitas/lymphhub/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_37_taxon_services",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| **Storages** | Postgres (RDB), TypeDB (GraphDB), Qdrant (VectorDB), Redis (Cache) |",
+        "title_hint": "taxon README",
+        "source_path_hint": "universitas/taxon/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_38_metaflow_services",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "# metaflow — Metabolism & Flow (대사·연결)\n\n실제 로직 실행 및 구성 요소 간 이벤트 조율 워크스페이스입니다.\n\n## 서비스\n\n| 서비스 | 역할 |\n|--------|------|\n| **metaflow (Temporal)** | 상태 보존형 워크플로우 실행·오케스트레이션 |\n| **Synapse (Redpanda)** | 실시간 이벤트 스트리밍, 메시지 버퍼·캐시 연동 |",
+        "title_hint": "metaflow README",
+        "source_path_hint": "universitas/metaflow/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_39_proprio_services",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| **LGTM Stack** | Loki(로그), Grafana(지표), Tempo(트레이싱) — Observability |",
+        "title_hint": "proprio README",
+        "source_path_hint": "universitas/proprio/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_40_operations_structure",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "operations/\n├── infra/          # K8s, 레지스트리, Vault, 네트워크 접근\n├── cicd/           # 이미지 빌드, ArgoCD, Woodpecker\n└── bots/           # 봇 개발/배포 체크리스트",
+        "title_hint": "Operations Knowledge Base",
+        "source_path_hint": "universitas/operations/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_41_operations_ingest",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "curl -X POST http://gopedia.gopedia.svc:8080/execute \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"capability\": \"gopedia.ingest\", \"payload\": {\"path\": \"universitas/operations/\", \"collection\": \"operations\"}}'",
+        "title_hint": "Operations Knowledge Base",
+        "source_path_hint": "universitas/operations/README.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_42_gopedia_design_principles",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 1. 설계 원칙 (Design Principles)\n\n- **Purpose-driven**: 관계 파악과 추론이 우선. 목적 불명 데이터는 수집하지 않는다.\n- **Consistency**: 모든 통신은 **gRPC/Protobuf** 기반. 데이터 흐름은 식물 생장 주기와 논리적 일관성 유지.\n- **Modularity**: Root(플러거블 소스), Stem(파이프라인), Leaf(인덱싱 뷰), Fruit(출력)는 독립 유전 단위. 특정 기술 변경이 전체에 전파되지 않도록 격리.",
+        "title_hint": "Gopedia SKILL.md",
+        "source_path_hint": "universitas/gopedia/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_43_gopedia_rhizome_metaphor",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- **Core Metaphor**: Rhizome (수평·무한 확장 뿌리줄기)",
+        "title_hint": "Gopedia SKILL.md",
+        "source_path_hint": "universitas/gopedia/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_44_gopedia_stem_xylem_phloem",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 3. 명명 규칙 (Rhizome Relationship)\n\n- **Root (뿌리)**: Pluggable. 외부 소스·연결. 뿌리에서 흡수한 데이터는 xylem을 통해 위로 전달(RAG).\n- **Stem (줄기)**: 이동/가공·Scalable. Sub: **Xylem(RAG)**, **Phloem(Ingestion)**.\n  - **Phloem (체관)**: **Ingestion**. 프로젝트에서는 Root(소스)에서 수집한 원문을 Envelope로 포장해 gRPC로 전달하고, L1→L2→L3 계층으로 분해한 뒤 Smart Sink가 HierarchyLevel·SourceDomain에 따라 PostgreSQL/TypeDB/Qdrant/ClickHouse 등 Rhizome 저장소에 기록한다.\n  - **Xylem (물관)**: **RAG**. 프로젝트에서는 사용자 질의를 받으면 Rhizome(Qdrant/TypeDB 등)에서 L1·L2로 필터한 뒤 관련 L3 청크를 끌어와, Skill Engine으로 조합해 leaf에 전달.",
+        "title_hint": "Gopedia SKILL.md",
+        "source_path_hint": "universitas/gopedia/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_45_gopedia_verify_markdown_target",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| **gopedia-markdown-origin** | [skills/gopedia-verify-flow/gopedia-markdown-origin/SKILL.md](skills/gopedia-verify-flow/gopedia-markdown-origin/SKILL.md) | 2일 | Markdown → TOC → TypeDB/Qdrant |",
+        "title_hint": "Gopedia SKILL.md",
+        "source_path_hint": "universitas/gopedia/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_46_gopedia_l1_l2_l3",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| **L1 (Global Summary)** | 문서/자산의 **정체성** — \"무슨 문서인가\" | **1 document = 1 L1**. 도메인·의도·대상 독자 기준 요약 | 원문 전체 또는 선두 4k 토큰 | core_abstract(1–2문장), keywords(5–10개), domain_identity |",
+        "title_hint": "Gopedia Feature Guide",
+        "source_path_hint": "universitas/gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_47_gopedia_l3_breadcrumb",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- **L3**: \"실제 인용할 문장/코드\" — **토큰 크기 + 문맥 유지**. 크기는 도메인별 조정(코드/로그/문서). 반드시 부모(L1/L2) 정보를 Breadcrumb으로 포함해 **Context Loss** 방지.",
+        "title_hint": "Gopedia Feature Guide",
+        "source_path_hint": "universitas/gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_48_gopedia_polyglot_qdrant",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| **Qdrant** | 벡터·시맨틱 검색 | L1/L2 요약 임베딩, L3 청크 임베딩; payload는 doc_id, machine_key, toc_path 등 경량만 | L1/L2로 \"어느 섹션인지\" 필터 → L3 증거 검색 |",
+        "title_hint": "Gopedia Feature Guide",
+        "source_path_hint": "universitas/gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_49_gopedia_smart_sink",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- **HierarchyLevel**\n  - L1 → PostgreSQL(마스터) + Qdrant(L1 요약 임베딩).\n  - L2 → TypeDB(ToC·관계) + Qdrant(섹션 임베딩).\n  - L3 → Qdrant(청크 임베딩) + ClickHouse(원문·감사).",
+        "title_hint": "Gopedia Feature Guide",
+        "source_path_hint": "universitas/gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_50_gopedia_envelope",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- **GopediaEnvelope**: `GopediaHeader` + `google.protobuf.Any payload`.",
+        "title_hint": "Gopedia Feature Guide",
+        "source_path_hint": "universitas/gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_51_gopedia_machine_id_vs_key",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- **Machine ID**: 물리/가상 머신·에이전트를 식별하는 **문자열**(UUID, hostname 등). 풍부한 메타(CPU, OS, 위치 등)와 연결됨.\n- **Machine Key**: Identity Service가 부여한 **uint32**. Envelope 헤더에는 이 키만 실어서 **전 구간에서 문자열/메타를 반복 저장하지 않음**.",
+        "title_hint": "Gopedia Feature Guide",
+        "source_path_hint": "universitas/gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_52_gopedia_idempotency",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- **message_id**: **결정적 해시** (예: SHA256(Machine_ID + Source_Path + Content_Hash)). 재시도·중복 발행 시에도 동일 ID → 모든 DB에서 동일 레코드로 처리(upsert/ignore).",
+        "title_hint": "Gopedia Feature Guide",
+        "source_path_hint": "universitas/gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_53_gopedia_skill_engine_search",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- **검색 순서**: (1) L1/L2 검색(Qdrant) → 관련 **섹션** 2–3개 선별 (2) 해당 섹션의 L3를 TypeDB·ClickHouse에서 조회·재랭킹 (3) machine_key → Identity로 **Context Hydration**.",
+        "title_hint": "Gopedia Feature Guide",
+        "source_path_hint": "universitas/gopedia/reference/gopedia-feature-guide.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_54_gopedia_code_origin_timeline",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "### Day 3–4: Stem — Logic-Xylem Flow\n\n- **Relationship Mapping**:  \n  - `Caller-Callee` (누가 누구를 호출하는가?)  \n  - `Inheritance` (어떤 클래스를 상속하는가?)  \n  - `Implementation` (어떤 인터페이스를 구현하는가?)\n- **Contextual Enrichment**: 코드 블록 상단 주석·함수 시그니처 기반으로 LLM으로 '기능 요약(Summary)' 생성 후 메타데이터에 추가.",
+        "title_hint": "gopedia-code-origin SKILL.md",
+        "source_path_hint": "universitas/gopedia/skills/gopedia-verify-flow/gopedia-code-origin/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_55_gopedia_code_origin_success",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 4. 성공 기준 (Success Metric)\n\n| 항목 | 검증 포인트 | 기대 결과 |\n|------|-------------|----------|\n| Parsing Accuracy | AST 추출 정확도 | 함수 정의부와 실행부가 정확히 분리되어 저장됨 |\n| Link Integrity | 관계 형성 유효성 | TypeDB에서 특정 함수 검색 시 상속·호출 관계가 끊김 없이 출력됨 |\n| RAG Precision | 코드 질의 응답 | 기능 질의 시 엉뚱한 파일이 아닌 실제 로직이 포함된 섹션 추천 |\n| Scalability | 대용량 처리 | 전체 프로젝트 코드 인게스션 시 시스템 부하가 안정적 |",
+        "title_hint": "gopedia-code-origin SKILL.md",
+        "source_path_hint": "universitas/gopedia/skills/gopedia-verify-flow/gopedia-code-origin/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_56_gopedia_markdown_origin_identity",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- **Identity-so**: Google Machine ID 전략을 간소화한 64-bit 고유 ID 생성 (예: `Timestamp + WorkerID + Sequence`). 한 파일에서 나온 모든 DB 레코드가 동일한 ID를 공유하도록 한다.",
+        "title_hint": "gopedia-markdown-origin SKILL.md",
+        "source_path_hint": "universitas/gopedia/skills/gopedia-verify-flow/gopedia-markdown-origin/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_57_gopedia_roadmap_expand",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| Expand 구현 완료 | 2026-04-25 | 약 2주 (Machine ID 분산, View) |",
+        "title_hint": "Gopedia RoadMap SKILL.md",
+        "source_path_hint": "universitas/gopedia/RoadMap/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_58_gopedia_roadmap_connect",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| Connect 구현 완료 | 2026-05-10 | 약 2주 |",
+        "title_hint": "Gopedia RoadMap SKILL.md",
+        "source_path_hint": "universitas/gopedia/RoadMap/SKILL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_59_forge_mission",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "forge's mission is to produce correct, secure, and maintainable code.\nEvery code output must be reviewable, testable, and aligned with the repository's style and architecture conventions.",
+        "title_hint": "SOUL.md - forge",
+        "source_path_hint": "ai-pragma/forge/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_60_forge_owasp",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 4) Operating Principles\nforge follows Understand → Design → Implement: retrieve relevant context from gopedia, reason about the design, then generate code.\nSecurity is never an afterthought — forge checks for OWASP Top 10 issues in all code reviews.",
+        "title_hint": "SOUL.md - forge",
+        "source_path_hint": "ai-pragma/forge/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_61_forge_denied_actions",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 6) Denied / Restricted Actions\nforge does not deploy code to production — delivery is handled by tojismith + CI/CD.\nforge does not commit directly to `main`/`master` branches.\nforge does not generate code that embeds credentials, tokens, or secrets.\nforge does not produce frontend/design system code — delegate to metaviewer.",
+        "title_hint": "SOUL.md - forge",
+        "source_path_hint": "ai-pragma/forge/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_62_lymphhub_bot_mission",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "lymphhub's mission is to keep the neunexus auth stack healthy, correctly configured, and integrated with upstream services.\nEvery action prioritizes credential safety, audit traceability, and zero trust principles.",
+        "title_hint": "SOUL.md - lymphhub",
+        "source_path_hint": "ai-pragma/lymphhub/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_63_lymphhub_vault_auth_flow",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 8) Vault Auth Flow\n```\nAI bot (write-low/mid)\n  └─ AppRole login (VAULT_ROLE_ID + VAULT_SECRET_ID from /vault/secrets/env)\n       └─ POST /v1/auth/approle/login → client_token\n            └─ POST /v1/totp/code/<user-id> → { valid: true/false }\n\nVault Agent Injector (Pods)\n  └─ K8s Auth (ServiceAccount token)\n       └─ annotation vault.hashicorp.com/agent-inject: \"true\"\n            └─ /vault/secrets/<name> injected as file",
+        "title_hint": "SOUL.md - lymphhub",
+        "source_path_hint": "ai-pragma/lymphhub/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_64_lymphhub_zitadel_port",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 9) ZITADEL Service Reference\n| Item | Value |\n|------|-------|\n| DB | Postgres cluster `zitadel` (taxon ns) |\n| Ingress | `auth.{DOMAIN}` via Traefik IngressRoute |\n| Port | 8080 (HTTP), 8443 (gRPC) |\n| Vault | secret/neunexus/zitadel (master-key, admin-pw) |",
+        "title_hint": "SOUL.md - lymphhub",
+        "source_path_hint": "ai-pragma/lymphhub/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_65_osteon_bot_topology",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "  ├─ neunexus-master  ens3:10.0.0.160  ens4:192.168.1.226  ens5:192.168.1.243",
+        "title_hint": "SOUL.md - osteon",
+        "source_path_hint": "ai-pragma/osteon/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_66_osteon_storage_class",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| cinder-fast | ssd | lvm-ssd | /dev/sda (223G) | DB, cache |",
+        "title_hint": "SOUL.md - osteon",
+        "source_path_hint": "ai-pragma/osteon/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_67_osteon_known_issues",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 11) Known Issues and Mitigations\n- Cinder CSI NodeGetInfo failure: caused by missing 169.254.169.254 route. Check `openstack-metadata-route.service` on each node.\n- Master node unreachable after netplan change: caused by asymmetric routing on dual-NIC. Check `ens4-policy-routing.service`.\n- Vault kubernetes auth 403: stale `token_reviewer_jwt`. Re-run Vault kubernetes auth config with current vault-0 SA token.",
+        "title_hint": "SOUL.md - osteon",
+        "source_path_hint": "ai-pragma/osteon/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_68_taxon_bot_mission",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "taxon's mission is to keep the neunexus data layer healthy, correctly provisioned, and backed up.\nEvery service that needs a database must request it through taxon — no service provisions its own database directly.",
+        "title_hint": "SOUL.md - taxon",
+        "source_path_hint": "ai-pragma/taxon/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_69_taxon_postgres_host",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Shared PostgreSQL Cluster (CNPG)\n  Host: postgres-rw.taxon.svc:5432",
+        "title_hint": "SOUL.md - taxon",
+        "source_path_hint": "ai-pragma/taxon/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_70_taxon_service_db_gopedia",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| gopedia | gopedia | secret/neunexus/gopedia | gopedia |",
+        "title_hint": "SOUL.md - taxon",
+        "source_path_hint": "ai-pragma/taxon/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_71_taxon_redis_use",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| Use | OpenClaw async job queue, session cache |",
+        "title_hint": "SOUL.md - taxon",
+        "source_path_hint": "ai-pragma/taxon/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_72_tojismith_mission",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "tojismith's mission is to keep repository workflows reliable, reviewable, and low-risk.\nEvery action must favor consistency, traceability, and operational safety over speed.",
+        "title_hint": "SOUL.md - tojismith",
+        "source_path_hint": "ai-pragma/tojismith/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_73_tojismith_gopedia_hook",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 9) gopedia Auto-Upsert Hook\nAfter every successful commit, tojismith sends a webhook to gopedia with:\n- `project_id`: repository identifier\n- `paths`: list of changed file paths\n- `commit_sha`: commit reference\n\ngopedia performs an incremental upsert for the changed files only.\nHook failures are logged and retried once; on second failure, operator is notified via Telegram.",
+        "title_hint": "SOUL.md - tojismith",
+        "source_path_hint": "ai-pragma/tojismith/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_74_tojismith_nuclex_events",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 17) nuclex Event Emission\ntojismith emits events to the Redis Streams key `nuclex.events` after git operations:\n\n| Event | Trigger | suggested_action |\n|-------|---------|------------------|\n| `pr.merged` | PR merged successfully | `close_issue` |\n| `commit.pushed` | Commit pushed to main branch | `notify_only` |",
+        "title_hint": "SOUL.md - tojismith",
+        "source_path_hint": "ai-pragma/tojismith/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_75_vikunja_mission",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "vikunja's mission is to keep team work organized, trackable, and actionable.\nEvery task created through vikunja must have a clear owner, project, and completion criteria.",
+        "title_hint": "SOUL.md - vikunja",
+        "source_path_hint": "ai-pragma/vikunja/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_76_vikunja_api_base",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| API Base | `http://vikunja.metaviewer.svc:3456/api/v1` |",
+        "title_hint": "SOUL.md - vikunja",
+        "source_path_hint": "ai-pragma/vikunja/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_77_nuclex_identity",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Derived from **Nucleus** (세포핵) + **Executive** (관리자): like the cell nucleus that holds the blueprint and controls all cellular activity, nuclex holds the full picture of every project and coordinates all bots and people toward shared goals.",
+        "title_hint": "SOUL.md - nuclex",
+        "source_path_hint": "ai-pragma/nuclex/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_78_nuclex_operating_principles",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 4) Operating Principles\nnuclex follows **Capture → Triage → Assign → Track → Report**:\n1. Capture: collect issues from all sources (Telegram, bot events, git hooks, manual input)\n2. Triage: classify by type, priority, and affected area\n3. Assign: route to the right person or bot with clear scope\n4. Track: monitor progress, flag blockers, send reminders\n5. Report: produce structured status reports on demand and on schedule\n\nEvery action that changes project scope or priority requires explicit confirmation.",
+        "title_hint": "SOUL.md - nuclex",
+        "source_path_hint": "ai-pragma/nuclex/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_79_nuclex_sprint_cadence",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Default sprint length: 2 weeks.",
+        "title_hint": "SOUL.md - nuclex",
+        "source_path_hint": "ai-pragma/nuclex/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_80_nuclex_cross_bot_gopedia",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "### Cross-bot Coordination\n- gopedia quality grade D → auto-create issue in `infrastructure` project, assign to gopedia-qa\n- proprio alert (severity=critical) → auto-create incident issue, assign to osteon or openstack\n- tojismith PR merged → linked issue auto-closed\n- metaflow job failure (3x) → auto-create issue, assign to metaflow owner\n- scribe doc committed → create documentation review task",
+        "title_hint": "SOUL.md - nuclex",
+        "source_path_hint": "ai-pragma/nuclex/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_81_nuclex_event_schema",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "\"event_type\": \"quality.degraded | alert.critical | pr.merged | job.failed | doc.committed\",",
+        "title_hint": "SOUL.md - nuclex",
+        "source_path_hint": "ai-pragma/nuclex/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_82_proguide_mission",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 2) Mission\nproguide's mission is to ensure every project in the neunexus ecosystem has accurate, up-to-date, and accessible documentation.\nEvery document produced by proguide is ingested into gopedia for RAG retrieval by other bots and operators.",
+        "title_hint": "SOUL.md - proguide",
+        "source_path_hint": "ai-pragma/proguide/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_83_proguide_doc_types",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "| Onboarding | New team member/bot setup guide | onboarding.md.tmpl |\n| Architecture | System design overview | architecture.md.tmpl |\n| ADR | Architecture Decision Record | adr.md.tmpl |\n| Runbook | Operational procedure | runbook.md.tmpl |\n| API Guide | API usage with examples | api-guide.md.tmpl |\n| Release Note | Version changelog | release-note.md.tmpl |",
+        "title_hint": "SOUL.md - proguide",
+        "source_path_hint": "ai-pragma/proguide/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_84_gopedia_bot_mission",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 2) Mission\ngopedia's mission is to make internal knowledge instantly retrievable, continuously up-to-date, and quality-assured.\nEvery ingested document must be chunked, indexed, and searchable within the same request cycle.",
+        "title_hint": "SOUL.md - gopedia",
+        "source_path_hint": "ai-pragma/gopedia/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_85_gopedia_bot_search_levels",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 7) Architecture\n```\ngopedia (bot + service)\n  ├─ Qdrant (vector DB)  — http://qdrant.taxon.svc:6333\n  │    └─ Collection: gopedia (default)\n  └─ PostgreSQL (shared cluster) — postgres-rw.taxon.svc:5432\n       └─ DB: gopedia (metadata, chunk registry, job status)\n\nChunking strategies:\n  - Standard: recursive text splitter (512 tokens, 64 overlap)\n  - Code domain: tree-sitter AST chunking (function/class boundaries)\n  - L1: document summary, L2: section, L3: chunk\n\nStaged search detail levels:\n  - summary: L1 only (fast, low token cost)\n  - standard: L1 + L2 (default)\n  - full: L1 + L2 + L3 (comprehensive)",
+        "title_hint": "SOUL.md - gopedia",
+        "source_path_hint": "ai-pragma/gopedia/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_86_gopedia_bot_chunking",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "- Standard: recursive text splitter (512 tokens, 64 overlap)",
+        "title_hint": "SOUL.md - gopedia",
+        "source_path_hint": "ai-pragma/gopedia/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_87_gopedia_qa_quality_grades",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 8) Quality Grades\n| Grade | Criteria | Action |\n|-------|----------|--------|\n| A | Top-1 hit rate ≥ 90%, no hallucination | No action |\n| B | Top-1 hit rate ≥ 75% | Log, schedule next cycle |\n| C | Top-1 hit rate ≥ 60% | Human reranking session required |\n| D | Top-1 hit rate < 60% | Re-ingest with adjusted chunking + human reranking |\n\nGrade transitions B→C or C→D trigger an operator Telegram notification.",
+        "title_hint": "SOUL.md - gopedia-qa",
+        "source_path_hint": "ai-pragma/gopedia-qa/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_88_gopedia_qa_feedback_lifecycle",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 11) Reranking Feedback Lifecycle\n1. **Collect**: gopedia-qa issues test queries, stores raw results\n2. **Score**: critic bot evaluates each result; scores stored in feedback table\n3. **Human review**: operator reviews low-score chunks, submits reranking via `/qa.rerank`\n4. **Export**: feedback exported as JSONL keyed by `project_id`\n5. **Re-ingest**: on next `gopedia.ingest` call with same `project_id`, feedback is automatically applied to reorder and weight chunks\n\nFeedback survives re-ingests — it is not cleared when a collection is rebuilt.",
+        "title_hint": "SOUL.md - gopedia-qa",
+        "source_path_hint": "ai-pragma/gopedia-qa/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_89_critic_composite_formula",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 7) Scoring Schema\n```json\n{\n  \"query\": \"...\",\n  \"score\": {\n    \"relevance\":    0.0–1.0,\n    \"accuracy\":     0.0–1.0,\n    \"fidelity\":     0.0–1.0,\n    \"hallucination_risk\": 0.0–1.0  // lower is better\n  },\n  \"composite\": 0.0–1.0,\n  \"reasoning\": \"...\",\n  \"issues\": [\"...\", \"...\"]\n}\n```\nComposite: `0.3*relevance + 0.3*accuracy + 0.25*fidelity + 0.15*(1-hallucination_risk)`",
+        "title_hint": "SOUL.md - critic",
+        "source_path_hint": "ai-pragma/critic/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_90_critic_scoring_dimensions",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 7) Scoring Schema\n```json\n{\n  \"query\": \"...\",\n  \"score\": {\n    \"relevance\":    0.0–1.0,\n    \"accuracy\":     0.0–1.0,\n    \"fidelity\":     0.0–1.0,\n    \"hallucination_risk\": 0.0–1.0  // lower is better\n  },\n  \"composite\": 0.0–1.0,\n  \"reasoning\": \"...\",\n  \"issues\": [\"...\", \"...\"]\n}\nComposite: `0.3*relevance + 0.3*accuracy + 0.25*fidelity + 0.15*(1-hallucination_risk)`",
+        "title_hint": "SOUL.md - critic",
+        "source_path_hint": "ai-pragma/critic/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_91_metacortex_mission",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "metacortex's mission is to produce correct, secure, and well-documented backend APIs that are contract-first and testable.\nEvery API change must update the OpenAPI/Protobuf spec before any implementation code is generated.",
+        "title_hint": "SOUL.md - metacortex",
+        "source_path_hint": "ai-pragma/metacortex/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_92_metacortex_contract_workflow",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 10) OpenAPI Contract Workflow\n```\nmetacortex\n  1. Draft OpenAPI spec (YAML)\n  2. Review: breaking change check vs. current spec\n  3. If breaking: require write-mid auth + migration plan\n  4. Generate server stub (language: Go default)\n  5. Generate client SDK for metaviewer (TypeScript)\n  6. Commit spec + stubs via tojismith PR\n  7. Notify metaviewer: new spec available",
+        "title_hint": "SOUL.md - metacortex",
+        "source_path_hint": "ai-pragma/metacortex/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_93_metaviewer_tech_stack",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Refine (react-based admin framework, MIT, code-first)\n  ├─ React 19 + TypeScript\n  ├─ shadcn/ui — component library (consistent with design system)",
+        "title_hint": "SOUL.md - metaviewer",
+        "source_path_hint": "ai-pragma/metaviewer/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_94_metaflow_windmill",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Why Windmill over Temporal:\n  - ~287MB RAM vs ~832MB (resource constrained cluster)\n  - Single binary, MSA-compatible\n  - Built-in script editor and webhook support",
+        "title_hint": "SOUL.md - metaflow",
+        "source_path_hint": "ai-pragma/metaflow/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_95_proprio_lgtm_stack",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "  └─ Mimir    — long-term metrics storage (Prometheus-compatible)\n       └─ Replaces vanilla Prometheus for scalable retention",
+        "title_hint": "SOUL.md - proprio",
+        "source_path_hint": "ai-pragma/proprio/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_96_proprio_alert_severity",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 11) Alert Severity Levels\n| Severity | Action | Auth to Silence |\n|---|---|---|\n| info | Log only | read |\n| warning | Telegram notification | write-low |\n| critical | Immediate Telegram escalation | write-high |",
+        "title_hint": "SOUL.md - proprio",
+        "source_path_hint": "ai-pragma/proprio/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_97_openstack_bot_topology",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "  AIO host: openstack-cp1 (192.168.1.11)",
+        "title_hint": "SOUL.md - openstack",
+        "source_path_hint": "ai-pragma/openstack/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_98_ai_assistant_openclaw",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "Routing modes:\n- **Sync** (POST /execute): short-lived operations, response < 30s\n- **Async** (Redis Streams): long-running jobs, result delivered as Telegram message on completion",
+        "title_hint": "SOUL.md - ai-assistant",
+        "source_path_hint": "ai-pragma/ai-assistant/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_99_plane_workspace_slug",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "## 8) Plane Service Reference\n| Item | Value |\n|------|-------|\n| Public URL | `https://task.toji.homes` |\n| Internal API | `http://plane-api.metaviewer.svc.cluster.local:8000` |\n| Namespace | `metaviewer` |\n| Helm release | `plane` (chart: plane-ce-1.5.0, app: 1.2.3) |\n| Workspace slug | `neunexus` |\n| Auth gate | oauth2-proxy (`lymphhub` ns) → Zitadel (`auth.toji.homes`) |",
+        "title_hint": "SOUL.md - plane",
+        "source_path_hint": "ai-pragma/plane/.hermes/SOUL.md"
+      }
+    },
+    {
+      "query_external_id": "geneso_100_plane_default_states",
+      "target_type": "l3_id",
+      "relevance": 1,
+      "target_data": {
+        "excerpt": "{ \"name\": \"Backlog\",     \"color\": \"#A3A3A3\", \"sequence\": 10000, \"group\": \"backlog\"    }\n{ \"name\": \"Todo\",        \"color\": \"#F96332\", \"sequence\": 20000, \"group\": \"unstarted\"  }\n{ \"name\": \"In Progress\", \"color\": \"#F4BE0C\", \"sequence\": 30000, \"group\": \"started\"    }\n{ \"name\": \"Done\",        \"color\": \"#16A34A\", \"sequence\": 40000, \"group\": \"completed\"  }\n{ \"name\": \"Cancelled\",   \"color\": \"#EF4444\", \"sequence\": 50000, \"group\": \"cancelled\"  }",
+        "title_hint": "SOUL.md - plane",
+        "source_path_hint": "ai-pragma/plane/.hermes/SOUL.md"
+      }
+    }
+  ]
+}
