@@ -57,8 +57,8 @@ def _bonus_for_hit(hit: dict[str, Any], target_data: dict[str, Any]) -> float:
     if title_hint and title_hint in title:
         bonus += 0.15
     if path_hint and path_hint.lower() in sp:
-        bonus += 0.2
-    return min(bonus, 0.45)
+        bonus += 0.35
+    return min(bonus, 0.60)
 
 
 def _pick_id_from_hit(hit: dict[str, Any], prefer_doc_id: bool) -> tuple[str | None, str]:
