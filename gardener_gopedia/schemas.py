@@ -60,6 +60,16 @@ class ResolveQrelsResult(BaseModel):
     ambiguous: int
     failed: int
     message: str | None = None
+    background: bool = False  # True when resolve is running async
+
+
+class IngestCompletePayload(BaseModel):
+    """Payload sent by gopedia when an ingest job completes."""
+
+    ingest_job_id: str
+    target_url: str  # gopedia URL that was ingested
+    path: str | None = None  # path that was ingested
+    status: str = "completed"  # completed | failed
 
 
 class IngestRunCreate(BaseModel):
