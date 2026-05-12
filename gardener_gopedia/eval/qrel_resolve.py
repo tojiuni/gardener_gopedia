@@ -44,21 +44,46 @@ def _bonus_for_hit(hit: dict[str, Any], target_data: dict[str, Any]) -> float:
     title_hint = _norm(target_data.get("title_hint"))
     path_hint = (target_data.get("source_path_hint") or "").replace("\\", "/")
     snip = _norm(hit.get("snippet"))
+    # surrounding_context (from ?detail=full) comes from PG knowledge_l3 —
+    # the ORIGINAL chunk content even when the highest-scoring Qdrant
+    # point payload was a synthetic question.  Always use it (in addition
+    # to snippet) for excerpt-substring matching.
+    ctx = _norm(hit.get("surrounding_context"))
     title = _norm(hit.get("title"))
     sp = (hit.get("source_path") or "").replace("\\", "/").lower()
 
+    haystack = (ctx + " " + snip) if ctx else snip
+
     if excerpt:
-        if excerpt[:120] in snip or excerpt in snip:
+        if excerpt[:120] in haystack or excerpt in haystack:
             bonus += 0.25
         else:
             for tok in re.findall(r"[\w가-힣]{4,}", excerpt)[:6]:
-                if tok in snip:
+                if tok in haystack:
                     bonus += 0.04
     if title_hint and title_hint in title:
         bonus += 0.15
     if path_hint and path_hint.lower() in sp:
         bonus += 0.35
     return min(bonus, 0.60)
+
+
+def _has_excerpt_substring_match(hit: dict[str, Any], target_data: dict[str, Any], min_len: int) -> bool:
+    """True iff the hit's surrounding_context contains the excerpt verbatim
+    AND the excerpt is long enough to be distinctive (>= min_len).
+
+    Used by the substring-override path: when exactly one hit satisfies
+    this, treat it as a deterministic match regardless of vector score.
+    Counters Q&A injection's tendency to flood the resolver with
+    high-score-but-wrong-chunk question points.
+    """
+    excerpt = _norm(target_data.get("excerpt"))
+    if len(excerpt) < min_len:
+        return False
+    ctx = _norm(hit.get("surrounding_context"))
+    if not ctx:
+        return False
+    return excerpt[:200] in ctx or (len(excerpt) > 200 and excerpt in ctx)
 
 
 def _pick_id_from_hit(hit: dict[str, Any], prefer_doc_id: bool) -> tuple[str | None, str]:
@@ -128,6 +153,38 @@ def resolve_single_qrel(
             "resolution_meta": {"error": "no_scorable_hits"},
         }
 
+    # ── Substring-first override ───────────────────────────────────────
+    # When the excerpt is long enough to be distinctive and exactly ONE
+    # hit's surrounding_context contains it verbatim, treat that as the
+    # deterministic resolution and bypass vector scoring.  This counters
+    # the Q&A-injection failure mode where a wrong chunk's question-text
+    # snippet outscores the correct chunk on vector similarity.
+    if bool(getattr(settings, "qrel_resolve_substring_override", True)):
+        min_len = int(getattr(settings, "qrel_resolve_substring_min_len", 40))
+        substring_hits = [
+            h for _, h in scored
+            if _has_excerpt_substring_match(h, td, min_len)
+        ]
+        if len(substring_hits) == 1:
+            best_hit = substring_hits[0]
+            tid, ttype = _pick_id_from_hit(best_hit, prefer_doc)
+            if tid:
+                return {
+                    "ok": True,
+                    "status": STATUS_RESOLVED,
+                    "target_id": tid,
+                    "target_type": ttype,
+                    "resolution_meta": {
+                        "resolution_method": "substring_override",
+                        "vector_score": float(best_hit.get("score") or 0.0),
+                        "chosen_title": best_hit.get("title"),
+                        "request_id": data.get("request_id"),
+                    },
+                }
+        # 0 substring hits → fall through to vector scoring.
+        # >1 substring hits → ambiguous on substring; fall through too,
+        #                     vector + bonus rank decides.
+
     scored.sort(key=lambda x: -x[0])
     best_score, best_hit = scored[0]
     vec = float(best_hit.get("score") or 0.0)
@@ -167,6 +224,7 @@ def resolve_single_qrel(
         "target_id": tid,
         "target_type": ttype,
         "resolution_meta": {
+            "resolution_method": "vector_plus_bonus",
             "combined_score": best_score,
             "vector_score": vec,
             "chosen_title": best_hit.get("title"),

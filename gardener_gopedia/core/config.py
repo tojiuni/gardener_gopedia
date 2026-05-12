@@ -75,10 +75,16 @@ class Settings(BaseSettings):
     label_consensus_min_confidence: float = 0.7
 
     # Qrel resolution (target_data → l3_id/doc_id via Gopedia search)
-    qrel_resolve_search_detail: str = "standard"
+    qrel_resolve_search_detail: str = "full"  # was "standard" — need surrounding_context for substring match
     qrel_resolve_min_vector_score: float = 0.25
     qrel_resolve_min_combined_score: float = 0.35
     qrel_resolve_max_hits_to_score: int = 20
+    # When True, hits whose surrounding_context contains the target_data
+    # excerpt verbatim get an override score that dominates vector ranking.
+    # Counters the v0.22.x regression where Q&A injection's question-text
+    # snippets fooled the resolver into picking wrong chunks.
+    qrel_resolve_substring_override: bool = True
+    qrel_resolve_substring_min_len: int = 40  # excerpt must be ≥40 chars to use substring signal
 
     # Compose Postgres (no GARDENER_ prefix — matches typical docker .env)
     postgres_user: str | None = Field(default=None, validation_alias="POSTGRES_USER")
