@@ -161,3 +161,195 @@ def test_dataset_create_accepts_target_data_only():
     )
     assert body.qrels[0].target_id is None
     assert body.qrels[0].target_data["excerpt"]
+
+
+# ─── Substring-override resolver (added 2026-05-12) ──────────────────────────
+
+def test_has_excerpt_substring_match_min_length():
+    from gardener_gopedia.eval.qrel_resolve import _has_excerpt_substring_match
+    td = {"excerpt": "short"}
+    hit = {"surrounding_context": "this paragraph contains short verbatim"}
+    # excerpt below min_len (40) → false even if substring exists
+    assert _has_excerpt_substring_match(hit, td, min_len=40) is False
+
+
+def test_has_excerpt_substring_match_hits_full_context():
+    from gardener_gopedia.eval.qrel_resolve import _has_excerpt_substring_match
+    excerpt = "metaflow uses Windmill because ~287MB RAM vs ~832MB"
+    td = {"excerpt": excerpt}
+    hit_ok = {"surrounding_context": f"Section 7. Tooling: {excerpt}. End."}
+    hit_no = {"surrounding_context": "completely unrelated text about kubectl and helm"}
+    assert _has_excerpt_substring_match(hit_ok, td, min_len=40) is True
+    assert _has_excerpt_substring_match(hit_no, td, min_len=40) is False
+
+
+def test_has_excerpt_substring_match_requires_surrounding_context():
+    from gardener_gopedia.eval.qrel_resolve import _has_excerpt_substring_match
+    td = {"excerpt": "a long enough distinctive phrase to satisfy min_len" * 2}
+    # No surrounding_context → cannot match (snippet alone is not enough)
+    hit = {"snippet": "a long enough distinctive phrase to satisfy min_len"}
+    assert _has_excerpt_substring_match(hit, td, min_len=40) is False
+
+
+def test_substring_override_wins_against_higher_vector_score():
+    """Mirrors the v0.22.x regression: a wrong-chunk question-text hit
+    has higher vector score, but the correct chunk has the excerpt in
+    its surrounding_context.  Override should pick the correct one."""
+    from types import SimpleNamespace
+    from unittest.mock import MagicMock
+    from gardener_gopedia.ingest.client import GopediaClient
+    from gardener_gopedia.eval.qrel_resolve import resolve_single_qrel
+
+    excerpt = "Caller-Callee (누가 누구를 호출하는가) Inheritance Implementation"
+    client = MagicMock(spec=GopediaClient)
+    client.search_json.return_value = {
+        "results": [
+            # Wrong chunk: high vector score (question matched), but
+            # surrounding_context (original) doesn't contain excerpt.
+            {
+                "l3_id": "wrong-question-hit",
+                "score": 0.92,
+                "snippet": "What three relationship mappings are performed in Day 3-4?",
+                "surrounding_context": "Day 3-4 covers the Stem phase generally.",
+                "title": "SKILL.md",
+                "source_path": "/skills/x.md",
+            },
+            # Correct chunk: lower vector score but substring match.
+            {
+                "l3_id": "correct-l3",
+                "score": 0.65,
+                "snippet": "(question text irrelevant here)",
+                "surrounding_context": f"Day 3-4 Stem: Logic-Xylem Flow — Relationship Mapping: {excerpt}.  More flow.",
+                "title": "SKILL.md",
+                "source_path": "/skills/code/expansion.md",
+            },
+        ],
+        "request_id": "r-override",
+    }
+    settings = SimpleNamespace(
+        qrel_resolve_search_detail="full",
+        qrel_resolve_max_hits_to_score=20,
+        qrel_resolve_min_vector_score=0.25,
+        qrel_resolve_min_combined_score=0.35,
+        qrel_resolve_substring_override=True,
+        qrel_resolve_substring_min_len=40,
+    )
+    qr = Qrel(
+        dataset_id="d", query_id="q",
+        target_id=None, target_type="l3_id", relevance=1,
+        target_data={"excerpt": excerpt},
+        resolution_status="unresolved",
+    )
+    out = resolve_single_qrel(client, query_text="3가지 relationship", project_id=None, qrel=qr, settings=settings)
+    assert out["ok"] is True
+    assert out["target_id"] == "correct-l3"
+    assert out["resolution_meta"]["resolution_method"] == "substring_override"
+
+
+def test_substring_override_ambiguous_falls_through():
+    """When >1 hit has substring match, override is skipped — vector
+    scoring decides as before."""
+    from types import SimpleNamespace
+    from unittest.mock import MagicMock
+    from gardener_gopedia.ingest.client import GopediaClient
+    from gardener_gopedia.eval.qrel_resolve import resolve_single_qrel
+
+    excerpt = "this phrase appears in two chunks one of which is wrong" * 2
+    client = MagicMock(spec=GopediaClient)
+    client.search_json.return_value = {
+        "results": [
+            {
+                "l3_id": "chunk-a",
+                "score": 0.50,
+                "snippet": "s",
+                "surrounding_context": f"...{excerpt}... in document A",
+                "title": "A",
+                "source_path": "/a.md",
+            },
+            {
+                "l3_id": "chunk-b",
+                "score": 0.70,
+                "snippet": "s",
+                "surrounding_context": f"document B copy: {excerpt}.",
+                "title": "B",
+                "source_path": "/b.md",
+            },
+        ],
+        "request_id": "r",
+    }
+    settings = SimpleNamespace(
+        qrel_resolve_search_detail="full",
+        qrel_resolve_max_hits_to_score=20,
+        qrel_resolve_min_vector_score=0.25,
+        qrel_resolve_min_combined_score=0.35,
+        qrel_resolve_substring_override=True,
+        qrel_resolve_substring_min_len=40,
+    )
+    qr = Qrel(
+        dataset_id="d", query_id="q",
+        target_id=None, target_type="l3_id", relevance=1,
+        target_data={"excerpt": excerpt},
+        resolution_status="unresolved",
+    )
+    out = resolve_single_qrel(client, query_text="anything", project_id=None, qrel=qr, settings=settings)
+    # Falls through to vector + bonus; chunk-b wins on vector
+    assert out["ok"] is True
+    assert out["target_id"] == "chunk-b"
+    assert out["resolution_meta"]["resolution_method"] == "vector_plus_bonus"
+
+
+def test_substring_override_disabled_demonstrates_vector_gap_loss():
+    """When override is disabled and the vector score gap is large
+    enough, the wrong chunk wins despite the right chunk having a
+    substring match in surrounding_context.  This captures the
+    v0.22.x failure mode the override fixes — guard against
+    accidental disable in the future."""
+    from types import SimpleNamespace
+    from unittest.mock import MagicMock
+    from gardener_gopedia.ingest.client import GopediaClient
+    from gardener_gopedia.eval.qrel_resolve import resolve_single_qrel
+
+    excerpt = "this excerpt only in chunk B" * 3
+    client = MagicMock(spec=GopediaClient)
+    client.search_json.return_value = {
+        "results": [
+            {
+                "l3_id": "high-score-wrong",
+                "score": 0.95,
+                "snippet": "(no excerpt)",
+                "surrounding_context": "completely different content",
+                "title": "A",
+                "source_path": "/a.md",
+            },
+            {
+                "l3_id": "right-chunk",
+                "score": 0.55,
+                "snippet": "(no excerpt)",
+                "surrounding_context": f"context here: {excerpt}",
+                "title": "B",
+                "source_path": "/b.md",
+            },
+        ],
+        "request_id": "r",
+    }
+    settings = SimpleNamespace(
+        qrel_resolve_search_detail="full",
+        qrel_resolve_max_hits_to_score=20,
+        qrel_resolve_min_vector_score=0.25,
+        qrel_resolve_min_combined_score=0.35,
+        qrel_resolve_substring_override=False,  # disabled
+        qrel_resolve_substring_min_len=40,
+    )
+    qr = Qrel(
+        dataset_id="d", query_id="q",
+        target_id=None, target_type="l3_id", relevance=1,
+        target_data={"excerpt": excerpt},
+        resolution_status="unresolved",
+    )
+    out = resolve_single_qrel(client, query_text="q", project_id=None, qrel=qr, settings=settings)
+    # right-chunk: 0.55 vec + 0.25 substring bonus = 0.80
+    # high-score-wrong: 0.95 vec + 0.0 bonus = 0.95
+    # → vector gap > combined bonus → wrong chunk wins (the v0.22.x bug)
+    assert out["ok"] is True
+    assert out["target_id"] == "high-score-wrong"  # demonstrates failure mode
+    assert out["resolution_meta"]["resolution_method"] == "vector_plus_bonus"
