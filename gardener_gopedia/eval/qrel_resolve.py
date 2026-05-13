@@ -28,14 +28,23 @@ def _norm(s: str | None) -> str:
 
 
 def _build_search_query(query_text: str, target_data: dict[str, Any]) -> str:
+    # Use question text only. Appending excerpt biased search toward heading-only chunks
+    # whose text mirrors the excerpt verbatim, causing wrong gold selection.
+    # Excerpt is still used in _bonus_for_hit for re-ranking among candidates.
     parts = [query_text.strip()]
-    ex = target_data.get("excerpt")
-    if isinstance(ex, str) and ex.strip():
-        parts.append(ex.strip()[:400])
     th = target_data.get("title_hint")
     if isinstance(th, str) and th.strip():
         parts.append(th.strip())
     return " ".join(parts)[:1500]
+
+
+def _is_heading_only_hit(hit: dict[str, Any]) -> bool:
+    """True if the hit's surrounding_context contains only a markdown heading with no body."""
+    ctx = (hit.get("surrounding_context") or "").strip()
+    if not ctx:
+        return True
+    lines = [ln for ln in ctx.split("\n") if ln.strip()]
+    return len(lines) == 1 and bool(re.match(r"^#{1,6}\s", lines[0]))
 
 
 def _bonus_for_hit(hit: dict[str, Any], target_data: dict[str, Any]) -> float:
@@ -163,7 +172,7 @@ def resolve_single_qrel(
         min_len = int(getattr(settings, "qrel_resolve_substring_min_len", 40))
         substring_hits = [
             h for _, h in scored
-            if _has_excerpt_substring_match(h, td, min_len)
+            if _has_excerpt_substring_match(h, td, min_len) and not _is_heading_only_hit(h)
         ]
         if len(substring_hits) == 1:
             best_hit = substring_hits[0]
