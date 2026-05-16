@@ -7,6 +7,8 @@ import time
 import uuid
 from datetime import datetime
 
+import httpx
+
 from sqlalchemy.orm import Session, selectinload
 
 from gardener_gopedia.core.config import get_settings
@@ -24,6 +26,22 @@ from gardener_gopedia.eval.qrel_resolve import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+def _fetch_gopedia_version(base_url: str) -> dict:
+    """Fetch version metadata from Gopedia for reproducibility tracking.
+
+    Never raises — on any failure returns a dict with an ``error`` key so that
+    callers can store partial information without aborting the eval run.
+    """
+    url = base_url.rstrip("/") + "/api/version"
+    try:
+        with httpx.Client(timeout=5.0) as client:
+            r = client.get(url)
+            r.raise_for_status()
+            return r.json()
+    except Exception as exc:
+        return {"error": str(exc), "fetched_at": datetime.utcnow().isoformat()}
 
 
 def _strip_opt(s: str | None) -> str | None:
@@ -110,6 +128,12 @@ def execute_eval_run(db: Session, eval_run_id: str) -> None:
         db.query(DatasetQuery).filter(DatasetQuery.dataset_id == dataset.id).order_by(DatasetQuery.external_id).all()
     )
     base = row.target_url or settings.gopedia_base_url
+
+    # Capture gopedia version for reproducibility — stored in params_json["versions"]
+    _gopedia_version = _fetch_gopedia_version(base)
+    row.params_json = {**(row.params_json or {}), "versions": {"gopedia": _gopedia_version}}
+    db.commit()
+
     if params.get("resolve_before_eval"):
         resolve_dataset_qrels(db, dataset.id, base, force=False)
 
