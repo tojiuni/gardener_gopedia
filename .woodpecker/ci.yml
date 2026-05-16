@@ -24,12 +24,7 @@ steps:
     environment:
       DAGGER_RUNNER_HOST: "tcp://dagger-engine.dagger.svc.cluster.local:1234"
     commands:
-      - echo "=== env ==="
-      - echo "DAGGER_RUNNER_HOST=${DAGGER_RUNNER_HOST}"
-      - python --version
       - pip install -q "dagger-io==0.20.8" anyio
-      - pip show dagger-io anyio
-      - echo "=== validate ==="
       - python ci/run.py validate
     when:
       - event: pull_request
